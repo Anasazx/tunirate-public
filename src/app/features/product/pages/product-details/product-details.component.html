@@ -1,272 +1,283 @@
-<div class="bg-white">
-  <div class="relative">
-    <button (click)="goBack()" aria-label="Go back"
-      class="absolute left-4 top-4 z-20 inline-flex items-center gap-2 rounded-lg bg-white/90 px-3 py-2 text-sm font-medium text-slate-800 shadow-sm hover:bg-white">
-      ← Back
+<div class="space-y-5">
+
+  <!-- Back -->
+  <div>
+    <button (click)="goBack()"
+      class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-slate-900 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Back
     </button>
-    <div class="absolute inset-0 overflow-hidden">
-      <img [src]="sharedService.getImageUrl(product?.images?.[0]?.url)" alt="background"
-        class="w-full h-full object-cover filter blur-2xl scale-110">
-      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-    </div>
-    <div class="relative container mx-auto px-4 py-16 text-white">
-      <div class="flex flex-col lg:flex-row items-center gap-12">
-        <div class="lg:w-1/2">
+  </div>
+
+  <!-- Product header card -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-6">
+    <div class="flex flex-col lg:flex-row gap-8">
+
+      <!-- Image gallery -->
+      <div class="lg:w-2/5 shrink-0">
+        <div class="aspect-square rounded-xl overflow-hidden border border-slate-100 bg-slate-50">
           <img [src]="sharedService.getImageUrl(selectedImage) || sharedService.getImageUrl(product?.images?.[0]?.url)"
-            alt="product image0" class="w-full h-auto rounded-2xl shadow-2xl">
-          <div class="flex gap-4 mt-4">
-            <div *ngFor="let image of product?.images" class="w-1/4 cursor-pointer" (click)="selectedImage = image.url">
-              <img [src]="sharedService.getImageUrl(image.url)" alt="product thumbnail"
-                class="w-full h-24 object-cover rounded-lg border-2 transition-all"
-                [class.border-white]="image.url === selectedImage"
-                [class.border-transparent]="image.url !== selectedImage">
+            alt="product" class="w-full h-full object-cover">
+        </div>
+        <div class="flex gap-2 mt-2.5" *ngIf="(product?.images?.length ?? 0) > 1">
+          <button *ngFor="let image of product?.images"
+            (click)="selectedImage = image.url"
+            class="flex-1 aspect-square overflow-hidden rounded-lg border-2 transition-all"
+            [class.border-slate-900]="image.url === selectedImage"
+            [class.border-transparent]="image.url !== selectedImage"
+            [class.opacity-40]="image.url !== selectedImage">
+            <img [src]="sharedService.getImageUrl(image.url)" alt="thumbnail" class="w-full h-full object-cover">
+          </button>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="flex-1 min-w-0">
+
+        <!-- Company -->
+        <div class="flex items-center gap-2 mb-3">
+          <img *ngIf="product?.companyLogoUrl as logo"
+            [src]="sharedService.getImageUrl(logo)"
+            class="h-6 w-6 rounded-full border border-slate-200 object-cover shrink-0">
+          <span class="text-sm font-medium text-gray-500">{{ product?.companyName }}</span>
+          <svg *ngIf="product?.companyIsVerified" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24" class="h-4 w-4 text-sky-500 shrink-0" fill="currentColor" title="Verified">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white"/>
+          </svg>
+        </div>
+
+        <h1 class="text-3xl font-bold text-slate-900 leading-tight">{{ product?.name }}</h1>
+
+        <!-- Description -->
+        <div class="mt-4">
+          <p class="text-sm text-gray-600 leading-relaxed" [class.line-clamp-4]="!descExpanded">
+            {{ product?.description }}
+          </p>
+          <button *ngIf="(product?.description?.length ?? 0) > 180"
+            (click)="descExpanded = !descExpanded"
+            class="mt-1.5 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
+            {{ descExpanded ? 'Show less' : 'Read more' }}
+          </button>
+        </div>
+
+        <!-- Rating overview -->
+        <div *ngIf="(product?.reviewsCount ?? 0) > 0"
+          class="mt-6 pt-5 border-t border-slate-100 flex items-center gap-6">
+          <div class="text-center shrink-0">
+            <div class="text-4xl font-extrabold text-slate-900 leading-none">{{ (product?.averageRating || 0).toFixed(1) }}</div>
+            <div class="flex justify-center gap-0.5 text-yellow-400 mt-1.5 text-sm leading-none">
+              <span *ngFor="let i of getSolidStars(product?.averageRating || 0)">★</span>
+              <span *ngFor="let i of getOutlineStars(product?.averageRating || 0)" class="text-slate-200">★</span>
+            </div>
+            <div class="text-xs text-gray-400 mt-1">{{ product?.reviewsCount ?? 0 }} reviews</div>
+          </div>
+          <div class="flex-1 space-y-1.5 min-w-0">
+            <div *ngFor="let star of [5,4,3,2,1]" class="flex items-center gap-2">
+              <span class="text-[11px] text-gray-400 w-2 shrink-0">{{ star }}</span>
+              <svg class="w-3 h-3 text-yellow-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.175 0l-3.37 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.285-3.957z"/>
+              </svg>
+              <div class="flex-1 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-yellow-400 h-full rounded-full transition-all duration-500"
+                  [style.width.%]="getStarPercent(star)"></div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="lg:w-1/2">
-          <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight">{{ product?.name }}</h1>
-          <div class="mt-4 text-xl text-gray-300 relative">
 
-            <div [class.line-clamp-3]="!descExpanded">
-              {{ product?.description }}
-            </div>
-
-            <!-- FADE + ACTION -->
-            <div *ngIf="(product?.description?.length ?? 0) > 120" class="mt-2">
-              <button (click)="descExpanded = !descExpanded"
-                class="text-sm text-sky-300 hover:text-sky-200 transition font-medium">
-                {{ descExpanded ? 'Show less' : 'Read more' }}
-              </button>
-            </div>
-
-          </div>
-          <div class="mt-3 flex items-center gap-2 text-gray-300">
-
-            <img *ngIf="product?.companyLogoUrl as logo" [src]="sharedService.getImageUrl(logo)"
-              class="h-8 w-8 rounded-full border" />
-            <span class="text-lg font-medium">
-              {{ product?.companyName }}
-            </span>
-
-            <!-- VERIFIED BADGE -->
-            <svg *ngIf="product?.companyIsVerified" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-              class="h-5 w-5 shrink-0 text-sky-500" fill="currentColor" title="Verified Company">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white" />
-            </svg>
-
-          </div>
-
-
-          <div class="mt-8 flex items-center gap-4">
-            <div class="flex items-center gap-1 text-yellow-400 text-2xl">
-              <span *ngFor="let i of getSolidStars(product?.averageRating || 0)">★</span><span
-                *ngFor="let i of getOutlineStars(product?.averageRating || 0)">☆</span>
-            </div>
-            <div class="text-lg text-gray-300">({{ product?.reviewsCount ?? 0 }} reviews)</div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
-  <div class="bg-gray-50 py-16">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col lg:flex-row gap-16">
+  <!-- Reviews + form -->
+  <div class="flex flex-col lg:flex-row gap-5">
 
+    <!-- Reviews column -->
+    <div class="flex-1 min-w-0 space-y-4">
 
+      <!-- Section heading -->
+      <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest px-0.5">
+        Community reviews
+        <span class="ml-1 font-normal normal-case tracking-normal">({{ product?.reviews?.length ?? 0 }})</span>
+      </h2>
 
-        <div class="lg:w-2/3">
+      <!-- Empty state -->
+      <div *ngIf="(product?.reviews?.length ?? 0) === 0"
+        class="bg-white rounded-2xl border border-dashed border-slate-200 py-14 text-center">
+        <p class="text-sm text-gray-400">No reviews yet. Be the first to share your thoughts!</p>
+      </div>
 
-          <h2 class="text-[22px] font-medium text-gray-900 mb-6">
-            Community reviews
-          </h2>
+      <!-- Review list -->
+      <div class="space-y-3">
+        <div *ngFor="let review of product?.reviews"
+          class="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-shadow hover:shadow-md"
+          [class.ring-2]="review.isMine"
+          [class.ring-blue-200]="review.isMine">
 
-          <div class="space-y-4">
+          <div class="flex">
+            <div class="w-1 shrink-0" [style.background-color]="getAccentColor(review)"></div>
+            <div class="flex-1 p-4">
 
-            <div *ngFor="let review of product?.reviews"
-              class="bg-white border-[0.5px] border-gray-200 border-l-[3px] rounded-r-xl pl-5 pr-5 pt-5 pb-4"
-              [style.border-left-color]="getAccentColor(review)">
-
-              <!-- HEADER -->
+              <!-- Header -->
               <div class="flex items-start justify-between gap-3">
-
                 <div class="flex items-center gap-3">
                   <img [src]="'https://picsum.photos/seed/' + (review.userName || 'anon') + '/100/100'"
-                    class="w-10 h-10 rounded-full border border-gray-200 flex-shrink-0" />
+                    class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0">
                   <div>
-                    <div class="flex items-center gap-2">
-                      <span class="text-sm font-medium text-gray-900">{{ review.userName }}</span>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-sm font-semibold text-slate-900">{{ review.userName }}</span>
                       <span *ngIf="review.isMine"
-                        class="text-[11px] font-medium bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
+                        class="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
                         You
                       </span>
                     </div>
-                    <div class="text-xs text-gray-400 mt-0.5">
-                      {{ review.createdAt | date:'medium' }}
-                    </div>
+                    <div class="text-[11px] text-gray-400 mt-0.5">{{ review.createdAt | date:'MMM d, y' }}</div>
                   </div>
                 </div>
 
-                <div class="flex flex-col items-end gap-1.5 flex-shrink-0">
-                  <div class="text-base tracking-wide text-amber-600">
+                <div class="flex flex-col items-end gap-1.5 shrink-0">
+                  <div class="flex gap-0.5 text-yellow-400 text-sm leading-none">
                     <span *ngFor="let i of getSolidStars(review.rating)">★</span>
-                    <span *ngFor="let i of getOutlineStars(review.rating)">☆</span>
+                    <span *ngFor="let i of getOutlineStars(review.rating)" class="text-slate-200">★</span>
                   </div>
                   <button *ngIf="review.isMine" (click)="deleteReview(review)"
                     [disabled]="deletingReviewId === review.id"
-                    class="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 hover:underline disabled:opacity-40 transition-opacity">
+                    class="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="3 6 5 6 21 6" />
-                      <path d="M19 6l-1 14H6L5 6" />
-                      <path d="M10 11v6" />
-                      <path d="M14 11v6" />
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-1 14H6L5 6"/>
+                      <path d="M10 11v6"/><path d="M14 11v6"/>
                     </svg>
                     {{ deletingReviewId === review.id ? 'Deleting…' : 'Delete' }}
                   </button>
                 </div>
-
               </div>
 
-              <!-- BODY -->
-              <p class="mt-3.5 text-sm text-gray-600 leading-relaxed">
-                {{ review.content }}
-              </p>
+              <!-- Body -->
+              <p class="mt-3 text-sm text-gray-600 leading-relaxed">{{ review.content }}</p>
 
-              <!-- COMMENTS -->
-              <div class="mt-3.5 border-t border-gray-100 pt-3.5">
+              <!-- Comments -->
+              <div class="mt-3.5 pt-3 border-t border-slate-50">
 
-                <!-- Preview -->
                 <div *ngIf="review.previewComment && !review.showComments"
-                  class="mb-2.5 rounded-lg bg-gray-50 px-3 py-2 text-[13px] text-gray-600">
-                  <span class="font-medium text-blue-600">{{ review.previewComment.actorName }}: </span>
+                  class="mb-2.5 rounded-lg bg-slate-50 px-3 py-2 text-[12px] text-gray-500">
+                  <span class="font-semibold text-blue-600">{{ review.previewComment.actorName }}: </span>
                   {{ review.previewComment.content }}
                 </div>
 
-                <!-- Toggle -->
-                <button (click)="toggleComments(review)" class="text-[13px] font-medium text-blue-600 hover:underline">
-                  {{ review.showComments ? 'Hide comments' : ('View ' + review.commentsCount + ' comments') }}
+                <button (click)="toggleComments(review)"
+                  class="flex items-center gap-1.5 text-[12px] font-medium text-gray-400 hover:text-slate-700 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                  </svg>
+                  {{ review.showComments ? 'Hide' : (review.commentsCount + ' comments') }}
                 </button>
 
-                <!-- Expanded -->
-                <div *ngIf="review.showComments" class="mt-3 space-y-2">
+                <div *ngIf="review.showComments" class="mt-3 space-y-1.5">
 
-                  <div *ngFor="let c of review.comments"
-                      class="rounded-lg bg-gray-50 px-3 py-2.5 text-[13px]">
-
-                    <!-- HEADER -->
-                    <div class="font-medium text-gray-800 mb-0.5 flex items-center gap-1">
-                      <span
-                        [ngClass]="c.actorType === 'COMPANY'
-                          ? 'text-violet-600 font-semibold'
-                          : 'text-blue-600 font-medium'">
-                        {{ c.actorName }}
-                      </span>
-                      <span *ngIf="c.repliedToActorName" class="text-gray-400">
-                        → {{ c.repliedToActorName }}
-                      </span>
-
-                    </div>
-
-                    <!-- CONTENT -->
-                    <div class="text-gray-600 leading-snug ml-0.5">
-                      {{ c.content }}
-                    </div>
-
-                    <!-- ACTIONS (TikTok style) -->
-                    <div class="mt-2 flex items-center gap-3 text-[11px] text-gray-500">
-
-                      <button
-                        class="hover:text-blue-600"
-                        (click)="startReply(c)">
-                        Reply
-                      </button>
-
-                    </div>
-
-                    <!-- REPLY INPUT (only for selected comment) -->
-                    <div *ngIf="replyingToCommentId === c.id"
-                        class="mt-2 flex gap-2">
-
-                      <input
-                        [(ngModel)]="replyText"
-                        placeholder="Write a reply..."
-                        class="flex-1 rounded-lg border px-2 py-1 text-[12px]"
-                      />
-
-                      <button
-                        (click)="sendReply(c)"
-                        class="bg-blue-600 text-white px-3 py-1 rounded-lg text-[12px]">
-                        Send
-                      </button>
-
-                      <button
-                        (click)="cancelReply()"
-                        class="text-gray-500 text-[12px]">
-                        Cancel
-                      </button>
-
-                    </div>
-
+                  <div *ngIf="review.comments?.length === 0"
+                    class="text-[12px] text-gray-400 text-center py-3 bg-slate-50 rounded-lg">
+                    No comments yet.
                   </div>
 
-                  <div *ngIf="review.comments?.length === 0" class="text-[13px] text-gray-400 text-center py-3">
-                    No comments yet — be the first.
+                  <div *ngFor="let c of review.comments" class="rounded-lg bg-slate-50 px-3 py-2 text-[12px]">
+                    <div class="flex items-baseline gap-1.5 mb-0.5">
+                      <span [ngClass]="c.actorType === 'COMPANY' ? 'font-semibold text-violet-600' : 'font-semibold text-blue-600'">
+                        {{ c.actorName }}
+                      </span>
+                      <span *ngIf="c.repliedToActorName" class="text-gray-400 text-[11px]">→ {{ c.repliedToActorName }}</span>
+                    </div>
+                    <p class="text-gray-600 leading-snug">{{ c.content }}</p>
+                    <button (click)="startReply(c)"
+                      class="mt-1.5 text-[11px] text-gray-400 hover:text-blue-500 font-medium transition-colors">
+                      Reply
+                    </button>
+                    <div *ngIf="replyingToCommentId === c.id" class="mt-1.5 flex gap-1.5">
+                      <input [(ngModel)]="replyText" placeholder="Reply…"
+                        class="flex-1 rounded-lg border border-slate-200 px-2 py-1 text-[12px] focus:outline-none focus:ring-2 focus:ring-slate-300">
+                      <button (click)="sendReply(c)"
+                        class="bg-slate-900 hover:bg-slate-700 text-white px-3 py-1 rounded-lg text-[11px] font-semibold transition-colors">
+                        Send
+                      </button>
+                      <button (click)="cancelReply()"
+                        class="text-gray-400 hover:text-gray-600 text-[11px] px-1 transition-colors">✕</button>
+                    </div>
                   </div>
 
                   <div class="flex gap-2 pt-1">
                     <input [(ngModel)]="review.newComment" placeholder="Add a comment…"
-                      class="flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-[13px] text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400" />
+                      class="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[12px] text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all">
                     <button (click)="addComment(review)"
-                      class="rounded-lg bg-blue-600 hover:bg-blue-700 px-4 py-1.5 text-[13px] font-medium text-white transition-colors">
+                      class="rounded-lg bg-slate-900 hover:bg-slate-700 px-4 py-1.5 text-[12px] font-semibold text-white transition-colors">
                       Post
                     </button>
                   </div>
 
                 </div>
-
               </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="lg:w-1/3">
-          <div class="sticky top-16">
-            <div class="bg-white p-6 rounded-2xl shadow-md">
-              <h3 class="text-2xl font-bold mb-2">{{ reviewFormTitle }}</h3>
-              <p class="mb-4 text-sm text-gray-500" *ngIf="myReview">You already reviewed this product. Edit your
-                existing review instead of creating a second one.</p>
-              <p class="mb-4 text-sm text-gray-500" *ngIf="!myReview">Add your review below. You can only leave one
-                review per product.</p>
-              <form (submit)="submitReview(); $event.preventDefault();">
-                <div class="mb-4">
-                  <label for="rating" class="block text-sm font-medium text-gray-700 mb-2">Your Rating</label>
-                  <div class="flex items-center gap-2 text-gray-300" (mouseleave)="hoveredRating = 0">
-                    <span *ngFor="let i of [1,2,3,4,5]"
-                      class="text-3xl cursor-pointer transition-transform duration-200 hover:scale-125"
-                      (mouseenter)="hoveredRating = i" (click)="selectedRating = i"
-                      [class.text-yellow-400]="i <= (hoveredRating || selectedRating)">★</span>
-                  </div>
-                </div>
-                <div class="mb-4">
-                  <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
-                  <textarea id="comment" name="comment" [(ngModel)]="reviewContent" rows="5"
-                    class="w-full border rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none transition"
-                    placeholder="What did you like or dislike?"></textarea>
-                </div>
-                <button type="submit" [disabled]="submittingReview || selectedRating === 0"
-                  class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-blue-300">
-                  {{ reviewFormButtonLabel }}
-                </button>
-              </form>
             </div>
           </div>
+
         </div>
       </div>
     </div>
+
+    <!-- Review form -->
+    <div class="lg:w-72 shrink-0">
+      <div class="sticky top-5">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+
+          <h3 class="text-base font-bold text-slate-900 mb-0.5">{{ reviewFormTitle }}</h3>
+          <p class="text-xs text-gray-400 mb-5">
+            <ng-container *ngIf="myReview">Edit your existing review below.</ng-container>
+            <ng-container *ngIf="!myReview">One review per product — make it count!</ng-container>
+          </p>
+
+          <form (submit)="submitReview(); $event.preventDefault()">
+
+            <div class="mb-4">
+              <label class="block text-xs font-medium text-gray-600 mb-1.5">Rating</label>
+              <div class="flex items-center gap-0.5" (mouseleave)="hoveredRating = 0">
+                <span *ngFor="let i of [1,2,3,4,5]"
+                  class="text-2xl cursor-pointer select-none transition-transform duration-100 hover:scale-110"
+                  (mouseenter)="hoveredRating = i"
+                  (click)="selectedRating = i"
+                  [class.text-yellow-400]="i <= (hoveredRating || selectedRating)"
+                  [class.text-slate-200]="i > (hoveredRating || selectedRating)">★</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1 h-4">
+                <ng-container [ngSwitch]="hoveredRating || selectedRating">
+                  <span *ngSwitchCase="1">Terrible</span>
+                  <span *ngSwitchCase="2">Poor</span>
+                  <span *ngSwitchCase="3">Okay</span>
+                  <span *ngSwitchCase="4">Good</span>
+                  <span *ngSwitchCase="5">Excellent!</span>
+                </ng-container>
+              </p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-xs font-medium text-gray-600 mb-1.5">Review</label>
+              <textarea name="reviewContent" [(ngModel)]="reviewContent" rows="4"
+                class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all resize-none"
+                placeholder="What did you think?"></textarea>
+            </div>
+
+            <button type="submit"
+              [disabled]="submittingReview || selectedRating === 0"
+              class="w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+              {{ reviewFormButtonLabel }}
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
+
 </div>

@@ -227,6 +227,12 @@ export class ProductDetailsComponent implements OnInit {
     return Array(5 - Math.floor(rating));
   }
 
+  getStarPercent(star: number): number {
+    if (!this.reviews.length) return 0;
+    const count = this.reviews.filter(r => Math.floor(r.rating) === star).length;
+    return Math.round((count / this.reviews.length) * 100);
+  }
+
   goBack() {
     this.location.back();
   }
