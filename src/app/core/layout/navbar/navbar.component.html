@@ -1,0 +1,47 @@
+<div class="bg-slate-50 border-b">
+  <div class="max-w-6xl mx-auto px-4 py-4">
+
+
+
+
+
+    <nav class="flex justify-center items-center gap-3 flex-wrap">
+
+      <a routerLink="/" (click)="clearSelection()" class="px-4 py-2 rounded-full text-base border transition"
+         [class.bg-black]="selectedCategoryId === null" [class.text-white]="selectedCategoryId === null">
+        All
+      </a>
+
+      <a *ngFor="let category of categories" routerLink="/" [queryParams]="{ category: category.name }"
+         (click)="toggleCategory(category.id)"
+         class="px-4 py-2 rounded-full text-base border hover:bg-gray-100 transition"
+         [class.bg-black]="selectedCategoryId === category.id" [class.text-white]="selectedCategoryId === category.id">
+        {{ category.name }}
+      </a>
+
+    </nav>
+
+
+    <div *ngIf="selectedCategoryId !== null && activeCategory() as category" class="mt-4 flex justify-center">
+
+      <div class="flex flex-wrap justify-center gap-3 max-w-3xl">
+
+        <a *ngFor="let sub of category.subcategories || []" routerLink="/"
+           [queryParams]="{ category: category.name, subcategory: sub.name }" class="px-4 py-2 rounded-full text-base font-medium border border-gray-200
+             text-gray-700 bg-white
+             hover:bg-gray-900 hover:text-white hover:border-gray-900
+             transition shadow-sm">
+
+          {{ sub.name }}
+
+        </a>
+
+        <span *ngIf="!category.subcategories.length" class="text-sm text-gray-400 px-2 py-2">
+          No subcategories
+        </span>
+
+      </div>
+
+    </div>
+  </div>
+</div>

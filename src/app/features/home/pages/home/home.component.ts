@@ -4,12 +4,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../product/services/productService/product.service';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
 import { ProductResponse } from '../../../product/models/productDTO/productResponse.model';
+import {NavbarComponent} from '../../../../core/layout/navbar/navbar.component';
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, NavbarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
