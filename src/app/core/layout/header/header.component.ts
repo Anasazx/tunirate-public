@@ -62,7 +62,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCompany();
     this.loadCategories();
     this.loadInvitations();
   }
@@ -70,17 +69,6 @@ export class HeaderComponent implements OnInit {
   /* ---------------- SEARCH ---------------- */
 
 
-
-
-  loadCompany(){
-    if (this.authService.isCompanyMember()) {
-      this.companyService.getMyCompany().subscribe({
-        next: company => {
-          this.company = company;
-        }
-      });
-    }
-  }
 
 
   onSearch(): void {
@@ -108,7 +96,7 @@ export class HeaderComponent implements OnInit {
           name: company.name,
           type: 'COMPANY' as const,
           logoUrl: company.logoUrl,
-          verified: company.verified ?? false
+          status: company.status ?? false
         }));
 
         this.suggestions = [...products, ...companies]

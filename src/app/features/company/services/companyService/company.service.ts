@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
 import { CompanyRequest } from '../../models/companyDTO/companyRequest.model';
 import { CompanyResponse } from '../../models/companyDTO/companyResponse.model';
+import {CompanyDetailResponse} from '../../models/companyDTO/companyDetailResponse.model';
 
 
 @Injectable({
@@ -19,12 +20,8 @@ export class CompanyService {
     this.companyUrl = this.sharedService.publicUrl + '/company';
   }
 
-  getCompanyById(id: number): Observable<CompanyResponse> {
-    return this.http.get<CompanyResponse>(`${this.companyUrl}/${id}`);
-  }
-
-  getMyCompany(): Observable<CompanyResponse> {
-    return this.http.get<CompanyResponse>(`${this.companyUrl}/my`);
+  getCompanyById(id: number): Observable<CompanyDetailResponse> {
+    return this.http.get<CompanyDetailResponse>(`${this.companyUrl}/details/${id}`);
   }
 
 }

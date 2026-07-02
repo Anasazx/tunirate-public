@@ -59,6 +59,8 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit() {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) this.loadProduct(+productId);
+    this.selectedImage = this.product?.images?.[0]?.url || null;
+
   }
 
   // ===================== LOAD PRODUCT =====================
@@ -304,4 +306,33 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
   //End reply logic
+
+
+
+  currentImageIndex = 0;
+
+
+  nextImage() {
+
+    if (!this.product?.images?.length) return;
+
+    this.currentImageIndex =
+
+      (this.currentImageIndex + 1) % this.product.images.length;
+
+    this.selectedImage = this.product.images[this.currentImageIndex].url;
+
+  }
+
+  prevImage() {
+
+    if (!this.product?.images?.length) return;
+
+    this.currentImageIndex =
+      (this.currentImageIndex - 1 + this.product.images.length) %
+      this.product.images.length;
+    this.selectedImage = this.product.images[this.currentImageIndex].url;
+
+  }
+
 }

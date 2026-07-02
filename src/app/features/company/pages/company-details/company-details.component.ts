@@ -4,6 +4,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CompanyService } from '../../services/companyService/company.service';
 import { ProductService } from '../../../product/services/productService/product.service';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
+import {CompanyResponse} from '../../models/companyDTO/companyResponse.model';
+import {ProductStatus} from '../../../product/enums/productStatus.enum.model';
+import {CompanyDetailResponse} from '../../models/companyDTO/companyDetailResponse.model';
+import {ProductResponse} from '../../../product/models/productDTO/productResponse.model';
 
 
 @Component({
@@ -15,13 +19,12 @@ import { SharedService } from '../../../../core/services/sharedService/shared.se
 })
 export class CompanyDetailsComponent implements OnInit {
 
-  company: any;
-  products: any[] = [];
+  company?: CompanyDetailResponse;
+  products?: ProductResponse[];
 
   constructor(
     private route: ActivatedRoute,
     private companyService: CompanyService,
-    private productService: ProductService,
     public sharedService: SharedService
   ) {}
 
@@ -33,18 +36,26 @@ export class CompanyDetailsComponent implements OnInit {
       if (!id) return;
 
       this.loadCompany(id);
-      this.loadProducts(id);
+
     });
 
   }
 
   loadCompany(id: number) {
     this.companyService.getCompanyById(id)
-      .subscribe(res => this.company = res);
+      .subscribe(
+
+        res => {
+          this.company = res;
+          this.products = this.company.products;
+
+          console.log(this.company)
+          console.log(this.products)
+
+        }
+
+      );
   }
 
-  loadProducts(id: number) {
-    this.productService.getProductsByCompanyId(id)
-      .subscribe(res => this.products = res);
-  }
+  protected readonly ProductStatus = ProductStatus;
 }

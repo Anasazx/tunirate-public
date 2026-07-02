@@ -5,16 +5,16 @@
     <div class="flex items-center gap-3">
 
       <img
-        [src]="sharedService.getImageUrl(company.logoUrl)"
+        [src]="sharedService.getImageUrl(company?.logoUrl)"
         class="h-12 w-12 rounded-full object-cover border"
       />
 
       <div class="min-w-0">
         <h1 class="text-xl font-semibold text-slate-900 truncate flex items-center gap-2">
 
-          {{ company.name }}
+          {{ company?.name }}
         <svg
-          *ngIf="company.verified"
+          *ngIf="company?.status == ProductStatus.PUBLISHED"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           class="h-5 w-5 shrink-0 text-sky-500"
@@ -29,8 +29,8 @@
         </svg>
         </h1>
 
-        <p class="text-sm text-slate-500 truncate">
-          {{ company.description }}
+        <p class="text-sm text-slate-500">
+          {{ company?.description }}
         </p>
       </div>
 
@@ -38,9 +38,9 @@
   </div>
 
   <!-- BANNER -->
-  <div *ngIf="company.bannerUrl" class="rounded-xl overflow-hidden border h-70">
+  <div *ngIf="company?.bannerUrl" class="rounded-xl overflow-hidden border h-70">
     <img
-      [src]="sharedService.getImageUrl(company.bannerUrl)"
+      [src]="sharedService.getImageUrl(company?.bannerUrl)"
       class="w-full h-full object-cover"
     />
   </div>
@@ -49,7 +49,7 @@
   <div class="bg-white border rounded-xl p-5">
 
     <h2 class="text-base font-semibold mb-4">
-      Products ({{ products.length }})
+      Products ({{ products?.length }})
     </h2>
 
     <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -123,7 +123,7 @@
 
     <!-- EMPTY -->
     <div
-      *ngIf="products.length === 0"
+      *ngIf="products?.length === 0"
       class="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500"
     >
       This company has no products yet.

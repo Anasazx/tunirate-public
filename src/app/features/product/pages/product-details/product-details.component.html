@@ -17,21 +17,47 @@
 
       <!-- Image gallery -->
       <div class="lg:w-2/5 shrink-0">
-        <div class="aspect-square rounded-xl overflow-hidden border border-slate-100 bg-slate-50">
-          <img [src]="sharedService.getImageUrl(selectedImage) || sharedService.getImageUrl(product?.images?.[0]?.url)"
-            alt="product" class="w-full h-full object-cover">
-        </div>
-        <div class="flex gap-2 mt-2.5" *ngIf="(product?.images?.length ?? 0) > 1">
-          <button *ngFor="let image of product?.images"
-            (click)="selectedImage = image.url"
-            class="flex-1 aspect-square overflow-hidden rounded-lg border-2 transition-all"
-            [class.border-slate-900]="image.url === selectedImage"
-            [class.border-transparent]="image.url !== selectedImage"
-            [class.opacity-40]="image.url !== selectedImage">
-            <img [src]="sharedService.getImageUrl(image.url)" alt="thumbnail" class="w-full h-full object-cover">
+        <div class="relative aspect-square rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
+
+          <!-- MAIN IMAGE -->
+          <img
+            [src]="sharedService.getImageUrl(selectedImage) || sharedService.getImageUrl(product?.images?.[0]?.url)"
+            alt="product"
+            class="w-full h-full object-cover transition"
+          />
+
+          <!-- LEFT ARROW -->
+          <button
+            *ngIf="(product?.images?.length ?? 0) > 1"
+            (click)="prevImage()"
+            class="absolute left-2 top-1/2 -translate-y-1/2
+             bg-black/40 hover:bg-black/70 text-white
+             w-8 h-8 rounded-full flex items-center justify-center
+             opacity-0 group-hover:opacity-100 transition">
+            ‹
           </button>
+
+          <!-- RIGHT ARROW -->
+          <button
+            *ngIf="(product?.images?.length ?? 0) > 1"
+            (click)="nextImage()"
+            class="absolute right-2 top-1/2 -translate-y-1/2
+             bg-black/40 hover:bg-black/70 text-white
+             w-8 h-8 rounded-full flex items-center justify-center
+             opacity-0 group-hover:opacity-100 transition">
+            ›
+          </button>
+
+          <!-- IMAGE COUNTER (optional but nice UX) -->
+          <div
+            *ngIf="(product?.images?.length ?? 0) > 1"
+            class="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-2 py-1 rounded-full">
+            {{ currentImageIndex + 1 }} / {{ product?.images?.length }}
+          </div>
+
         </div>
       </div>
+
 
       <!-- Info -->
       <div class="flex-1 min-w-0">
@@ -174,7 +200,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                   </svg>
-                  {{ review.showComments ? 'Hide' : (review.commentsCount + ' comments') }}
+                  {{ review.showComments ? 'Hide' : ((review.commentsCount == 0) + ' comments') }}
                 </button>
 
                 <div *ngIf="review.showComments" class="mt-3 space-y-1.5">
