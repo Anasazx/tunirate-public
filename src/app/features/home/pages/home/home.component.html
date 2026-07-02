@@ -1,6 +1,6 @@
 <div class="sticky top-16 z-40 bg-white border-b">
 
-  <app-navbar></app-navbar>
+
 
 </div>
 
@@ -29,7 +29,10 @@
 
     <!-- LEFT -->
     <div>
-      <h2 class="text-xl font-semibold text-slate-900 mb-3">
+      <h2
+        class="text-xl font-semibold text-slate-900 mb-3 cursor-pointer hover:underline"
+        [routerLink]="['/product', product.id]"
+      >
         {{ product.name }}
       </h2>
 

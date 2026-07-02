@@ -9,6 +9,7 @@ import { SearchService } from '../../services/searchService/search.service';
 import { CompanyInvitationService } from '../../../features/company/services/companyInvitationService/company-invitation.service';
 import { CompanyService } from '../../../features/company/services/companyService/company.service';
 import { SharedService } from '../../services/sharedService/shared.service';
+import {NavbarComponent} from '../navbar/navbar.component';
 
 
 type HeaderCategory = any;
@@ -16,7 +17,7 @@ type HeaderCategory = any;
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
