@@ -67,7 +67,7 @@
           <img *ngIf="product?.companyLogoUrl as logo"
             [src]="sharedService.getImageUrl(logo)"
             class="h-6 w-6 rounded-full border border-slate-200 object-cover shrink-0">
-          <span class="text-sm font-medium text-gray-500">{{ product?.companyName }}</span>
+          <span class="text-sm font-medium text-gray-500 cursor-pointer hover:underline" [routerLink]="['/company', product?.companyId]">{{ product?.companyName }}</span>
           <svg *ngIf="product?.companyIsVerified" xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24" class="h-4 w-4 text-sky-500 shrink-0" fill="currentColor" title="Verified">
             <circle cx="12" cy="12" r="10"/>

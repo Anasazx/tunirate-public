@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import { ReviewResponse } from '../../../../core/model/dto/reviewDTO/reviewResponse.model';
 import { DetailedProduct } from '../../models/detailedProduct.model';
 import { CommentResponse } from '../../../../core/model/dto/commentDTO/commentResponse.model';
@@ -15,7 +15,7 @@ import { ReviewRequest } from '../../../../core/model/dto/reviewDTO/reviewReques
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })

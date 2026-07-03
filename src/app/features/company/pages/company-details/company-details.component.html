@@ -1,41 +1,92 @@
 <div class="max-w-5xl mx-auto p-5 space-y-5">
 
+
   <!-- HEADER -->
-  <div class="bg-white border rounded-xl p-5">
-    <div class="flex items-center gap-3">
+  <div class="bg-white border rounded-2xl p-6 shadow-sm">
 
-      <img
-        [src]="sharedService.getImageUrl(company?.logoUrl)"
-        class="h-12 w-12 rounded-full object-cover border"
-      />
+    <div class="flex items-start justify-between gap-6">
 
-      <div class="min-w-0">
-        <h1 class="text-xl font-semibold text-slate-900 truncate flex items-center gap-2">
+      <!-- LEFT -->
+      <div class="flex items-start gap-4 min-w-0">
 
-          {{ company?.name }}
-        <svg
-          *ngIf="company?.status == ProductStatus.PUBLISHED"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="h-5 w-5 shrink-0 text-sky-500"
-          fill="currentColor"
-          title="Verified Company"
+        <!-- LOGO -->
+        <img
+          [src]="sharedService.getImageUrl(company?.logoUrl)"
+          class="h-14 w-14 rounded-xl object-cover border shrink-0"
+        />
+
+        <!-- INFO -->
+        <div class="min-w-0 flex-1">
+
+          <!-- NAME -->
+          <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+
+            {{ company?.name }}
+
+            <!-- VERIFIED -->
+            <svg
+              *ngIf="company?.status === ProductStatus.PUBLISHED"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="h-5 w-5 text-sky-500"
+              fill="currentColor"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white"/>
+            </svg>
+
+          </h1>
+
+          <!-- DESCRIPTION -->
+          <p class="text-sm text-slate-500 leading-relaxed mt-1 max-w-2xl">
+            {{ company?.description || 'No description available' }}
+          </p>
+
+          <!-- META -->
+          <div class="mt-4 flex flex-wrap gap-2 text-xs">
+
+          <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+            {{ company?.country }}
+          </span>
+
+            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+            {{ company?.industry }}
+          </span>
+
+            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+            {{ company?.phoneNumber }}
+          </span>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT: SOCIAL ICONS -->
+      <div class="flex items-center gap-2 shrink-0">
+
+        <a
+          *ngFor="let social of company?.socialLinks"
+          [href]="formatUrl(social.url)"
+          target="_blank"
+          class="w-10 h-10 flex items-center justify-center rounded-full border
+               text-slate-600 hover:bg-slate-900 hover:text-white transition"
         >
-          <circle cx="12" cy="12" r="10" />
-          <path
-            d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
-            fill="white"
-          />
-        </svg>
-        </h1>
 
-        <p class="text-sm text-slate-500">
-          {{ company?.description }}
-        </p>
+          <!-- ICON -->
+          <img
+            [src]="socialIconMap[social.platform]"
+            class="w-8 h-8"
+            alt="{{ social.platform }}"
+          />
+
+        </a>
+
       </div>
 
     </div>
   </div>
+
 
   <!-- BANNER -->
   <div *ngIf="company?.bannerUrl" class="rounded-xl overflow-hidden border h-70">

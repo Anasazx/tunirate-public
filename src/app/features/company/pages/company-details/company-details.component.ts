@@ -6,6 +6,7 @@ import { SharedService } from '../../../../core/services/sharedService/shared.se
 import {ProductStatus} from '../../../product/enums/productStatus.enum.model';
 import {CompanyDetailResponse} from '../../models/companyDTO/companyDetailResponse.model';
 import {ProductResponse} from '../../../product/models/productDTO/productResponse.model';
+import {SOCIAL_ICON_MAP} from '../../../../core/mapping/social-icon-map';
 
 
 @Component({
@@ -19,6 +20,9 @@ export class CompanyDetailsComponent implements OnInit {
 
   company?: CompanyDetailResponse;
   products?: ProductResponse[];
+
+
+  socialIconMap = SOCIAL_ICON_MAP;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,4 +60,30 @@ export class CompanyDetailsComponent implements OnInit {
   }
 
   protected readonly ProductStatus = ProductStatus;
+
+  socialIcons: Record<string, string> = {
+    WEBSITE: 'globe',
+    FACEBOOK: 'facebook',
+    INSTAGRAM: 'instagram',
+    X: 'x',
+    LINKEDIN: 'linkedin',
+    YOUTUBE: 'youtube',
+    TIKTOK: 'tiktok',
+    GITHUB: 'github',
+    DISCORD: 'discord'
+  };
+
+
+  formatUrl(url: string): string {
+    if (!url) return '#';
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : 'https://' + url;
+  }
+
+
+
+
+
+
 }
