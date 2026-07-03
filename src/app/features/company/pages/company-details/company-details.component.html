@@ -63,30 +63,32 @@
       </div>
 
       <!-- RIGHT: SOCIAL ICONS -->
-      <div class="flex items-center gap-2 shrink-0">
+      <div class="shrink-0" dir="rtl">
+        <div class="grid grid-flow-col grid-rows-4 gap-2 shrink-0">
 
-        <a
-          *ngFor="let social of company?.socialLinks"
-          [href]="formatUrl(social.url)"
-          target="_blank"
-          class="w-10 h-10 flex items-center justify-center rounded-full border
-               text-slate-600 hover:bg-slate-900 hover:text-white transition"
-        >
+          <a
+            *ngFor="let social of company?.socialLinks"
+            [href]="formatUrl(social.url)"
+            target="_blank"
+            class="w-10 h-10 flex items-center justify-center rounded-full border
+                 text-slate-600 hover:bg-slate-900 hover:text-white transition"
+          >
 
-          <!-- ICON -->
-          <img
-            [src]="socialIconMap[social.platform]"
-            class="w-7 h-7"
-            alt="{{ social.platform }}"
-          />
+            <!-- ICON -->
+            <img
+              [src]="socialIconMap[social.platform]"
+              class="w-7 h-7"
+              alt="{{ social.platform }}"
+            />
 
-        </a>
+          </a>
 
+        </div>
       </div>
+
 
     </div>
   </div>
-
 
   <!-- BANNER -->
   <div *ngIf="company?.bannerUrl" class="rounded-xl overflow-hidden border h-70">
