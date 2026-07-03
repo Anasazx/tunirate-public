@@ -7,12 +7,9 @@ import { CategoryService } from '../../../features/home/services/categoryService
 import { SubcategoryService } from '../../../features/home/services/subcategoryService/subcategory.service';
 import { SearchService } from '../../services/searchService/search.service';
 import { CompanyInvitationService } from '../../../features/company/services/companyInvitationService/company-invitation.service';
-import { CompanyService } from '../../../features/company/services/companyService/company.service';
 import { SharedService } from '../../services/sharedService/shared.service';
-import {NavbarComponent} from '../navbar/navbar.component';
+import { NavbarComponent } from '../navbar/navbar.component';
 
-
-type HeaderCategory = any;
 
 @Component({
   selector: 'app-header',
@@ -25,16 +22,9 @@ export class HeaderComponent implements OnInit {
 
   @Output() searchChange = new EventEmitter<string>();
 
-  currentUser$: any;
-
-  categories: HeaderCategory[] = [];
-  loadingCategories = false;
-
-  selectedCategoryId: number | null = null;
-
-  // SEARCH
   searchQuery = '';
 
+  //TODO; MAKE THIS AN INDEPENDENT DTO TO REUSE IT!
   suggestions: {
     id: number;
     name: string;
@@ -43,33 +33,40 @@ export class HeaderComponent implements OnInit {
     verified?: boolean;
   }[] = [];
 
-  company: any;
+  invitations: any[] = [];
+  invitationCount = 0;
+  showInvitations = false;
 
-  // simple search index (products + companies etc)
-  searchIndex: string[] = [];
+  userMenuOpen = false;
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private categoryService: CategoryService,
-    private subcategoryService: SubcategoryService,
     private searchService: SearchService,
     private companyInvitationService: CompanyInvitationService,
     public sharedService: SharedService,
-    private companyService: CompanyService
-  ) {
-    this.currentUser$ = this.authService.currentUser$;
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.loadCategories();
     this.loadInvitations();
   }
 
+  /* ---------------- AUTH ---------------- */
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
+
+  goCompanyDashboard(): void {
+    this.router.navigate(['/']); // future update
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
   /* ---------------- SEARCH ---------------- */
-
-
-
 
   onSearch(): void {
     const query = this.searchQuery.trim();
@@ -82,7 +79,6 @@ export class HeaderComponent implements OnInit {
 
     this.searchService.search(query).subscribe({
       next: (res) => {
-
         const products = (res.products || []).map(product => ({
           id: product.id,
           name: product.name,
@@ -100,131 +96,37 @@ export class HeaderComponent implements OnInit {
         }));
 
         this.suggestions = [...products, ...companies]
-          // safer duplicate removal (type + id)
           .filter((item, index, arr) =>
             index === arr.findIndex(x => x.id === item.id && x.type === item.type)
           )
           .slice(0, 6);
       },
-
-      error: (err) => {
-        console.error('Search failed', err);
+      error: () => {
         this.suggestions = [];
       }
     });
   }
 
-
-
-  selectSuggestion(item: {id: number;name: string;type: 'PRODUCT' | 'COMPANY';logoUrl?: string;}): void {
-
+  selectSuggestion(item: any): void {
     this.searchQuery = item.name;
     this.suggestions = [];
     this.searchChange.emit(item.name);
 
-    if (item.type === 'COMPANY') {
-      this.router.navigate(['/company', item.id]);
-    } else {
-      this.router.navigate(['/product', item.id]);
-    }
-
+    this.router.navigate(
+      item.type === 'COMPANY'
+        ? ['/company', item.id]
+        : ['/product', item.id]
+    );
   }
 
-  /* ---------------- CATEGORY ---------------- */
+  /* ---------------- INVITATIONS ---------------- */
 
-  toggleCategory(categoryId: number): void {
-    this.selectedCategoryId =
-      this.selectedCategoryId === categoryId ? null : categoryId;
-  }
-
-  clearSelection(): void {
-    this.selectedCategoryId = null;
-  }
-
-  activeCategory(): HeaderCategory | undefined {
-    return this.categories.find(c => c.id === this.selectedCategoryId);
-  }
-
-  /* ---------------- AUTH ---------------- */
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
-
-  isAdmin(): boolean {
-    return this.authService.isAdmin();
-  }
-
-  goAdmin(): void {
-    this.router.navigate(['/admin']);
-  }
-
-  goCompanyDashboard(): void {
-    this.router.navigate(['/c']);
-  }
-
-  /* ---------------- DATA ---------------- */
-
-  loadCategories(): void {
-    this.loadingCategories = true;
-
-    this.categoryService.getAllCategories().subscribe({
-      next: (categories) => {
-        this.subcategoryService.getAllSubcategories().subscribe({
-          next: (subcategories) => {
-
-            this.categories = (categories ?? []).map(category => ({
-              ...category,
-              subcategories: (subcategories ?? [])
-                .filter(s => s.categoryId === category.id)
-                .map(s => ({ id: s.id, name: s.name }))
-            }));
-
-            // build search index
-            this.buildSearchIndex();
-
-            this.loadingCategories = false;
-          },
-          error: () => {
-            this.categories = [];
-            this.loadingCategories = false;
-          }
-        });
-      },
-      error: () => {
-        this.categories = [];
-        this.loadingCategories = false;
-      }
-    });
-  }
-
-  buildSearchIndex(): void {
-    this.searchIndex = [];
-
-    for (const cat of this.categories) {
-      this.searchIndex.push(cat.name);
-
-      for (const sub of cat.subcategories || []) {
-        this.searchIndex.push(sub.name);
-      }
-    }
-  }
-
-  //Notification logic
-
-  invitations: any[] = [];
-  invitationCount = 0;
-  showInvitations = false;
-
-  toggleInvitations() {
+  toggleInvitations(): void {
     this.showInvitations = !this.showInvitations;
-    if (this.showInvitations) {
-      this.loadInvitations();
-    }
+    if (this.showInvitations) this.loadInvitations();
   }
 
-  loadInvitations() {
+  loadInvitations(): void {
     this.companyInvitationService.getMyInvitations()
       .subscribe(res => {
         this.invitations = res;
@@ -232,17 +134,13 @@ export class HeaderComponent implements OnInit {
       });
   }
 
-  accept(id: number) {
+  accept(id: number): void {
     this.companyInvitationService.acceptInvitation(id)
       .subscribe(() => this.loadInvitations());
   }
 
-  reject(id: number) {
+  reject(id: number): void {
     this.companyInvitationService.rejectInvitation(id)
       .subscribe(() => this.loadInvitations());
   }
-
-
-
-
 }

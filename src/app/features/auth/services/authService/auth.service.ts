@@ -1,86 +1,120 @@
 import { Injectable } from '@angular/core';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, tap, switchMap, catchError, of, map } from 'rxjs';
+
 import { AuthResponse } from '../../models/authDTO/authResponse.model';
 import { LoginRequest } from '../../models/authDTO/loginRequest.model';
 import { RegisterRequest } from '../../models/authDTO/registerRequest.model';
-
-
+import { AuthUserResponse } from '../../../user/models/userDTO/authUserResponse.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  authUrl : String = "";
-  private tokenKey = 'auth_user';
-  private currentUserSubject = new BehaviorSubject<AuthResponse | null>(this.loadFromStorage());
+  private readonly authUrl: string;
+  private readonly tokenKey = 'auth_token';
+
+  // =========================
+  // STATE
+  // =========================
+
+  private tokenSubject = new BehaviorSubject<string | null>(this.loadToken());
+  public token$ = this.tokenSubject.asObservable();
+
+  private currentUserSubject = new BehaviorSubject<AuthUserResponse | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private sharedService: SharedService, private http: HttpClient) {
-    this.authUrl = this.sharedService.publicUrl + "/auth";
+  constructor(
+    private sharedService: SharedService,
+    private http: HttpClient
+  ) {
+    this.authUrl = this.sharedService.publicUrl + '/auth';
+
+    // restore session on refresh
+    if (this.tokenSubject.value) {
+      this.loadCurrentUser().subscribe();
+    }
   }
 
-  // Request/response DTOs
-  login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.authUrl.toString()}/login`, request).pipe(
-      tap((res) => {
-        this.saveToStorage(res);
-        this.currentUserSubject.next(res);
+  // =========================
+  // LOGIN
+  // =========================
+  login(request: LoginRequest): Observable<AuthUserResponse> {
+    return this.http.post<AuthResponse>(`${this.authUrl}/login`, request).pipe(
+      tap(res => this.setToken(res.token)),
+      tap(res => this.setCurrentUser(res.user)),
+      map(res => res.user)
+    );
+  }
+
+  // =========================
+  // REGISTER
+  // =========================
+  register(request: RegisterRequest): Observable<AuthUserResponse> {
+    return this.http.post<AuthResponse>(`${this.authUrl}/register`, request).pipe(
+      tap(res => this.setToken(res.token)),
+      tap(res => this.setCurrentUser(res.user)),
+      map(res => res.user)
+    );
+  }
+
+  // =========================
+  // CURRENT USER (refresh from backend)
+  // =========================
+  loadCurrentUser(): Observable<AuthUserResponse | null> {
+    return this.http.get<AuthUserResponse>(`${this.authUrl}/me`).pipe(
+      tap(user => this.setCurrentUser(user)),
+      catchError(err => {
+        console.error('Failed to load user', err);
+        this.logout();
+        return of(null);
       })
     );
   }
 
-  register(request: RegisterRequest): Observable<AuthResponse> {
-    console.log(request);
-
-    return this.http.post<AuthResponse>(`${this.authUrl.toString()}/register`, request).pipe(
-      tap((res) => {
-        this.saveToStorage(res);
-        this.currentUserSubject.next(res);
-      })
-    );
-  }
-
+  // =========================
+  // LOGOUT
+  // =========================
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    this.tokenSubject.next(null);
     this.currentUserSubject.next(null);
   }
 
+  // =========================
+  // HELPERS
+  // =========================
   getToken(): string | null {
-    return this.currentUserSubject.value?.token ?? null;
+    return this.tokenSubject.value;
   }
 
+  getCurrentUser(): AuthUserResponse | null {
+    return this.currentUserSubject.value;
+  }
 
-  isAdmin(): boolean {
-    const role = this.currentUserSubject.value?.role;
-    return !!role && role.toLowerCase() === 'admin';
+  isLoggedIn(): boolean {
+    return !!this.tokenSubject.value;
   }
 
   isCompanyMember(): boolean {
-    return !!this.currentUserSubject.value?.companyId;
+    return false; // will be updated when you add companyId/roles in DTO
   }
 
-  private saveToStorage(res: AuthResponse) {
-    try {
-      localStorage.setItem(this.tokenKey, JSON.stringify(res));
-    } catch (e) {
-      console.error('Failed to persist auth token', e);
-    }
+  // =========================
+  // INTERNAL STATE UPDATES
+  // =========================
+  private setToken(token: string) {
+    localStorage.setItem(this.tokenKey, token);
+    this.tokenSubject.next(token);
   }
 
-  private loadFromStorage(): AuthResponse | null {
-    try {
-      const raw = localStorage.getItem(this.tokenKey);
-      return raw ? JSON.parse(raw) as AuthResponse : null;
-    } catch (e) {
-      console.error('Failed to read auth token from storage', e);
-      return null;
-    }
+  private setCurrentUser(user: AuthUserResponse) {
+    this.currentUserSubject.next(user);
   }
 
+  private loadToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
 }
-
-

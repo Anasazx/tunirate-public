@@ -67,66 +67,84 @@
       </div>
     </div>
 
-    <!-- RIGHT: USER / AUTH -->
+    <!-- RIGHT: USER MENU -->
+    <!-- RIGHT: USER MENU -->
     <div class="justify-self-end flex items-center gap-3">
 
-      <!-- NOTIFICATIONS -->
-      <button *ngIf="currentUser$ | async as user"
-              (click)="toggleInvitations()"
-              class="relative p-2 rounded-full hover:bg-gray-100 transition">
+      <!-- AUTH STATE -->
+      <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
 
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="w-6 h-6 text-gray-700"
-             fill="none"
-             viewBox="0 0 24 24"
-             stroke="currentColor">
+        <!-- NOTIFICATIONS -->
+        <button (click)="toggleInvitations()"
+                class="relative p-2 rounded-full hover:bg-gray-100 transition">
 
-          <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9" />
+          <!-- bell icon -->
+          <svg xmlns="http://www.w3.org/2000/svg"
+               class="w-6 h-6 text-gray-700"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9" />
+          </svg>
 
-        </svg>
+          <span *ngIf="invitationCount > 0"
+                class="absolute -top-1 -right-1 min-w-[18px] h-[18px]
+                   flex items-center justify-center text-[10px] font-bold
+                   bg-red-500 text-white rounded-full px-1">
+        {{ invitationCount }}
+      </span>
 
-        <span *ngIf="invitationCount > 0"
-              class="absolute -top-1 -right-1 min-w-[18px] h-[18px]
-                     flex items-center justify-center text-[10px] font-bold
-                     bg-red-500 text-white rounded-full px-1">
-          {{ invitationCount }}
+        </button>
+
+        <!-- USER DROPDOWN -->
+        <div class="relative">
+
+          <button (click)="toggleUserMenu()"
+                  class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition">
+
+            <img
+              [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"
+              class="w-8 h-8 rounded-full object-cover border"
+            />
+
+            <span class="text-sm font-medium text-gray-700 hidden md:block">
+          {{ user.name }}
         </span>
 
-      </button>
+          </button>
 
-      <!-- AUTH -->
-      <ng-container *ngIf="currentUser$ | async as user; else guest">
+          <div *ngIf="userMenuOpen"
+               class="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
 
-        <button *ngIf="authService.isCompanyMember() && company"
-                (click)="goCompanyDashboard()"
-                class="flex items-center gap-2 px-3 py-2 text-sm border rounded-md hover:bg-gray-50">
+            <a routerLink="/profile" class="block px-4 py-2 text-sm hover:bg-gray-100">
+              Profile
+            </a>
 
-          <img [src]="sharedService.getImageUrl(company.logoUrl)"
-               class="w-5 h-5 rounded-full object-cover" />
+            <a routerLink="/settings" class="block px-4 py-2 text-sm hover:bg-gray-100">
+              Settings
+            </a>
 
-          <span class="font-medium">
-            {{ company.name }}
-          </span>
+            <a *ngIf="authService.isCompanyMember()"
+               (click)="goCompanyDashboard()"
+               class="block px-4 py-2 text-sm hover:bg-gray-100">
+              Company Dashboard
+            </a>
 
-        </button>
+            <button (click)="logout()"
+                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+              Logout
+            </button>
 
-        <button *ngIf="isAdmin()"
-                (click)="goAdmin()"
-                class="text-sm px-3 py-2 rounded-md bg-gray-900 text-white hover:bg-black">
-          Admin
-        </button>
+          </div>
 
-        <button (click)="logout()"
-                class="text-sm px-3 py-2 rounded-md border hover:bg-gray-50">
-          Logout
-        </button>
+        </div>
 
       </ng-container>
 
-      <!-- GUEST -->
+      <!-- GUEST TEMPLATE -->
       <ng-template #guest>
         <div class="flex items-center gap-3">
           <a routerLink="/auth/login" class="text-sm text-gray-600 hover:text-black">
@@ -141,7 +159,6 @@
       </ng-template>
 
     </div>
-
   </div>
 
   <!-- NAVBAR -->
