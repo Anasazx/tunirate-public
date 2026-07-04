@@ -1,0 +1,25 @@
+<!-- HEADER -->
+<app-account-header></app-account-header>
+
+<!-- PAGE WRAPPER -->
+<div class="bg-gray-50 min-h-screen py-6">
+
+  <div class="max-w-6xl mx-auto px-4 flex gap-6 items-stretch">
+
+    <!-- SIDEBAR -->
+    <aside class="w-1/4">
+      <div class="bg-white border rounded-xl p-4 h-full sticky top-20">
+        <app-account-sidebar></app-account-sidebar>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="w-3/4">
+      <div class="bg-white border rounded-xl p-6 min-h-full">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+  </div>
+
+</div>

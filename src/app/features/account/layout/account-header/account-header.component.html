@@ -1,0 +1,74 @@
+<div class="bg-white border-b">
+
+  <div class="max-w-6xl mx-auto px-4 h-16 grid grid-cols-3 items-center">
+
+    <!-- LEFT: BRAND (same as main header) -->
+    <div class="justify-self-start">
+      <a routerLink="/" class="font-bold text-xl text-gray-800">
+        ReviewHub
+      </a>
+    </div>
+
+    <!-- CENTER (optional empty or label) -->
+    <div class="justify-self-center text-sm text-gray-500">
+      Account Settings
+    </div>
+
+    <!-- RIGHT: ACTIONS -->
+    <div class="justify-self-end flex items-center gap-4">
+
+      <!-- Home -->
+      <a routerLink="/" class="text-sm text-gray-600 hover:text-black">
+        ← Home
+      </a>
+
+      <ng-container *ngIf="authService.currentUser$ | async as user">
+
+        <!-- User Dropdown -->
+        <div class="relative">
+
+          <button (click)="toggleUserMenu()"
+                  class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition">
+
+            <img
+              [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"
+              class="w-8 h-8 rounded-full object-cover border"
+            />
+
+            <span class="text-sm font-medium text-gray-700 hidden md:block">
+            {{ user.name }}
+          </span>
+
+          </button>
+
+
+          <div *ngIf="userMenuOpen"
+               class="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
+
+            <a routerLink="/account" class="block px-4 py-2 text-sm hover:bg-gray-100">
+              My account
+            </a>
+
+            <a *ngIf="authService.isCompanyMember()"
+               (click)="goCompanyDashboard()"
+               class="block px-4 py-2 text-sm hover:bg-gray-100">
+              Company Dashboard
+            </a>
+
+            <button (click)="logout()"
+                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+              Logout
+            </button>
+
+          </div>
+
+        </div>
+
+      </ng-container>
+
+
+    </div>
+
+  </div>
+
+</div>

@@ -68,7 +68,6 @@
     </div>
 
     <!-- RIGHT: USER MENU -->
-    <!-- RIGHT: USER MENU -->
     <div class="justify-self-end flex items-center gap-3">
 
       <!-- AUTH STATE -->
@@ -112,6 +111,7 @@
 
             <span class="text-sm font-medium text-gray-700 hidden md:block">
           {{ user.name }}
+
         </span>
 
           </button>
@@ -119,12 +119,8 @@
           <div *ngIf="userMenuOpen"
                class="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
 
-            <a routerLink="/profile" class="block px-4 py-2 text-sm hover:bg-gray-100">
-              Profile
-            </a>
-
-            <a routerLink="/settings" class="block px-4 py-2 text-sm hover:bg-gray-100">
-              Settings
+            <a routerLink="/account" class="block px-4 py-2 text-sm hover:bg-gray-100">
+              My account
             </a>
 
             <a *ngIf="authService.isCompanyMember()"

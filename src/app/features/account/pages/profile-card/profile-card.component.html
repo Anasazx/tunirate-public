@@ -1,0 +1,74 @@
+<div *ngIf="user" class="space-y-6">
+
+  <!-- PROFILE HEADER -->
+  <div class="flex items-center gap-4">
+
+    <img
+      [src]="sharedService.getImageUrl(user.avatarUrl)"
+      class="w-16 h-16 rounded-full border object-cover"
+    />
+
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800">
+        {{ user.name }}
+      </h2>
+
+      <p class="text-sm text-gray-500">
+        {{ user.email }}
+      </p>
+
+      <!-- STATUS BADGE -->
+      <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
+        {{ user.status }}
+      </span>
+    </div>
+
+  </div>
+
+  <!-- INFO GRID -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+    <div class="p-3 border rounded-lg">
+      <p class="text-gray-500">Phone</p>
+      <p class="font-medium">
+        {{ user.phoneNumber || 'Not provided' }}
+      </p>
+    </div>
+
+    <div class="p-3 border rounded-lg">
+      <p class="text-gray-500">Country</p>
+      <p class="font-medium">
+        {{ user.country || 'Not provided' }}
+      </p>
+    </div>
+
+    <div class="p-3 border rounded-lg">
+      <p class="text-gray-500">Email verified</p>
+      <p class="font-medium">
+        {{ user.emailVerified ? 'Yes' : 'No' }}
+      </p>
+    </div>
+
+    <div class="p-3 border rounded-lg">
+      <p class="text-gray-500">Joined</p>
+      <p class="font-medium">
+        {{ user.createdAt | date:'mediumDate' }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="flex gap-3 pt-2">
+
+    <button class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
+      Edit Profile
+    </button>
+
+    <button class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100">
+      Delete Account
+    </button>
+
+  </div>
+
+</div>

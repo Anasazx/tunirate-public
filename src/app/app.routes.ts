@@ -5,6 +5,10 @@ import { HomeComponent } from './features/home/pages/home/home.component';
 import { MainComponent } from './core/layout/main/main.component';
 import { LoginComponent } from './features/auth/pages/login/login.component';
 import { RegisterComponent } from './features/auth/pages/register/register.component';
+import {AccountLayoutComponent} from './features/account/layout/account-layout/account-layout.component';
+import {MyReviewsComponent} from './features/account/pages/my-reviews/my-reviews.component';
+import {SecurityComponent} from './features/account/pages/security/security.component';
+import {ProfileCardComponent} from './features/account/pages/profile-card/profile-card.component';
 
 
 export const routes: Routes = [
@@ -17,6 +21,16 @@ export const routes: Routes = [
     component: RegisterComponent,
   },
   {
+    path: 'account',
+    component: AccountLayoutComponent,
+    children: [
+      { path: '', component: ProfileCardComponent },
+      { path: 'profile', component: ProfileCardComponent },
+      { path: 'security', component: SecurityComponent },
+      { path: 'reviews', component: MyReviewsComponent },
+    ],
+  },
+  {
     path: '',
     component: MainComponent,
     children: [
@@ -25,6 +39,8 @@ export const routes: Routes = [
       { path: 'company/:id', component: CompanyDetailsComponent },
     ],
   },
+
+
 
 
   // {

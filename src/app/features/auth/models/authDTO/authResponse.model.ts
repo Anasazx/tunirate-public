@@ -1,6 +1,6 @@
-import {AuthUserResponse} from '../../../user/models/userDTO/authUserResponse.model';
+import { AuthUserDto } from '../../../user/models/userDTO/authUserDto.model';
 
 export interface AuthResponse {
     token: string;
-    user: AuthUserResponse;
+    user: AuthUserDto;
 }
