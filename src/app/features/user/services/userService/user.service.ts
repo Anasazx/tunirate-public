@@ -22,6 +22,10 @@ export class UserService {
   }
 
 
+  updateMyProfile(data: any): Observable<UserResponse> {
+    return this.http.put<UserResponse>(`${this.userUrl}/me`, data);
+  }
+
 
 
 

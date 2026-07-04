@@ -13,11 +13,6 @@
         {{ user.name }}
       </h2>
 
-      <p class="text-sm text-gray-500">
-        {{ user.email }}
-      </p>
-
-      <!-- STATUS BADGE -->
       <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
         {{ user.status }}
       </span>
@@ -25,50 +20,118 @@
 
   </div>
 
-  <!-- INFO GRID -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+  <!-- INFO OR EDIT MODE -->
+  <div *ngIf="!editing; else editForm">
 
-    <div class="p-3 border rounded-lg">
-      <p class="text-gray-500">Phone</p>
-      <p class="font-medium">
+    <!-- VIEW MODE -->
+    <div class="divide-y border rounded-xl overflow-hidden text-sm">
+
+      <!-- PHONE -->
+      <div class="flex justify-between items-center px-4 py-3">
+
+        <div class="flex flex-col">
+          <span class="text-gray-500">Phone</span>
+          <span class="font-medium text-gray-800">
         {{ user.phoneNumber || 'Not provided' }}
-      </p>
-    </div>
+      </span>
+        </div>
 
-    <div class="p-3 border rounded-lg">
-      <p class="text-gray-500">Country</p>
-      <p class="font-medium">
+      </div>
+
+      <!-- COUNTRY -->
+      <div class="flex justify-between items-center px-4 py-3">
+
+        <div class="flex flex-col">
+          <span class="text-gray-500">Country</span>
+          <span class="font-medium text-gray-800">
         {{ user.country || 'Not provided' }}
-      </p>
-    </div>
+      </span>
+        </div>
 
-    <div class="p-3 border rounded-lg">
-      <p class="text-gray-500">Email verified</p>
-      <p class="font-medium">
-        {{ user.emailVerified ? 'Yes' : 'No' }}
-      </p>
-    </div>
+      </div>
 
-    <div class="p-3 border rounded-lg">
-      <p class="text-gray-500">Joined</p>
-      <p class="font-medium">
+      <!-- EMAIL + BADGE -->
+      <div class="flex justify-between items-center px-4 py-3">
+
+        <div class="flex flex-col">
+          <span class="text-gray-500">Email</span>
+          <span class="font-medium text-gray-800">
+        {{ user.email }}
+      </span>
+        </div>
+
+        <span
+          class="px-2 py-1 text-xs rounded-full font-medium"
+          [ngClass]="user.emailVerified
+        ? 'bg-green-100 text-green-700'
+        : 'bg-yellow-100 text-yellow-700'"
+        >
+      {{ user.emailVerified ? 'Verified' : 'Not verified' }}
+    </span>
+
+      </div>
+
+      <!-- JOINED -->
+      <div class="flex justify-between items-center px-4 py-3">
+
+        <div class="flex flex-col">
+          <span class="text-gray-500">Joined</span>
+          <span class="font-medium text-gray-800">
         {{ user.createdAt | date:'mediumDate' }}
-      </p>
+      </span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex gap-3 pt-4">
+
+      <button
+        (click)="startEdit(user)"
+        class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
+        Edit Profile
+      </button>
+
+      <button class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100">
+        Delete Account
+      </button>
+
     </div>
 
   </div>
 
-  <!-- ACTIONS -->
-  <div class="flex gap-3 pt-2">
+  <!-- EDIT MODE -->
+  <ng-template #editForm>
 
-    <button class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
-      Edit Profile
-    </button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
 
-    <button class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100">
-      Delete Account
-    </button>
+      <input [(ngModel)]="editModel.phoneNumber"
+             placeholder="Phone"
+             class="border p-2 rounded-lg"/>
 
-  </div>
+      <input [(ngModel)]="editModel.country"
+             placeholder="Country"
+             class="border p-2 rounded-lg"/>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex gap-3 pt-3">
+
+      <button (click)="save()"
+              class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        Save
+      </button>
+
+      <button (click)="cancelEdit()"
+              class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
+        Cancel
+      </button>
+
+    </div>
+
+  </ng-template>
 
 </div>
