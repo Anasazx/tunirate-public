@@ -1,7 +1,7 @@
 <!-- LEFT SIDEBAR -->
 <div
   *ngIf="authService.currentUser$ | async as user"
-  class="md:col-span-1 bg-white border rounded-xl p-4 h-fit sticky top-20"
+  class="md:col-span-1  bg-white border rounded-xl p-4 h-full sticky top-20"
 >
 
   <div class="flex flex-col items-center text-center mb-6">
@@ -30,7 +30,7 @@
     >
       My Reviews
     </a>
-
+<!--
     <a
       routerLink="/account/security"
       routerLinkActive="bg-gray-100 font-medium"
@@ -38,7 +38,7 @@
     >
       Security
     </a>
-
+-->
   </nav>
 
 </div>

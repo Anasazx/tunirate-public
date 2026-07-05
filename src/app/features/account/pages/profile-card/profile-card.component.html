@@ -1,137 +1,178 @@
 <div *ngIf="user" class="space-y-6">
 
-  <!-- PROFILE HEADER -->
+  <!-- HEADER -->
   <div class="flex items-center gap-4">
 
-    <img
-      [src]="sharedService.getImageUrl(user.avatarUrl)"
-      class="w-16 h-16 rounded-full border object-cover"
-    />
+    <div class="relative group">
+
+      <img
+
+        [src]="sharedService.getImageUrl(user.avatarUrl)"
+
+        class="w-16 h-16 rounded-full border object-cover"
+
+      />
+
+      <!-- overlay -->
+
+      <label class="absolute inset-0 flex items-center justify-center
+
+                bg-black/40 opacity-0 group-hover:opacity-100
+
+                cursor-pointer rounded-full transition">
+
+        <span class="text-white text-xs">Change</span>
+
+        <input
+
+          type="file"
+
+          class="hidden"
+
+          accept="image/*"
+
+          (change)="onAvatarSelected($event)"
+
+        />
+
+      </label>
+
+    </div>
 
     <div>
       <h2 class="text-lg font-semibold text-gray-800">
         {{ user.name }}
       </h2>
 
-      <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">
-        {{ user.status }}
+      <span class="inline-block text-xs text-gray-600">
+        Joined at {{ user.createdAt | date }}
       </span>
     </div>
 
   </div>
 
-  <!-- INFO OR EDIT MODE -->
-  <div *ngIf="!editing; else editForm">
+  <!-- CARD -->
+  <div class="divide-y border rounded-xl overflow-hidden text-sm">
 
-    <!-- VIEW MODE -->
-    <div class="divide-y border rounded-xl overflow-hidden text-sm">
+    <!-- PHONE -->
+    <div class="flex justify-between items-center px-4 py-3">
 
-      <!-- PHONE -->
-      <div class="flex justify-between items-center px-4 py-3">
+      <div class="flex flex-col flex-1">
+        <span class="text-gray-500">Phone</span>
 
-        <div class="flex flex-col">
-          <span class="text-gray-500">Phone</span>
+        <ng-container *ngIf="editingField !== 'phone'; else editPhone">
           <span class="font-medium text-gray-800">
-        {{ user.phoneNumber || 'Not provided' }}
-      </span>
-        </div>
+            {{ user.phoneNumber || 'Not provided' }}
+          </span>
+        </ng-container>
+
+        <ng-template #editPhone>
+          <input
+            [(ngModel)]="editModel.phoneNumber"
+            class="mt-1 w-full border rounded-lg px-3 py-2"
+          />
+        </ng-template>
 
       </div>
 
-      <!-- COUNTRY -->
-      <div class="flex justify-between items-center px-4 py-3">
-
-        <div class="flex flex-col">
-          <span class="text-gray-500">Country</span>
-          <span class="font-medium text-gray-800">
-        {{ user.country || 'Not provided' }}
-      </span>
-        </div>
-
-      </div>
-
-      <!-- EMAIL + BADGE -->
-      <div class="flex justify-between items-center px-4 py-3">
-
-        <div class="flex flex-col">
-          <span class="text-gray-500">Email</span>
-          <span class="font-medium text-gray-800">
-        {{ user.email }}
-      </span>
-        </div>
-
-        <span
-          class="px-2 py-1 text-xs rounded-full font-medium"
-          [ngClass]="user.emailVerified
-        ? 'bg-green-100 text-green-700'
-        : 'bg-yellow-100 text-yellow-700'"
-        >
-      {{ user.emailVerified ? 'Verified' : 'Not verified' }}
-    </span>
-
-      </div>
-
-      <!-- JOINED -->
-      <div class="flex justify-between items-center px-4 py-3">
-
-        <div class="flex flex-col">
-          <span class="text-gray-500">Joined</span>
-          <span class="font-medium text-gray-800">
-        {{ user.createdAt | date:'mediumDate' }}
-      </span>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="flex gap-3 pt-4">
-
+      <!-- PEN -->
       <button
-        (click)="startEdit(user)"
-        class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
-        Edit Profile
+        *ngIf="editingMode"
+        (click)="startEdit('phone')"
+        class="text-sm text-gray-400 hover:text-gray-700 transition">
+
+        Edit
       </button>
 
-      <button class="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100">
-        Delete Account
+    </div>
+
+    <!-- COUNTRY -->
+    <div class="flex justify-between items-center px-4 py-3">
+
+      <div class="flex flex-col flex-1">
+        <span class="text-gray-500">Country</span>
+
+        <ng-container *ngIf="editingField !== 'country'; else editCountry">
+          <span class="font-medium text-gray-800">
+            {{ user.country || 'Not provided' }}
+          </span>
+        </ng-container>
+
+        <ng-template #editCountry>
+          <select
+            [(ngModel)]="editModel.country"
+            class="mt-1 w-full border rounded-lg px-3 py-2">
+
+            <option *ngFor="let c of countries" [value]="c">
+              {{ c }}
+            </option>
+
+          </select>
+        </ng-template>
+
+      </div>
+
+      <!-- PEN -->
+      <button
+        *ngIf="editingMode"
+        (click)="startEdit('country')"
+        class="text-sm text-gray-400 hover:text-gray-700 transition">
+
+        Edit
       </button>
+
+    </div>
+
+    <!-- EMAIL -->
+    <div class="flex justify-between items-center px-4 py-3">
+
+      <div class="flex flex-col">
+        <span class="text-gray-500">Email</span>
+        <span class="font-medium text-gray-800">
+          {{ user.email }}
+        </span>
+      </div>
+
+      <span
+        class="px-2 py-1 text-xs rounded-full font-medium"
+        [ngClass]="user.emailVerified
+          ? 'bg-green-100 text-green-700'
+          : 'bg-yellow-100 text-yellow-700'">
+
+        {{ user.emailVerified ? 'Verified' : 'Not verified' }}
+      </span>
 
     </div>
 
   </div>
 
-  <!-- EDIT MODE -->
-  <ng-template #editForm>
+  <!-- GLOBAL ACTION BUTTON -->
+  <div class="flex justify-end gap-3 pt-2">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+    <button
+      *ngIf="!editingMode"
+      (click)="enableEditMode()"
+      class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
 
-      <input [(ngModel)]="editModel.phoneNumber"
-             placeholder="Phone"
-             class="border p-2 rounded-lg"/>
+      Edit Profile
+    </button>
 
-      <input [(ngModel)]="editModel.country"
-             placeholder="Country"
-             class="border p-2 rounded-lg"/>
+    <button
+      *ngIf="editingMode"
+      (click)="save()"
+      class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
 
-    </div>
+      Save
+    </button>
 
-    <!-- ACTIONS -->
-    <div class="flex gap-3 pt-3">
+    <button
+      *ngIf="editingMode"
+      (click)="cancelEdit()"
+      class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
 
-      <button (click)="save()"
-              class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-        Save
-      </button>
+      Cancel
+    </button>
 
-      <button (click)="cancelEdit()"
-              class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
-        Cancel
-      </button>
-
-    </div>
-
-  </ng-template>
+  </div>
 
 </div>

@@ -7,10 +7,11 @@ export interface CommentResponse {
   actorName: string;
   actorType: ActorType;
   actorId: number;
+  actorAvatarUrl: string;
 
   reviewId: number;
 
-   
+
   repliedToCommentId: number | null;
   repliedToActorId: number | null;
   repliedToActorType: ActorType | null;
@@ -23,4 +24,4 @@ export interface CommentResponse {
 
 
 
- 
+

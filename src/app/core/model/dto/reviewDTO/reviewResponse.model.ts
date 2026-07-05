@@ -1,10 +1,11 @@
 import { CommentResponse } from "../commentDTO/commentResponse.model";
+import {MinimizedUserResponse} from '../../../../features/user/models/userDTO/authUserDto.model';
 
 export interface ReviewResponse {
   id: number;
   rating: number;
   content: string;
-  userName: string;
+  user: MinimizedUserResponse;
   isMine?: boolean;
   commentsCount: number;
   previewComment?: CommentResponse;
@@ -15,5 +16,5 @@ export interface ReviewResponse {
   showComments?: boolean;
   comments?: CommentResponse[];
   newComment?: string;
-  
+
 }

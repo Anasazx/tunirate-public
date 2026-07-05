@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, tap} from 'rxjs';
 import { AuthResponse } from '../../models/authDTO/authResponse.model';
 import { LoginRequest } from '../../models/authDTO/loginRequest.model';
 import { RegisterRequest } from '../../models/authDTO/registerRequest.model';
-import {AuthUserDto} from '../../../user/models/userDTO/authUserDto.model';
+import {MinimizedUserResponse} from '../../../user/models/userDTO/authUserDto.model';
 import {TokenService} from '../../../../core/services/tokenService/token.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class AuthService {
 
   private readonly authUrl: string;
 
-  private currentUserSubject = new BehaviorSubject<AuthUserDto | null>(null);
+  private currentUserSubject = new BehaviorSubject<MinimizedUserResponse | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
@@ -56,8 +56,8 @@ export class AuthService {
     );
   }
 
-  loadCurrentUser(): Observable<AuthUserDto> {
-    return this.http.get<AuthUserDto>(`${this.authUrl}/me`).pipe(
+  loadCurrentUser(): Observable<MinimizedUserResponse> {
+    return this.http.get<MinimizedUserResponse>(`${this.authUrl}/me`).pipe(
       tap(user => this.currentUserSubject.next(user))
     );
   }

@@ -27,6 +27,14 @@ export class UserService {
   }
 
 
+  uploadAvatar(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<UserResponse>(
+      `${this.userUrl}/me/avatar`,
+      formData
+    );
+  }
 
 
 }

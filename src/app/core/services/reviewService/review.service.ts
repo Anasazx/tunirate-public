@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SharedService } from '../sharedService/shared.service';
 import { ReviewResponse } from '../../model/dto/reviewDTO/reviewResponse.model';
 import { ReviewRequest } from '../../model/dto/reviewDTO/reviewRequest.model';
+import {MinimizedReviewResponse} from '../../model/dto/reviewDTO/minimizedReviewResponse.model';
 
 export interface PageResponse<T> {
   content: T[];
@@ -35,17 +36,6 @@ export class ReviewService {
     this.reviewUrl = `${this.sharedService.publicUrl}/reviews`;
   }
 
-  getAllReviews(): Observable<ReviewResponse[]> {
-    return this.http.get<ReviewResponse[]>(this.reviewUrl);
-  }
-
-  getReviewById(id: number): Observable<ReviewResponse> {
-    return this.http.get<ReviewResponse>(`${this.reviewUrl}/${id}`);
-  }
-
-  getMyCompanyReviews(): Observable<ReviewResponse[]> {
-    return this.http.get<ReviewResponse[]>(`${this.reviewUrl}/my`);
-  }
 
   getReviewsByProductId(productId: number, page = 0, size = 10): Observable<PageResponse<ReviewResponse>> {
     const params = new HttpParams()
@@ -54,11 +44,8 @@ export class ReviewService {
     return this.http.get<PageResponse<ReviewResponse>>(`${this.reviewUrl}/by-product/${productId}`, { params });
   }
 
-  getReviewsByUserId(userId: number, page = 0, size = 10): Observable<PageResponse<ReviewResponse>> {
-    const params = new HttpParams()
-      .set('page', page)
-      .set('size', size);
-    return this.http.get<PageResponse<ReviewResponse>>(`${this.reviewUrl}/by-user/${userId}`, { params });
+  getMyReviews(): Observable<MinimizedReviewResponse[]> {
+    return this.http.get<MinimizedReviewResponse[]>(`${this.reviewUrl}/my`);
   }
 
   createReview(request: ReviewRequest): Observable<ReviewResponse> {
