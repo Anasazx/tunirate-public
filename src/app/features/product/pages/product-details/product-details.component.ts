@@ -178,6 +178,10 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+  hasLongDescription(description?: string): boolean {
+    return (description?.length ?? 0) > 280;
+  }
+
   // ===================== COMMENTS =====================
   addComment(review: ReviewResponse & any) {
 

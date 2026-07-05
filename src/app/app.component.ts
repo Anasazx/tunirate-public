@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {AuthService} from './features/auth/services/authService/auth.service';
 
 @Component({
@@ -10,7 +10,18 @@ import {AuthService} from './features/auth/services/authService/auth.service';
 })
 export class AppComponent {
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+  }
 
   ngOnInit(): void {
     this.authService.initAuth();

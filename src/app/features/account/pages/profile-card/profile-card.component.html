@@ -113,11 +113,17 @@
     <div class="flex justify-between items-center px-4 py-3">
 
       <div class="flex flex-col flex-1">
+
         <span class="text-gray-500">Email</span>
+
         <ng-container *ngIf="editingField !== 'email'; else editEmail">
-      <span class="font-medium text-gray-800">
-        {{ user.email }}
-      </span>
+
+          <span class="font-medium text-gray-800">
+            {{ user.email }}
+          </span>
+
+          <span class="text-xs text-gray-400" *ngIf="!user.emailVerified">Email is not verified</span>
+
         </ng-container>
 
         <ng-template #editEmail>
