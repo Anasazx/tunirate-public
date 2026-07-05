@@ -1,4 +1,5 @@
 import {UserStatus} from '../../enums/userStatus.enum.model';
+import {Country} from '../../../../core/model/enums/country.enum.model';
 
 export interface UserResponse {
   id: number;
@@ -7,7 +8,7 @@ export interface UserResponse {
   emailVerified: boolean;
   avatarUrl: string | null;
   phoneNumber: string;
-  country: string;
+  country: Country;
   status: UserStatus;
   createdAt: string;
 }

@@ -1,9 +1,7 @@
 import {Country} from '../../../../core/model/enums/country.enum.model';
 
-export interface RegisterRequest {
-  name: string;
+export interface UpdateUserRequest {
   email: string;
+  phoneNumber: string;
   country: Country;
-  password: string;
 }
-

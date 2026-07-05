@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
 import {Observable} from 'rxjs';
 import {UserResponse} from '../../models/userDTO/userResponse.model';
+import {UpdateUserRequest} from '../../models/userDTO/updateUserRequest.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -22,9 +23,11 @@ export class UserService {
   }
 
 
-  updateMyProfile(data: any): Observable<UserResponse> {
-    return this.http.put<UserResponse>(`${this.userUrl}/me`, data);
+  updateMyProfile(request:UpdateUserRequest): Observable<UserResponse> {
+    return this.http.put<UserResponse>(`${this.userUrl}/me`, request);
   }
+
+
 
 
   uploadAvatar(file: File) {

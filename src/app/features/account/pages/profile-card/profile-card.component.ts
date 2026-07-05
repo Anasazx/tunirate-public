@@ -5,6 +5,7 @@ import { UserResponse } from '../../../user/models/userDTO/userResponse.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Country } from '../../../../core/model/enums/country.enum.model';
+import {UpdateUserRequest} from '../../../user/models/userDTO/updateUserRequest.model';
 
 @Component({
   selector: 'app-profile-card',
@@ -25,35 +26,54 @@ export class ProfileCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getMyProfile().subscribe({
-      next: (res) => this.user = res
+      next: (res) => {this.user = res;
+        console.log("this is the result", res);
+      }
+
     });
   }
 
-
-
   editingMode = false;
-  editingField: 'phone' | 'country' | null = null;
-  editModel = {
+
+  editingField: 'phone' | 'country'| 'email' | null = null;
+
+  editModel: {
+    phoneNumber: string;
+    email: string;
+    country: Country | null;
+  } = {
     phoneNumber: '',
-    country: ''
+    email: '',
+    country: null
   };
+
   enableEditMode() {
     this.editingMode = true;
   }
+
   cancelEdit() {
     this.editingMode = false;
     this.editingField = null;
   }
-  startEdit(field: 'phone' | 'country') {
+
+  startEdit(field: 'phone' | 'email' | 'country') {
     this.editingField = field;
-    this.editModel = {
-      phoneNumber: this.user?.phoneNumber || '',
-      country: this.user?.country || ''
-    };
+    if (!this.user) return;
+    this.editModel.phoneNumber = this.user.phoneNumber || '';
+    this.editModel.email = this.user.email || '';
+    this.editModel.country = this.user.country ?? null;
   }
+
   save() {
     if (!this.user) return;
-    this.userService.updateMyProfile(this.editModel).subscribe({
+
+    const payload: UpdateUserRequest = {
+      phoneNumber: this.editModel.phoneNumber?.trim() || '',
+      email: this.editModel.email?.trim() || '',
+      country: this.editModel.country ?? this.user.country
+    };
+
+    this.userService.updateMyProfile(payload).subscribe({
       next: (res) => {
         this.user = res;
         this.editingMode = false;

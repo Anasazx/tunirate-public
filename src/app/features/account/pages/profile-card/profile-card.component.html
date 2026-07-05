@@ -6,35 +6,21 @@
     <div class="relative group">
 
       <img
-
         [src]="sharedService.getImageUrl(user.avatarUrl)"
-
         class="w-16 h-16 rounded-full border object-cover"
-
       />
 
       <!-- overlay -->
-
       <label class="absolute inset-0 flex items-center justify-center
-
                 bg-black/40 opacity-0 group-hover:opacity-100
-
                 cursor-pointer rounded-full transition">
-
         <span class="text-white text-xs">Change</span>
-
         <input
-
           type="file"
-
           class="hidden"
-
           accept="image/*"
-
           (change)="onAvatarSelected($event)"
-
         />
-
       </label>
 
     </div>
@@ -75,7 +61,7 @@
 
       </div>
 
-      <!-- PEN -->
+      <!-- edit button -->
       <button
         *ngIf="editingMode"
         (click)="startEdit('phone')"
@@ -112,7 +98,7 @@
 
       </div>
 
-      <!-- PEN -->
+      <!-- Edit button -->
       <button
         *ngIf="editingMode"
         (click)="startEdit('country')"
@@ -126,22 +112,29 @@
     <!-- EMAIL -->
     <div class="flex justify-between items-center px-4 py-3">
 
-      <div class="flex flex-col">
+      <div class="flex flex-col flex-1">
         <span class="text-gray-500">Email</span>
-        <span class="font-medium text-gray-800">
-          {{ user.email }}
-        </span>
+        <ng-container *ngIf="editingField !== 'email'; else editEmail">
+      <span class="font-medium text-gray-800">
+        {{ user.email }}
+      </span>
+        </ng-container>
+
+        <ng-template #editEmail>
+          <input
+            [(ngModel)]="editModel.email"
+            class="mt-1 w-full border rounded-lg px-3 py-2"
+          />
+        </ng-template>
       </div>
 
-      <span
-        class="px-2 py-1 text-xs rounded-full font-medium"
-        [ngClass]="user.emailVerified
-          ? 'bg-green-100 text-green-700'
-          : 'bg-yellow-100 text-yellow-700'">
-
-        {{ user.emailVerified ? 'Verified' : 'Not verified' }}
-      </span>
-
+      <!-- EDIT BUTTON -->
+      <button
+        *ngIf="editingMode"
+        (click)="startEdit('email')"
+        class="text-sm text-gray-400 hover:text-gray-700 transition">
+        Edit
+      </button>
     </div>
 
   </div>
