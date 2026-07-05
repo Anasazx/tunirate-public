@@ -144,6 +144,29 @@
           </div>
         </div>
 
+        <div
+          *ngIf="product?.reviewsCount === 0"
+          class="mt-6 pt-6 border-t border-slate-100 flex flex-col items-center justify-center text-center gap-3"
+        >
+
+          <!-- Icon -->
+            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 8h10M7 12h6m-6 4h8M5 6h14a2 2 0 012 2v10a2 2 0 01-2 2H7l-4 4V8a2 2 0 012-2z"/>
+            </svg>
+
+          <!-- Text -->
+          <div>
+            <p class="text-sm font-medium text-slate-700">
+              No reviews yet
+            </p>
+            <p class="text-xs text-slate-500 mt-1">
+              Be the first to share your thoughts!
+            </p>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
