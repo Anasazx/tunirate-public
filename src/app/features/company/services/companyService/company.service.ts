@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
-import { CompanyRequest } from '../../models/companyDTO/companyRequest.model';
-import { CompanyResponse } from '../../models/companyDTO/companyResponse.model';
 import {CompanyDetailResponse} from '../../models/companyDTO/companyDetailResponse.model';
 
 

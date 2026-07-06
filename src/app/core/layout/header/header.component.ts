@@ -9,6 +9,7 @@ import { SearchService } from '../../services/searchService/search.service';
 import { CompanyInvitationService } from '../../../features/company/services/companyInvitationService/company-invitation.service';
 import { SharedService } from '../../services/sharedService/shared.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import {filter} from 'rxjs';
 
 
 @Component({
@@ -47,8 +48,12 @@ export class HeaderComponent implements OnInit {
     public sharedService: SharedService,
   ) {}
 
-  ngOnInit(): void {
-    this.loadInvitations();
+  ngOnInit() {
+    this.authService.currentUser$.pipe(
+      filter(user => !!user)
+    ).subscribe(() => {
+      this.loadInvitations();
+    });
   }
 
   /* ---------------- AUTH ---------------- */

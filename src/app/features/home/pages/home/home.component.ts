@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../product/services/productService/product.service';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
 import { ProductResponse } from '../../../product/models/productDTO/productResponse.model';
-
 
 @Component({
   selector: 'app-home',
@@ -13,9 +12,6 @@ import { ProductResponse } from '../../../product/models/productDTO/productRespo
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-
-
-
 
 export class HomeComponent implements OnInit{
 
@@ -30,51 +26,101 @@ export class HomeComponent implements OnInit{
   selectedCategory = 'All';
   selectedSubcategory = 'All';
 
-ngOnInit(): void {
-  this.productService.getProducts().subscribe({
-    next: (products) => {
-      this.products = products;
-      this.route.queryParamMap.subscribe({
-        next: (params) => {
-          const category = params.get('category') || 'All';
-          const subcategory = params.get('subcategory') || 'All';
-          this.selectedCategory = category;
-          this.selectedSubcategory = subcategory;
-          this.filteredProducts = this.products.filter((product: any) => {
-            const productCategory = product.categoryName ?? product.category;
-            const productSubcategory = product.subcategoryName ?? product.subcategory ?? product.category;
+  page = 0;
+  size = 20;
+  last = false;
+  loading = false;
 
+  ngOnInit(): void {
 
-            const matchesCategory = category === 'All' || productCategory === category;
-            const matchesSubcategory = subcategory === 'All' || productSubcategory === subcategory;
+    this.route.queryParamMap.subscribe(params => {
 
-            return matchesCategory && matchesSubcategory;
-          });
+      this.selectedCategory =
 
-            console.log("this r the filtred prod: ", this.filteredProducts);
+        params.get('category') || 'All';
 
+      this.selectedSubcategory =
+
+        params.get('subcategory') || 'All';
+
+      this.products = [];
+
+      this.page = 0;
+
+      this.last = false;
+
+      this.loadProducts();
+
+    });
+
+  }
+
+  loadProducts() {
+
+    if (this.loading || this.last) return;
+
+    this.loading = true;
+
+    this.productService.getProducts(this.page, this.size)
+      .subscribe({
+        next: (response) => {
+
+          this.products.push(...response.content);
+
+          this.page++;
+
+          this.last = response.last;
+
+          this.loading = false;
+
+          this.applyFilters();
+
+        },
+        error: err => {
+          console.error(err);
+          this.loading = false;
         }
-
-
       });
-    },
 
-    error: (err) => {
-      console.error(err);
-    }
-  });
-
-}
-
-  getSolidStars(rating: number): any[] {
-    return Array(Math.floor(rating));
   }
 
-  getOutlineStars(rating: number): any[] {
-    return Array(5 - Math.floor(rating));
+  applyFilters() {
+
+    this.filteredProducts = this.products.filter(product => {
+
+      const productCategory =
+        product.categoryName ?? product.category;
+
+      const productSubcategory =
+        product.subcategoryName ??
+        product.subcategory ??
+        product.category;
+
+      const matchesCategory =
+        this.selectedCategory === 'All' ||
+        productCategory === this.selectedCategory;
+
+      const matchesSubcategory =
+        this.selectedSubcategory === 'All' ||
+        productSubcategory === this.selectedSubcategory;
+
+      return matchesCategory && matchesSubcategory;
+
+    });
+
   }
 
-
-
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const scrollPosition =
+      window.innerHeight + window.scrollY;
+    const pageHeight =
+      document.documentElement.scrollHeight;
+    const nearBottom =
+      window.innerHeight + window.scrollY + 300 >=
+      document.documentElement.scrollHeight;
+    if (!nearBottom || this.loading || this.last) return;
+    this.loadProducts();
+  }
 
 }

@@ -4,6 +4,7 @@ import { SharedService } from '../../../../core/services/sharedService/shared.se
 import { Observable } from 'rxjs';
 import { ProductResponse } from '../../models/productDTO/productResponse.model';
 import { DetailedProduct } from '../../models/detailedProduct.model';
+import {Page} from '../../../../core/model/page.model';
 
 
 
@@ -21,20 +22,14 @@ export class ProductService {
     this.productUrl = this.sharedService.publicUrl + "/product"
   }
 
-  getProducts(): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(this.productUrl.toString());
+  getProducts(page: number = 0, size: number = 20): Observable<Page<ProductResponse>> {
+    return this.http.get<Page<ProductResponse>>(
+      `${this.productUrl}?page=${page}&size=${size}`
+    );
   }
-
 
   getDetailedProductById(productId: number): Observable<DetailedProduct> {
     return this.http.get<DetailedProduct>(`${this.productUrl.toString()}/${productId}/details`);
-  }
-
-
-  getProductsByCompanyId(companyId: number): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(
-      `${this.productUrl.toString()}/company/${companyId}`
-    );
   }
 
 }

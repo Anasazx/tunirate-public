@@ -106,3 +106,7 @@
     No products found in {{ selectedSubcategory !== 'All' ? selectedSubcategory : selectedCategory }}.
   </div>
 </div>
+
+<div *ngIf="loading" class="text-center py-4 text-gray-500">
+  Loading more products...
+</div>
