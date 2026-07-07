@@ -11,6 +11,7 @@ import { ReviewService } from '../../../../core/services/reviewService/review.se
 import { CommentService } from '../../../../core/services/commentService/comment.service';
 import { ReviewRequest } from '../../../../core/model/dto/reviewDTO/reviewRequest.model';
 import {ReviewFormComponent} from './components/review-form/review-form.component';
+import {AuthService} from '../../../auth/services/authService/auth.service';
 
 
 type ReviewWithComments = ReviewResponse & {
@@ -72,7 +73,8 @@ export class ProductDetailsComponent implements OnInit {
     private location: Location,
     public sharedService: SharedService,
     private reviewService: ReviewService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -215,8 +217,17 @@ export class ProductDetailsComponent implements OnInit {
 
   }
 
+
+  reviewIsMine(id: number){
+    return id == this.authService.getCurrentUser?.id
+  }
+
+
   deleteReview(review: ReviewResponse) {
-    if (!review.isMine || !this.product) return;
+
+    console.log("this is the current user: ", this.authService.getCurrentUser)
+
+    if (!this.reviewIsMine(review.user.id) || !this.product) return;
 
     if (!confirm('Delete your review?')) return;
 

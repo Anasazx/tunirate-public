@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, tap} from 'rxjs';
 import { AuthResponse } from '../../models/authDTO/authResponse.model';
 import { LoginRequest } from '../../models/authDTO/loginRequest.model';
 import { RegisterRequest } from '../../models/authDTO/registerRequest.model';
-import {MinimizedUserResponse} from '../../../user/models/userDTO/authUserDto.model';
+import {MinimizedUserResponse} from '../../../user/models/userDTO/minimizedUserResponse.model';
 import {TokenService} from '../../../../core/services/tokenService/token.service';
 
 @Injectable({
@@ -70,6 +70,10 @@ export class AuthService {
 
   isCompanyMember(): boolean{
     return false
+  }
+
+  get getCurrentUser(): MinimizedUserResponse | null {
+    return this.currentUserSubject.value;
   }
 
 }

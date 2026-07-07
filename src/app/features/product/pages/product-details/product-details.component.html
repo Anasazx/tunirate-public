@@ -195,8 +195,8 @@
       <div class="space-y-3">
         <div *ngFor="let review of reviews"
           class="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-shadow hover:shadow-md"
-          [class.ring-2]="review.isMine"
-          [class.ring-blue-200]="review.isMine">
+          [class.ring-2]="reviewIsMine(review.user.id)"
+          [class.ring-blue-200]="reviewIsMine(review.user.id)">
 
           <div class="flex">
             <div class="flex-1 p-4">
@@ -214,7 +214,7 @@
                         {{ review.user.name }}
                       </span>
 
-                      <span *ngIf="review.isMine"
+                      <span *ngIf="reviewIsMine(review.user.id)"
                             class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">
                         You
                       </span>
@@ -233,7 +233,7 @@
                     <span *ngFor="let i of getSolidStars(review.rating)">★</span>
                     <span *ngFor="let i of getOutlineStars(review.rating)" class="text-slate-200">★</span>
                   </div>
-                  <button *ngIf="review.isMine" (click)="deleteReview(review)"
+                  <button *ngIf="reviewIsMine(review.user.id)" (click)="deleteReview(review)"
                     [disabled]="deletingReviewId === review.id"
                     class="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
@@ -383,7 +383,7 @@
 
     <!-- Review form -->
     <app-review-form
-      [productId]="product!.id"
+      [productId]="product?.id"
       [myReview]="myReview"
       [submittingReview]="submittingReview"
       (reviewSubmitted)="submitReview($event)">

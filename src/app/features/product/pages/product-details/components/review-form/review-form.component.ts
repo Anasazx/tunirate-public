@@ -18,12 +18,11 @@ import {ReviewRequest} from '../../../../../../core/model/dto/reviewDTO/reviewRe
 })
 export class ReviewFormComponent implements OnChanges{
 
-  @Input() productId!: number;
+  @Input() productId?: number;
   @Input() myReview: ReviewResponse | null = null;
   @Input() submittingReview = false;
 
-  @Output()
-  reviewSubmitted = new EventEmitter<ReviewRequest>();
+  @Output() reviewSubmitted = new EventEmitter<ReviewRequest>();
 
   reviewContent = '';
   selectedRating = 0;
@@ -34,6 +33,8 @@ export class ReviewFormComponent implements OnChanges{
   private originalContent = '';
 
   private originalRating = 0;
+
+  constructor() {}
 
   ngOnChanges() {
     if (this.myReview) {
@@ -49,20 +50,10 @@ export class ReviewFormComponent implements OnChanges{
     }
   }
 
-  constructor() {}
-/*
-  ngOnChanges() {
-    if (this.myReview) {
-      this.reviewContent = this.myReview.content ?? '';
-      this.selectedRating = this.myReview.rating ?? 0;
-    } else {
-      this.reviewContent = '';
-      this.selectedRating = 0;
-    }
-  }
-*/
   submit() {
-    if (this.selectedRating === 0) return;
+    if (!this.productId || this.selectedRating === 0) {
+      return;
+    }
     const request: ReviewRequest = {
       productId: this.productId,
       rating: this.selectedRating,
@@ -83,22 +74,14 @@ export class ReviewFormComponent implements OnChanges{
     this.editing = true;
   }
 
-
   cancelEdit() {
-
     this.reviewContent = this.originalContent;
     this.selectedRating = this.originalRating;
-
     this.editing = false;
-
   }
 
-
   get hasChanges(): boolean {
-
-    return this.reviewContent !== this.originalContent
-      || this.selectedRating !== this.originalRating;
-
+    return this.reviewContent !== this.originalContent || this.selectedRating !== this.originalRating;
   }
 
 }

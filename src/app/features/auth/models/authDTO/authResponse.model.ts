@@ -1,4 +1,4 @@
-import { MinimizedUserResponse } from '../../../user/models/userDTO/authUserDto.model';
+import { MinimizedUserResponse } from '../../../user/models/userDTO/minimizedUserResponse.model';
 
 export interface AuthResponse {
     token: string;

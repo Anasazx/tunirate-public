@@ -10,7 +10,6 @@ export interface CompanyDetailResponse {
   logoUrl?: string;
   bannerUrl?: string;
   phoneNumber: string;
-  websiteUrl: string;
   address: string;
   country: Country;
   industry: Industry;
