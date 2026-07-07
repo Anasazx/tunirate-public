@@ -99,10 +99,11 @@
         </button>
 
         <!-- USER DROPDOWN -->
-        <div class="relative">
+        <div class="relative user-menu">
 
-          <button (click)="toggleUserMenu()"
-                  class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition">
+          <button
+            (click)="toggleUserMenu(); $event.stopPropagation()"
+            class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition">
 
             <img
               [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"

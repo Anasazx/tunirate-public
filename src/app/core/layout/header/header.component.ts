@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../features/auth/services/authService/auth.service';
-import { CategoryService } from '../../../features/home/services/categoryService/category.service';
-import { SubcategoryService } from '../../../features/home/services/subcategoryService/subcategory.service';
 import { SearchService } from '../../services/searchService/search.service';
 import { CompanyInvitationService } from '../../../features/company/services/companyInvitationService/company-invitation.service';
 import { SharedService } from '../../services/sharedService/shared.service';
@@ -69,6 +67,7 @@ export class HeaderComponent implements OnInit {
 
   toggleUserMenu(): void {
     this.userMenuOpen = !this.userMenuOpen;
+    console.log(this.userMenuOpen)
   }
 
   /* ---------------- SEARCH ---------------- */
@@ -148,4 +147,11 @@ export class HeaderComponent implements OnInit {
     this.companyInvitationService.rejectInvitation(id)
       .subscribe(() => this.loadInvitations());
   }
+
+
+  @HostListener('document:click')
+  closeUserMenu() {
+    this.userMenuOpen = false;
+  }
+
 }

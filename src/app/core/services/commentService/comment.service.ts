@@ -26,7 +26,7 @@ export class CommentService {
   getCommentsByReviewId(
     reviewId: number,
     page: number = 0,
-    size: number = 10
+    size: number = 4
   ): Observable<Page<CommentResponse>> {
     return this.http.get<Page<CommentResponse>>(
       `${this.commentUrl}/review/${reviewId}?page=${page}&size=${size}`

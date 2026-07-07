@@ -109,11 +109,8 @@ export class ProductDetailsComponent implements OnInit {
 
         next: (response) => {
 
-
           this.totalReviews = response.reviews.totalElements;
 
-
-          // first page only
           if (this.page === 0) {
             this.myReview = response.myReview;
 
@@ -124,30 +121,51 @@ export class ProductDetailsComponent implements OnInit {
           }
 
 
-          const newReviews = response.reviews.content.map(r => ({
-            ...r,
-            showComments: false,
-            comments: [],
-            newComment: '',
-            commentsPage: 0,
-            commentsTotal: r.commentsCount ?? 0,
-            commentsLoading: false
-          }));
+          let newReviews = response.reviews.content
+            .filter(r => !this.myReview || r.id !== this.myReview.id)
+            .map(r => ({
+              ...r,
+              showComments: false,
+              comments: [],
+              newComment: '',
+              commentsPage: 0,
+              commentsTotal: r.commentsCount ?? 0,
+              commentsLoading: false
+            }));
 
 
-          this.reviews = [
-            ...this.reviews,
-            ...newReviews
-          ];
+          // Add my review first only on the first page
+          if (this.page === 0 && this.myReview) {
+
+            const myReviewWithState = {
+              ...this.myReview,
+              showComments: false,
+              comments: [],
+              newComment: '',
+              commentsPage: 0,
+              commentsTotal: this.myReview.commentsCount ?? 0,
+              commentsLoading: false
+            };
+
+            this.reviews = [
+              myReviewWithState,
+              ...newReviews
+            ];
+
+          } else {
+
+            this.reviews = [
+              ...this.reviews,
+              ...newReviews
+            ];
+
+          }
 
 
           this.product!.reviews = this.reviews;
 
-
           this.page++;
-
           this.last = response.reviews.last;
-
           this.loading = false;
         },
 
@@ -159,7 +177,6 @@ export class ProductDetailsComponent implements OnInit {
       });
 
   }
-
   // ===================== REVIEW CRUD =====================
   submitReview() {
     if (!this.product?.id || this.selectedRating <= 0) return;
@@ -255,7 +272,7 @@ export class ProductDetailsComponent implements OnInit {
     review.commentsLoading = true;
 
     this.commentService
-      .getCommentsByReviewId(review.id, review.commentsPage ?? 0, 10)
+      .getCommentsByReviewId(review.id, review.commentsPage ?? 0, 4)
       .subscribe({
 
         next: (response) => {
