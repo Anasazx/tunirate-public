@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import { ReviewResponse } from '../../../../core/model/dto/reviewDTO/reviewResponse.model';
@@ -11,6 +11,15 @@ import { ReviewService } from '../../../../core/services/reviewService/review.se
 import { CommentService } from '../../../../core/services/commentService/comment.service';
 import { ReviewRequest } from '../../../../core/model/dto/reviewDTO/reviewRequest.model';
 
+
+type ReviewWithComments = ReviewResponse & {
+  showComments?: boolean;
+  comments?: CommentResponse[];
+  newComment?: string;
+  commentsPage?: number;
+  commentsTotal?: number;
+  commentsLoading?: boolean;
+};
 
 @Component({
   selector: 'app-product-details',
@@ -26,11 +35,7 @@ export class ProductDetailsComponent implements OnInit {
   // ===================== STATE =====================
   product?: DetailedProduct;
 
-  reviews: (ReviewResponse & {
-    showComments?: boolean;
-    comments?: CommentResponse[];
-    newComment?: string;
-  })[] = [];
+  reviews: ReviewWithComments[] = [];
 
   myReview: ReviewResponse | null = null;
 
@@ -44,7 +49,20 @@ export class ProductDetailsComponent implements OnInit {
   descExpanded = false;
   selectedImage: string | null = '';
 
-  visibleReviews = 3;
+  totalReviews: number = 0;
+
+  page = 0;
+  size = 10;
+  last = false;
+  loading = false;
+
+  productId!: number;
+
+  //Reply logic
+  replyingToCommentId: number | null = null;
+  replyText = '';
+
+  currentImageIndex = 0;
 
   // ===================== INIT =====================
   constructor(
@@ -65,53 +83,81 @@ export class ProductDetailsComponent implements OnInit {
 
   // ===================== LOAD PRODUCT =====================
   loadProduct(id: number) {
+    this.productId = id;
     this.productService.getDetailedProductById(id).subscribe({
       next: (data) => {
         this.product = data;
-
         const mainImage =
           data.images?.find(i => i.isMain) ?? data.images?.[0];
-
         this.selectedImage = mainImage?.url ?? null;
-
-        this.loadReviews(id);
+        this.loadReviews();
       },
       error: console.error
     });
   }
 
   // ===================== LOAD REVIEWS =====================
-  private loadReviews(productId: number) {
-    this.reviewService.getReviewsByProductId(productId, 0, 100).subscribe({
-      next: (page) => {
+  private loadReviews() {
 
-        console.log("these r the idk ", page);
+    if (this.loading || this.last) return;
 
-        this.reviews = (page.content ?? []).map(r => ({
-          ...r,
-          showComments: false,
-          comments: [],
-          newComment: ''
-        }));
+    this.loading = true;
 
-        this.product!.reviews = this.reviews;
+    this.reviewService
+      .getReviewsByProductId(this.productId, this.page, this.size)
+      .subscribe({
 
-        this.myReview = this.reviews.find(r => r.isMine) ?? null;
+        next: (response) => {
 
-        if (this.myReview) {
-          this.reviewContent = this.myReview.content ?? '';
-          this.selectedRating = this.myReview.rating ?? 0;
-        } else {
-          this.reviewContent = '';
-          this.selectedRating = 0;
+
+          this.totalReviews = response.reviews.totalElements;
+
+
+          // first page only
+          if (this.page === 0) {
+            this.myReview = response.myReview;
+
+            if (this.myReview) {
+              this.reviewContent = this.myReview.content ?? '';
+              this.selectedRating = this.myReview.rating ?? 0;
+            }
+          }
+
+
+          const newReviews = response.reviews.content.map(r => ({
+            ...r,
+            showComments: false,
+            comments: [],
+            newComment: '',
+            commentsPage: 0,
+            commentsTotal: r.commentsCount ?? 0,
+            commentsLoading: false
+          }));
+
+
+          this.reviews = [
+            ...this.reviews,
+            ...newReviews
+          ];
+
+
+          this.product!.reviews = this.reviews;
+
+
+          this.page++;
+
+          this.last = response.reviews.last;
+
+          this.loading = false;
+        },
+
+        error: err => {
+          console.error(err);
+          this.loading = false;
         }
-      },
-      error: err => {
-        console.error(err);
-        this.reviews = [];
-        this.myReview = null;
-      }
-    });
+
+      });
+
   }
 
   // ===================== REVIEW CRUD =====================
@@ -183,7 +229,7 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   // ===================== COMMENTS =====================
-  addComment(review: ReviewResponse & any) {
+  addComment(review: ReviewWithComments) {
 
     if (!review.newComment?.trim()) return;
 
@@ -204,15 +250,34 @@ export class ProductDetailsComponent implements OnInit {
 
   loadComments(review: ReviewResponse & any) {
 
-    this.commentService.getCommentsByReviewId(review.id)
-      .subscribe({
-        next: (comments) => {
-          console.log("these r the comments", comments);
+    if (review.commentsLoading) return;
 
-          review.comments = comments ?? [];
+    review.commentsLoading = true;
+
+    this.commentService
+      .getCommentsByReviewId(review.id, review.commentsPage ?? 0, 10)
+      .subscribe({
+
+        next: (response) => {
+
+          review.comments = [
+            ...(review.comments || []),
+            ...response.content
+          ];
+
+          review.commentsTotal = response.totalElements;
+
+          review.commentsPage = (review.commentsPage ?? 0) + 1;
+
+          review.commentsLoading = false;
           review.showComments = true;
         },
-        error: console.error
+
+        error: err => {
+          console.error(err);
+          review.commentsLoading = false;
+        }
+
       });
   }
 
@@ -250,17 +315,6 @@ export class ProductDetailsComponent implements OnInit {
   get reviewFormButtonLabel() {
     return this.myReview ? 'Update Review' : 'Submit Review';
   }
-
-  getAccentColor(review: any): string {
-    if (review.isMine) return '#378ADD';
-    if (review.rating >= 4) return '#1D9E75';
-    if (review.rating <= 2) return '#D85A30';
-    return '#888780';
-  }
-
-  //Reply logic
-  replyingToCommentId: number | null = null;
-  replyText = '';
 
   startReply(comment: any) {
     this.replyingToCommentId = comment.id;
@@ -309,12 +363,6 @@ export class ProductDetailsComponent implements OnInit {
       }
     });
   }
-  //End reply logic
-
-
-
-  currentImageIndex = 0;
-
 
   nextImage() {
 
@@ -337,6 +385,17 @@ export class ProductDetailsComponent implements OnInit {
       this.product.images.length;
     this.selectedImage = this.product.images[this.currentImageIndex].url;
 
+  }
+
+  @HostListener('window:scroll')
+  onScroll() {
+    const position =
+      window.innerHeight + window.scrollY;
+    const height =
+      document.documentElement.scrollHeight;
+    if (position >= height - 300) {
+      this.loadReviews();
+    }
   }
 
 }

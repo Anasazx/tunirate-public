@@ -10,12 +10,11 @@ import { CompanyInvitationResponse } from '../../models/companyInvitationDTO/Com
 })
 export class CompanyInvitationService {
 
-  private baseUrl: string;
+  private readonly baseUrl: string;
 
   constructor(private sharedService: SharedService,private http: HttpClient) {
     this.baseUrl = `${this.sharedService.publicUrl}/invitations`;
   }
-
 
   // GET my invitations
   getMyInvitations(): Observable<CompanyInvitationResponse[]> {

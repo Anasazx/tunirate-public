@@ -1,6 +1,5 @@
 import {ProductStatus} from '../../../product/enums/productStatus.enum.model';
 import {Country} from '../../../../core/model/enums/country.enum.model';
-import {ProductResponse} from '../../../product/models/productDTO/productResponse.model';
 import {SocialLink} from '../socialLink.model';
 import {Industry} from '../../enums/industry.enum.model';
 
@@ -16,7 +15,6 @@ export interface CompanyDetailResponse {
   country: Country;
   industry: Industry;
   socialLinks: SocialLink[];
-  products: ProductResponse[];
   status: ProductStatus;
 }
 

@@ -18,7 +18,7 @@ export class CompanyService {
     this.companyUrl = this.sharedService.publicUrl + '/company';
   }
 
-  getCompanyById(id: number): Observable<CompanyDetailResponse> {
+  getCompanyInfoById(id: number): Observable<CompanyDetailResponse> {
     return this.http.get<CompanyDetailResponse>(`${this.companyUrl}/details/${id}`);
   }
 

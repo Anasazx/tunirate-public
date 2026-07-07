@@ -9,6 +9,7 @@ import {AccountLayoutComponent} from './features/account/layout/account-layout/a
 import {MyReviewsComponent} from './features/account/pages/my-reviews/my-reviews.component';
 import {SecurityComponent} from './features/account/pages/security/security.component';
 import {ProfileCardComponent} from './features/account/pages/profile-card/profile-card.component';
+import {MyCommentsComponent} from './features/account/pages/my-comments/my-comments.component';
 
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'profile', component: ProfileCardComponent },
       { path: 'security', component: SecurityComponent },
       { path: 'reviews', component: MyReviewsComponent },
+      { path: 'comments', component: MyCommentsComponent },
     ],
   },
   {

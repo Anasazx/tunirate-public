@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CompanyService } from '../../services/companyService/company.service';
@@ -7,6 +7,7 @@ import {ProductStatus} from '../../../product/enums/productStatus.enum.model';
 import {CompanyDetailResponse} from '../../models/companyDTO/companyDetailResponse.model';
 import {ProductResponse} from '../../../product/models/productDTO/productResponse.model';
 import {SOCIAL_ICON_MAP} from '../../../../core/mapping/social-icon-map';
+import {ProductService} from '../../../product/services/productService/product.service';
 
 
 @Component({
@@ -19,7 +20,17 @@ import {SOCIAL_ICON_MAP} from '../../../../core/mapping/social-icon-map';
 export class CompanyDetailsComponent implements OnInit {
 
   company?: CompanyDetailResponse;
-  products?: ProductResponse[];
+
+  products: ProductResponse[] = [];
+
+  protected readonly ProductStatus = ProductStatus;
+
+  companyId!: number;
+  page = 0;
+  size = 20;
+  last = false;
+  loading = false;
+
 
 
   socialIconMap = SOCIAL_ICON_MAP;
@@ -27,52 +38,56 @@ export class CompanyDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private companyService: CompanyService,
+    private productService: ProductService,
     public sharedService: SharedService
   ) {}
 
   ngOnInit(): void {
 
     this.route.paramMap.subscribe(params => {
-      const id = Number(params.get('id'));
 
+      const id = Number(params.get('id'));
       if (!id) return;
 
-      this.loadCompany(id);
+      this.companyId = id;
+
+      this.loadCompany();
+
+      // IMPORTANT: first page load
+      this.loadProducts();
 
     });
 
   }
 
-  loadCompany(id: number) {
-    this.companyService.getCompanyById(id)
-      .subscribe(
-
-        res => {
-          this.company = res;
-          this.products = this.company.products;
-
-          console.log(this.company)
-          console.log(this.products)
-
-        }
-
-      );
+  loadCompany() {
+    this.companyService.getCompanyInfoById(this.companyId)
+      .subscribe(res => {
+        this.company = res;
+      });
   }
 
-  protected readonly ProductStatus = ProductStatus;
+  loadProducts() {
 
-  socialIcons: Record<string, string> = {
-    WEBSITE: 'globe',
-    FACEBOOK: 'facebook',
-    INSTAGRAM: 'instagram',
-    X: 'x',
-    LINKEDIN: 'linkedin',
-    YOUTUBE: 'youtube',
-    TIKTOK: 'tiktok',
-    GITHUB: 'github',
-    DISCORD: 'discord'
-  };
+    if (this.loading || this.last) return;
 
+    this.loading = true;
+
+    this.productService
+      .getCompanyProducts(this.companyId, this.page, this.size)
+      .subscribe(res => {
+
+        this.products = [
+          ...this.products,
+          ...res.content
+        ];
+
+        this.page++;
+        this.last = res.last;
+        this.loading = false;
+      });
+
+  }
 
   formatUrl(url: string): string {
     if (!url) return '#';
@@ -81,9 +96,17 @@ export class CompanyDetailsComponent implements OnInit {
       : 'https://' + url;
   }
 
-
-
-
-
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const scrollPosition =
+      window.innerHeight + window.scrollY;
+    const pageHeight =
+      document.documentElement.scrollHeight;
+    const nearBottom =
+      scrollPosition >= pageHeight - 200;
+    if (nearBottom) {
+      this.loadProducts();
+    }
+  }
 
 }

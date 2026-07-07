@@ -17,6 +17,7 @@ export class AuthService {
   private readonly authUrl: string;
 
   private currentUserSubject = new BehaviorSubject<MinimizedUserResponse | null>(null);
+
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(

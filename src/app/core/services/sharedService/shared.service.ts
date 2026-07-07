@@ -11,15 +11,12 @@ export class SharedService {
 
   constructor() { }
 
-
-
-    //helper
-    getImageUrl(imageUrl?: String | null): string {
-        if (!imageUrl) {
-            return 'https://placehold.co/600x400/EEE/31343C';
-        }
-        return `${this.uploadPublicUrl}/${imageUrl}`;
+  //helper
+  getImageUrl(imageUrl?: String | null): string {
+    if (!imageUrl) {
+      return 'https://placehold.co/600x400/EEE/31343C';
     }
+    return `${this.uploadPublicUrl}/${imageUrl}`;
+  }
 
-  
 }

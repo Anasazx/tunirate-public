@@ -27,7 +27,7 @@
       <div class="flex justify-between items-start">
 
         <div>
-          <p class="font-medium text-gray-800">
+          <p class="font-medium text-gray-800 cursor-pointer hover:underline hover:text-gray-900 transition" [routerLink]="['/product', review.productId]">
             {{ review.productName }}
           </p>
 
@@ -48,20 +48,12 @@
         {{ review.content }}
       </p>
 
-      <!-- ACTIONS -->
-      <div class="flex justify-end gap-3 pt-2">
-
-        <button
-          class="text-xs text-gray-400 hover:text-gray-700 transition"
-          routerLink="/product/{{ review.productId }}"
-        >
-          Go to review
-        </button>
-
-      </div>
-
     </div>
 
+    <div #loadMoreTrigger></div>
+
   </div>
+
+  <div class="flex justify-center divide-gray-400" *ngIf="loading">Loading reviews...</div>
 
 </div>

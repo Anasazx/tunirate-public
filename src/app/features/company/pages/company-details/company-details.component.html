@@ -45,17 +45,17 @@
           <!-- META -->
           <div class="mt-4 flex flex-wrap gap-2 text-xs">
 
-          <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
-            {{ company?.country }}
-          </span>
+            <span *ngIf="company?.country" class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+              {{ company?.country }}
+            </span>
 
-            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
-            {{ company?.industry }}
-          </span>
+            <span *ngIf="company?.industry" class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+              {{ company?.industry }}
+            </span>
 
-            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
-            {{ company?.phoneNumber }}
-          </span>
+            <span *ngIf="company?.phoneNumber" class="px-3 py-1 rounded-full bg-slate-100 text-slate-600">
+              {{ company?.phoneNumber }}
+            </span>
 
           </div>
 
@@ -102,7 +102,7 @@
   <div class="bg-white border rounded-xl p-5">
 
     <h2 class="text-base font-semibold mb-4">
-      Products ({{ products?.length }})
+      Products ({{ products.length }})
     </h2>
 
     <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -182,6 +182,10 @@
       This company has no products yet.
     </div>
 
+    <div class="text-center mt-4 divide-gray-400" *ngIf="loading">Loading...</div>
+
   </div>
 
 </div>
+
+

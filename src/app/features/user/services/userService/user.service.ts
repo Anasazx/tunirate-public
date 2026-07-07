@@ -14,10 +14,6 @@ export class UserService {
     this.userUrl = this.shared.publicUrl + '/users';
   }
 
-
-
-
-
   getMyProfile(): Observable<UserResponse> {
     return this.http.get<UserResponse>(`${this.userUrl}/me`);
   }
@@ -27,9 +23,6 @@ export class UserService {
     return this.http.put<UserResponse>(`${this.userUrl}/me`, request);
   }
 
-
-
-
   uploadAvatar(file: File) {
     const formData = new FormData();
     formData.append('file', file);
@@ -38,6 +31,5 @@ export class UserService {
       formData
     );
   }
-
 
 }

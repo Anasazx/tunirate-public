@@ -64,17 +64,11 @@ export class HomeComponent implements OnInit{
     this.productService.getProducts(this.page, this.size)
       .subscribe({
         next: (response) => {
-
           this.products.push(...response.content);
-
           this.page++;
-
           this.last = response.last;
-
           this.loading = false;
-
           this.applyFilters();
-
         },
         error: err => {
           console.error(err);
@@ -112,10 +106,6 @@ export class HomeComponent implements OnInit{
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const scrollPosition =
-      window.innerHeight + window.scrollY;
-    const pageHeight =
-      document.documentElement.scrollHeight;
     const nearBottom =
       window.innerHeight + window.scrollY + 300 >=
       document.documentElement.scrollHeight;

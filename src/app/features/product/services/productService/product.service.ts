@@ -7,12 +7,9 @@ import { DetailedProduct } from '../../models/detailedProduct.model';
 import {Page} from '../../../../core/model/page.model';
 
 
-
 @Injectable({
   providedIn: 'root'
 })
-
-
 
 export class ProductService {
 
@@ -30,6 +27,15 @@ export class ProductService {
 
   getDetailedProductById(productId: number): Observable<DetailedProduct> {
     return this.http.get<DetailedProduct>(`${this.productUrl.toString()}/${productId}/details`);
+  }
+
+  getCompanyProducts(companyId: number, page: number = 0, size: number = 20): Observable<Page<ProductResponse>> {
+    return this.http.get<Page<ProductResponse>>(
+      `${this.productUrl}/company/${companyId}`,
+      {
+        params: { page, size }
+      }
+    );
   }
 
 }

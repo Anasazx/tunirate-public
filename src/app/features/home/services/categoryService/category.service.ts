@@ -7,6 +7,7 @@ import { CategoryResponse } from '../../models/categoryDTO/categoryResponse.mode
 @Injectable({
   providedIn: 'root'
 })
+
 export class CategoryService {
 
     private readonly categoryUrl: string;
