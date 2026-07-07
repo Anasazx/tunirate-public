@@ -10,6 +10,7 @@ import { SharedService } from '../../../../core/services/sharedService/shared.se
 import { ReviewService } from '../../../../core/services/reviewService/review.service';
 import { CommentService } from '../../../../core/services/commentService/comment.service';
 import { ReviewRequest } from '../../../../core/model/dto/reviewDTO/reviewRequest.model';
+import {ReviewFormComponent} from './components/review-form/review-form.component';
 
 
 type ReviewWithComments = ReviewResponse & {
@@ -24,7 +25,7 @@ type ReviewWithComments = ReviewResponse & {
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
@@ -178,14 +179,7 @@ export class ProductDetailsComponent implements OnInit {
 
   }
   // ===================== REVIEW CRUD =====================
-  submitReview() {
-    if (!this.product?.id || this.selectedRating <= 0) return;
-
-    const request: ReviewRequest = {
-      rating: this.selectedRating,
-      content: this.reviewContent || null,
-      productId: this.product.id
-    };
+  submitReview(request: ReviewRequest) {
 
     this.submittingReview = true;
 
@@ -199,17 +193,18 @@ export class ProductDetailsComponent implements OnInit {
 
         if (this.myReview) {
           this.reviews = this.reviews.map(r =>
-            r.id === this.myReview!.id ? { ...saved, comments: r.comments, showComments: r.showComments } : r
+            r.id === this.myReview!.id
+              ? { ...saved, comments: r.comments, showComments: r.showComments }
+              : r
           );
         } else {
-          this.reviews = [{ ...saved, comments: [], showComments: false }, ...this.reviews];
+          this.reviews = [
+            { ...saved, comments: [], showComments: false },
+            ...this.reviews
+          ];
         }
 
-        this.product!.reviews = this.reviews;
         this.myReview = saved;
-
-        this.reviewContent = saved.content ?? '';
-        this.selectedRating = 0;
         this.submittingReview = false;
       },
       error: err => {
@@ -217,6 +212,7 @@ export class ProductDetailsComponent implements OnInit {
         this.submittingReview = false;
       }
     });
+
   }
 
   deleteReview(review: ReviewResponse) {
@@ -325,14 +321,6 @@ export class ProductDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  get reviewFormTitle() {
-    return this.myReview ? 'Update Your Review' : 'Share Your Thoughts';
-  }
-
-  get reviewFormButtonLabel() {
-    return this.myReview ? 'Update Review' : 'Submit Review';
-  }
-
   startReply(comment: any) {
     this.replyingToCommentId = comment.id;
     this.replyText = '';
@@ -400,6 +388,7 @@ export class ProductDetailsComponent implements OnInit {
     this.currentImageIndex =
       (this.currentImageIndex - 1 + this.product.images.length) %
       this.product.images.length;
+
     this.selectedImage = this.product.images[this.currentImageIndex].url;
 
   }

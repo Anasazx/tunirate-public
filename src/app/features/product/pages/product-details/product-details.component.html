@@ -382,56 +382,12 @@
     </div>
 
     <!-- Review form -->
-    <div class="lg:w-72 shrink-0">
-      <div class="sticky top-36">
-        <div class="bg-white rounded-2xl border border-slate-200 p-5">
-
-          <h3 class="text-base font-bold text-slate-900 mb-0.5">{{ reviewFormTitle }}</h3>
-          <p class="text-xs text-gray-400 mb-5">
-            <ng-container *ngIf="myReview">Edit your existing review below.</ng-container>
-            <ng-container *ngIf="!myReview">One review per product — make it count!</ng-container>
-          </p>
-
-          <form (submit)="submitReview(); $event.preventDefault()">
-
-            <div class="mb-4">
-              <label class="block text-xs font-medium text-gray-600 mb-1.5">Rating</label>
-              <div class="flex items-center gap-0.5" (mouseleave)="hoveredRating = 0">
-                <span *ngFor="let i of [1,2,3,4,5]"
-                  class="text-2xl cursor-pointer select-none transition-transform duration-100 hover:scale-110"
-                  (mouseenter)="hoveredRating = i"
-                  (click)="selectedRating = i"
-                  [class.text-yellow-400]="i <= (hoveredRating || selectedRating)"
-                  [class.text-slate-200]="i > (hoveredRating || selectedRating)">★</span>
-              </div>
-              <p class="text-xs text-gray-400 mt-1 h-4">
-                <ng-container [ngSwitch]="hoveredRating || selectedRating">
-                  <span *ngSwitchCase="1">Terrible</span>
-                  <span *ngSwitchCase="2">Poor</span>
-                  <span *ngSwitchCase="3">Okay</span>
-                  <span *ngSwitchCase="4">Good</span>
-                  <span *ngSwitchCase="5">Excellent!</span>
-                </ng-container>
-              </p>
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-xs font-medium text-gray-600 mb-1.5">Review</label>
-              <textarea name="reviewContent" [(ngModel)]="reviewContent" rows="4"
-                class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all resize-none"
-                placeholder="What did you think?"></textarea>
-            </div>
-
-            <button type="submit"
-              [disabled]="submittingReview || selectedRating === 0"
-              class="w-full rounded-xl bg-slate-900 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-              {{ reviewFormButtonLabel }}
-            </button>
-
-          </form>
-        </div>
-      </div>
-    </div>
+    <app-review-form
+      [productId]="product!.id"
+      [myReview]="myReview"
+      [submittingReview]="submittingReview"
+      (reviewSubmitted)="submitReview($event)">
+    </app-review-form>
 
   </div>
 
