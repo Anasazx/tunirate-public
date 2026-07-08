@@ -127,6 +127,7 @@ export class HeaderComponent implements OnInit {
 
   toggleInvitations(): void {
     this.showInvitations = !this.showInvitations;
+    console.log(this.showInvitations)
     if (this.showInvitations) this.loadInvitations();
   }
 
@@ -149,9 +150,16 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  @HostListener('document:click')
-  closeUserMenu() {
-    this.userMenuOpen = false;
+
+  @HostListener('document:click', ['$event'])
+  closeMenus(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.user-menu')) {
+      this.userMenuOpen = false;
+    }
+    if (!target.closest('.notification-menu')) {
+      this.showInvitations = false;
+    }
   }
 
 }

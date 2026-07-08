@@ -74,29 +74,52 @@
       <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
 
         <!-- NOTIFICATIONS -->
-        <button (click)="toggleInvitations()"
-                class="relative p-2 rounded-full hover:bg-gray-100 transition">
+        <div class="relative notification-menu">
+          <button
+            (click)="toggleInvitations(); $event.stopPropagation()"
+            class="relative p-2 rounded-full hover:bg-gray-100 transition">
 
-          <!-- bell icon -->
-          <svg xmlns="http://www.w3.org/2000/svg"
-               class="w-6 h-6 text-gray-700"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9" />
-          </svg>
+            <!-- bell icon -->
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-6 h-6 text-gray-700"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9" />
+            </svg>
 
-          <span *ngIf="invitationCount > 0"
-                class="absolute -top-1 -right-1 min-w-[18px] h-[18px]
-                   flex items-center justify-center text-[10px] font-bold
-                   bg-red-500 text-white rounded-full px-1">
-        {{ invitationCount }}
-      </span>
+            <span *ngIf="invitationCount > 0"
+                  class="absolute -top-1 -right-1 min-w-[18px] h-[18px]
+                     flex items-center justify-center text-[10px] font-bold
+                     bg-red-500 text-white rounded-full px-1">
+          {{ invitationCount }}
+        </span>
 
-        </button>
+          </button>
+
+
+          <div
+            *ngIf="showInvitations"
+            class="absolute right-0 top-full mt-2 w-80 bg-white border rounded-xl shadow-lg z-50">
+
+            <div class="p-4 border-b font-semibold">
+              Invitations
+            </div>
+            <div *ngIf="invitations.length === 0"
+                 class="p-4 text-sm text-gray-500">
+              No invitations.
+            </div>
+            <div *ngFor="let invitation of invitations"
+                 class="p-4 border-b">
+              {{ invitation.company.name }}
+            </div>
+          </div>
+
+        </div>
+
 
         <!-- USER DROPDOWN -->
         <div class="relative user-menu">
