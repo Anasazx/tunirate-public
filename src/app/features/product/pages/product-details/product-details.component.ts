@@ -43,7 +43,6 @@ export class ProductDetailsComponent implements OnInit {
 
   reviewContent = '';
   selectedRating = 0;
-  hoveredRating = 0;
 
   submittingReview = false;
   deletingReviewId: number | null = null;
@@ -80,19 +79,24 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit() {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) this.loadProduct(+productId);
-    this.selectedImage = this.product?.images?.[0]?.url || null;
-
   }
 
   // ===================== LOAD PRODUCT =====================
   loadProduct(id: number) {
     this.productId = id;
+
     this.productService.getDetailedProductById(id).subscribe({
       next: (data) => {
+
         this.product = data;
-        const mainImage =
-          data.images?.find(i => i.isMain) ?? data.images?.[0];
-        this.selectedImage = mainImage?.url ?? null;
+
+        const mainIndex = data.images?.findIndex(i => i.isMain) ?? -1;
+
+        this.currentImageIndex = mainIndex >= 0 ? mainIndex : 0;
+
+        this.selectedImage =
+          data.images?.[this.currentImageIndex]?.url ?? null;
+
         this.loadReviews();
       },
       error: console.error
@@ -217,11 +221,9 @@ export class ProductDetailsComponent implements OnInit {
 
   }
 
-
-  reviewIsMine(id: number){
-    return id == this.authService.getCurrentUser?.id
+  reviewIsMine(id: number): boolean {
+    return id === this.authService.getCurrentUser?.id;
   }
-
 
   deleteReview(review: ReviewResponse) {
 
@@ -381,27 +383,25 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   nextImage() {
+    const images = this.product?.images;
 
-    if (!this.product?.images?.length) return;
+    if (!images?.length) return;
 
     this.currentImageIndex =
+      (this.currentImageIndex + 1) % images.length;
 
-      (this.currentImageIndex + 1) % this.product.images.length;
-
-    this.selectedImage = this.product.images[this.currentImageIndex].url;
-
+    this.selectedImage = images[this.currentImageIndex].url;
   }
 
   prevImage() {
+    const images = this.product?.images;
 
-    if (!this.product?.images?.length) return;
+    if (!images?.length) return;
 
     this.currentImageIndex =
-      (this.currentImageIndex - 1 + this.product.images.length) %
-      this.product.images.length;
+      (this.currentImageIndex - 1 + images.length) % images.length;
 
-    this.selectedImage = this.product.images[this.currentImageIndex].url;
-
+    this.selectedImage = images[this.currentImageIndex].url;
   }
 
   @HostListener('window:scroll')
