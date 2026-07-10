@@ -5,18 +5,24 @@ import { Injectable } from '@angular/core';
 })
 export class SharedService {
 
-  publicUrl = "http://localhost:8080"
+  publicUrl = "/api";
 
-  uploadPublicUrl = "http://localhost:8080/uploads"
+  uploadPublicUrl = "/uploads";
 
-  constructor() { }
+  constructor() {}
 
-  //helper
-  getImageUrl(imageUrl?: String | null): string {
+  getImageUrl(imageUrl?: string | null): string {
+
     if (!imageUrl) {
+
       return 'https://placehold.co/600x400/EEE/31343C';
+
     }
+
+    console.log("this is the link: ", `${this.uploadPublicUrl}/${imageUrl}`);
+
     return `${this.uploadPublicUrl}/${imageUrl}`;
+
   }
 
 }

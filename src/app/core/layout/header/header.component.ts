@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit {
 
   toggleUserMenu(): void {
     this.userMenuOpen = !this.userMenuOpen;
+    this.showInvitations = false;
     console.log(this.userMenuOpen)
   }
 
@@ -127,7 +128,7 @@ export class HeaderComponent implements OnInit {
 
   toggleInvitations(): void {
     this.showInvitations = !this.showInvitations;
-    console.log(this.showInvitations)
+    this.userMenuOpen = false;
     if (this.showInvitations) this.loadInvitations();
   }
 

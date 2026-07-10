@@ -184,6 +184,7 @@ export class ProductDetailsComponent implements OnInit {
       });
 
   }
+
   // ===================== REVIEW CRUD =====================
   submitReview(request: ReviewRequest) {
 
@@ -406,10 +407,8 @@ export class ProductDetailsComponent implements OnInit {
 
   @HostListener('window:scroll')
   onScroll() {
-    const position =
-      window.innerHeight + window.scrollY;
-    const height =
-      document.documentElement.scrollHeight;
+    const position = window.innerHeight + window.scrollY;
+    const height = document.documentElement.scrollHeight;
     if (position >= height - 300) {
       this.loadReviews();
     }

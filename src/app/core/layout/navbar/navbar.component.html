@@ -5,135 +5,72 @@
     <!-- Categories -->
     <div class="flex flex-wrap items-center justify-center gap-3">
       <button
-
         routerLink="/"
-
         (click)="clearSelection()"
-
         class="h-10 px-5 rounded-full
-
          flex items-center justify-center
-
          text-sm font-medium
-
          border transition-all duration-200"
-
         [class.bg-slate-900]="selectedCategoryId === null"
-
         [class.text-white]="selectedCategoryId === null"
-
         [class.border-slate-900]="selectedCategoryId === null"
-
         [class.bg-slate-100]="selectedCategoryId !== null"
-
         [class.text-slate-700]="selectedCategoryId !== null"
-
         [class.border-slate-200]="selectedCategoryId !== null">
-
         All
-
       </button>
 
       <button
-
         *ngFor="let category of categories"
-
         routerLink="/"
-
         [queryParams]="{ category: category.name }"
-
         (click)="toggleCategory(category.id)"
-
         class="h-10 px-5 rounded-full
-
          flex items-center justify-center
-
          text-sm font-medium
-
          border transition-all duration-200
-
          whitespace-nowrap"
-
         [class.bg-slate-900]="selectedCategoryId === category.id"
-
         [class.text-white]="selectedCategoryId === category.id"
-
         [class.border-slate-900]="selectedCategoryId === category.id"
-
         [class.bg-slate-100]="selectedCategoryId !== category.id"
-
         [class.text-slate-700]="selectedCategoryId !== category.id"
-
         [class.border-slate-200]="selectedCategoryId !== category.id"
-
         [class.hover:bg-slate-200]="selectedCategoryId !== category.id">
-
         {{ category.name }}
-
       </button>
-
     </div>
 
     <!-- Subcategories -->
     <div
-      *ngIf="selectedCategoryId !== null && activeCategory() as category"
-      class="mt-6">
-
-
+      *ngIf="selectedCategoryId !== null && activeCategory() as category" class="mt-6">
       <div class="flex flex-wrap justify-center gap-3">
-
         <a
-
           *ngFor="let sub of category.subcategories"
-
           routerLink="/"
-
           [queryParams]="{
-
       category: category.name,
-
       subcategory: sub.name
-
     }"
-
           class="h-9 px-4
-
            rounded-full
-
            flex items-center
-
-           text-sm font-medium
-
+           text-sm font-mediu
            border border-slate-200
-
            bg-white
-
            text-slate-600
-
            hover:bg-slate-900
-
            hover:text-white
-
            hover:border-slate-900
-
            transition">
-
           {{ sub.name }}
-
         </a>
-
       </div>
-
       <div
         *ngIf="!category.subcategories.length"
         class="text-center text-slate-400 py-8">
-
         No subcategories
-
       </div>
-
     </div>
-
   </div>
-
 </div>
