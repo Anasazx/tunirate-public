@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 })
 export class SharedService {
 
-  publicUrl = "/api";
+  publicUrl = "https://anasazx.tech/api";
 
-  uploadPublicUrl = "/uploads";
+  uploadPublicUrl = "https://anasazx.tech/uploads";
 
   constructor() {}
 
