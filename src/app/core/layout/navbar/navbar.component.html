@@ -1,9 +1,12 @@
-<div class="bg-white border-b">
+<div
+  class="bg-white border-b relative pb-1"
+  (mouseleave)="hideSubcategories()">
 
   <div class="max-w-fit mx-auto px-6 pb-3 pt-2">
 
     <!-- Categories -->
     <div class="flex flex-wrap items-center justify-center gap-3">
+
       <button
         routerLink="/"
         (click)="clearSelection()"
@@ -17,14 +20,17 @@
         [class.bg-slate-100]="selectedCategoryId !== null"
         [class.text-slate-700]="selectedCategoryId !== null"
         [class.border-slate-200]="selectedCategoryId !== null">
+
         All
+
       </button>
+
 
       <button
         *ngFor="let category of categories"
         routerLink="/"
         [queryParams]="{ category: category.name }"
-        (click)="toggleCategory(category.id)"
+        (mouseenter)="showSubcategories(category.id)"
         class="h-10 px-5 rounded-full
          flex items-center justify-center
          text-sm font-medium
@@ -37,25 +43,39 @@
         [class.text-slate-700]="selectedCategoryId !== category.id"
         [class.border-slate-200]="selectedCategoryId !== category.id"
         [class.hover:bg-slate-200]="selectedCategoryId !== category.id">
+
         {{ category.name }}
+
       </button>
+
     </div>
+
 
     <!-- Subcategories -->
     <div
-      *ngIf="selectedCategoryId !== null && activeCategory() as category" class="mt-6">
-      <div class="flex flex-wrap justify-center gap-3">
+      *ngIf="hoveredCategoryId !== null && activeCategory() as category"
+      @subCategoryAnimation
+      class="absolute top-full left-0 w-full z-50"
+      (mouseenter)="showSubcategories(category.id)"
+    >
+
+      <div
+        class="flex flex-wrap justify-center gap-3
+         bg-white border border-slate-200
+         shadow-lg rounded-b-2xl
+         px-6 py-4">
+
         <a
           *ngFor="let sub of category.subcategories"
           routerLink="/"
           [queryParams]="{
-      category: category.name,
-      subcategory: sub.name
-    }"
+            category: category.name,
+            subcategory: sub.name
+          }"
           class="h-9 px-4
            rounded-full
            flex items-center
-           text-sm font-mediu
+           text-sm font-medium
            border border-slate-200
            bg-white
            text-slate-600
@@ -63,14 +83,24 @@
            hover:text-white
            hover:border-slate-900
            transition">
+
           {{ sub.name }}
+
         </a>
+
       </div>
+
+
       <div
         *ngIf="!category.subcategories.length"
-        class="text-center text-slate-400 py-8">
+        class="text-center text-slate-400 py-8 bg-white">
+
         No subcategories
+
       </div>
+
     </div>
+
   </div>
+
 </div>

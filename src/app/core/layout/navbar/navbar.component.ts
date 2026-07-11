@@ -3,6 +3,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CategoryService } from '../../../features/home/services/categoryService/category.service';
 import { SubcategoryService } from '../../../features/home/services/subcategoryService/subcategory.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 type HeaderCategory = any;
 
@@ -10,7 +11,33 @@ type HeaderCategory = any;
   selector: 'app-navbar',
   imports: [NgForOf, NgIf, RouterLink],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
+  animations: [
+    trigger('subCategoryAnimation', [
+      transition(':enter', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-10px)'
+        }),
+        animate(
+          '200ms ease-out',
+          style({
+            opacity: 1,
+            transform: 'translateY(0)'
+          })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({
+            opacity: 0,
+            transform: 'translateY(-10px)'
+          })
+        )
+      ])
+    ])
+  ]
 })
 
 
@@ -18,7 +45,6 @@ export class NavbarComponent implements OnInit {
 
   categories: HeaderCategory[] = [];
   selectedCategoryId: number | null = null;
-  currentRoute = '';
 
   constructor(
     private categoryService: CategoryService,
@@ -29,17 +55,29 @@ export class NavbarComponent implements OnInit {
     this.loadCategories();
   }
 
-  toggleCategory(categoryId: number): void {
-    this.selectedCategoryId =
-      this.selectedCategoryId === categoryId ? null : categoryId;
+  hoveredCategoryId: number | null = null;
+
+  hideTimeout: any;
+
+  showSubcategories(categoryId: number) {
+    clearTimeout(this.hideTimeout);
+    this.hoveredCategoryId = categoryId;
+  }
+
+  hideSubcategories() {
+    this.hideTimeout = setTimeout(() => {
+      this.hoveredCategoryId = null;
+    }, 200);
+  }
+
+  activeCategory() {
+    return this.categories.find(
+      c => c.id === this.hoveredCategoryId
+    );
   }
 
   clearSelection(): void {
     this.selectedCategoryId = null;
-  }
-
-  activeCategory(): HeaderCategory | undefined {
-    return this.categories.find(c => c.id === this.selectedCategoryId);
   }
 
   loadCategories(): void {
@@ -60,4 +98,6 @@ export class NavbarComponent implements OnInit {
       error: () => { this.categories = []; }
     });
   }
+
+
 }
