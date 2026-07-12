@@ -1,16 +1,144 @@
 <header class="bg-white border-b sticky top-0 z-50">
 
-  <div class="max-w-6xl mx-auto px-4 h-16 grid grid-cols-3 items-center">
+  <div
+    class="max-w-6xl mx-auto px-4
+         flex flex-col gap-2 py-2
+         md:h-16 md:grid md:grid-cols-3
+         md:gap-0 md:py-0 md:items-center"
+  >
 
-    <!-- LEFT: LOGO -->
-    <div class="justify-self-start">
-      <a routerLink="/" class="font-bold text-xl text-gray-800">
+
+    <!-- TOP ROW MOBILE / LEFT DESKTOP -->
+    <div
+      class="flex items-center w-full h-10
+         gap-1
+         md:justify-self-start"
+    >
+
+      <!-- Burger -->
+
+      <button
+        (click)="toggleMobileMenu()"
+        class="p-1.5 rounded-lg hover:bg-slate-100 transition md:hidden"
+      >
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="w-6 h-6 text-slate-700"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+
+      </button>
+
+      <!-- LOGO -->
+      <a
+        routerLink="/"
+        class="font-semibold text-lg text-slate-900"
+      >
         ReviewHub
       </a>
+
+
+      <!-- MOBILE USER ACTIONS -->
+      <div class="flex items-center gap-2 ml-auto md:hidden">
+
+        <ng-container *ngIf="authService.currentUser$ | async as user; else mobileGuest">
+
+
+          <!-- Notification -->
+          <button
+            (click)="toggleInvitations(); $event.stopPropagation()"
+            class="relative p-2 rounded-full hover:bg-gray-100 transition">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-6 h-6 text-gray-700"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9" />
+
+            </svg>
+
+
+            <span
+              *ngIf="invitationCount > 0"
+              class="absolute -top-1 -right-1
+                     min-w-[18px] h-[18px]
+                     flex items-center justify-center
+                     text-[10px] font-bold
+                     bg-red-500 text-white
+                     rounded-full px-1">
+
+              {{ invitationCount }}
+
+            </span>
+
+          </button>
+
+
+          <!-- Avatar -->
+          <button
+            (click)="toggleUserMenu(); $event.stopPropagation()"
+            class="p-1 rounded-full hover:bg-gray-100">
+
+            <img
+              [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"
+              class="w-8 h-8 rounded-full object-cover border">
+
+          </button>
+
+
+        </ng-container>
+
+
+        <ng-template #mobileGuest>
+
+          <a
+
+            routerLink="/auth/login"
+
+            class="
+
+      text-sm font-medium
+
+      text-slate-700
+
+      px-2 py-1
+
+      hover:text-slate-900
+
+      transition
+
+    ">
+
+            Sign in
+
+          </a>
+
+        </ng-template>
+
+
+      </div>
+
     </div>
 
-    <!-- CENTER: SEARCH -->
-    <div class="justify-self-center w-full max-w-xl">
+
+
+    <!-- SEARCH -->
+    <div
+      class="w-full max-w-xl
+        md:justify-self-center
+        mb-1"
+    >
 
       <div class="relative w-full">
 
@@ -19,35 +147,53 @@
           [(ngModel)]="searchQuery"
           (input)="onSearch()"
           placeholder="Search products, companies..."
-          class="w-full rounded-xl border px-4 py-2 text-sm
-                 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          class="w-full rounded-lg border px-3 py-2 text-sm
+                 focus:outline-none
+                 focus:ring-2 focus:ring-gray-200"
         />
 
-        <!-- SUGGESTIONS -->
-        <div *ngIf="suggestions.length"
-             class="absolute left-0 right-0 mt-2 z-50 bg-white border rounded-xl shadow-lg overflow-hidden">
 
-          <button *ngFor="let item of suggestions"
-                  (click)="selectSuggestion(item)"
-                  class="w-full flex items-center justify-between gap-3 px-4 py-2 text-sm hover:bg-gray-100">
+        <!-- SUGGESTIONS -->
+        <div
+          *ngIf="suggestions.length"
+          class="absolute left-0 right-0 mt-2
+                 z-50 bg-white border
+                 rounded-xl shadow-lg
+                 overflow-hidden">
+
+
+          <button
+            *ngFor="let item of suggestions"
+            (click)="selectSuggestion(item)"
+            class="w-full flex items-center justify-between
+                   gap-3 px-4 py-2 text-sm
+                   hover:bg-gray-100">
+
 
             <div class="flex items-center gap-2">
 
-              <img *ngIf="item.type === 'COMPANY'"
-                   [src]="sharedService.getImageUrl(item.logoUrl)"
-                   class="h-6 w-6 rounded-full object-cover border" />
+
+              <img
+                *ngIf="item.type === 'COMPANY'"
+                [src]="sharedService.getImageUrl(item.logoUrl)"
+                class="h-6 w-6 rounded-full object-cover border">
+
 
               <span class="flex items-center gap-1">
+
                 {{ item.name }}
 
-                <svg *ngIf="item.type === 'COMPANY' && item.verified"
-                     xmlns="http://www.w3.org/2000/svg"
-                     viewBox="0 0 24 24"
-                     class="h-4 w-4 text-sky-500"
-                     fill="currentColor">
+                <svg
+                  *ngIf="item.type === 'COMPANY' && item.verified"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="h-4 w-4 text-sky-500"
+                  fill="currentColor">
 
                   <circle cx="12" cy="12" r="10" />
-                  <path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white" />
+                  <path
+                    d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
+                    fill="white" />
 
                 </svg>
 
@@ -55,133 +201,239 @@
 
             </div>
 
-            <span *ngIf="item.type === 'COMPANY'"
-                  class="text-xs text-slate-400 font-medium">
+
+            <span
+              *ngIf="item.type === 'COMPANY'"
+              class="text-xs text-slate-400 font-medium">
+
               company
+
             </span>
+
 
           </button>
 
+
         </div>
 
+
       </div>
+
     </div>
 
-    <!-- RIGHT: USER MENU -->
-    <div class="justify-self-end flex items-center gap-3">
+
+
+
+    <!-- DESKTOP USER MENU -->
+    <div
+      class="hidden md:flex
+         justify-self-end
+         items-center gap-3">
+
 
       <!-- AUTH STATE -->
-      <ng-container *ngIf="authService.currentUser$ | async as user; else guest">
+      <ng-container *ngIf="authService.currentUser$ | async as user; else desktopGuest">
+
 
         <!-- NOTIFICATIONS -->
         <div class="relative notification-menu">
+
           <button
             (click)="toggleInvitations(); $event.stopPropagation()"
-            class="relative p-2 rounded-full hover:bg-gray-100 transition">
+            class="relative p-2 rounded-full hover:bg-slate-100 transition">
 
-            <!-- bell icon -->
+
             <svg xmlns="http://www.w3.org/2000/svg"
-                 class="w-6 h-6 text-gray-700"
+                 class="w-6 h-6 text-slate-700"
                  fill="none"
                  viewBox="0 0 24 24"
                  stroke="currentColor">
+
               <path stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 11-6 0m6 0H9" />
+
             </svg>
 
-            <span *ngIf="invitationCount > 0"
-                  class="absolute -top-1 -right-1 min-w-[18px] h-[18px]
-                     flex items-center justify-center text-[10px] font-bold
-                     bg-red-500 text-white rounded-full px-1">
+
+            <span
+              *ngIf="invitationCount > 0"
+              class="absolute -top-1 -right-1
+                 min-w-[18px] h-[18px]
+                 flex items-center justify-center
+                 text-[10px] font-bold
+                 bg-red-500 text-white
+                 rounded-full px-1">
+
           {{ invitationCount }}
+
         </span>
+
 
           </button>
 
 
+
+          <!-- INVITATIONS DROPDOWN -->
           <div
             *ngIf="showInvitations"
-            class="absolute right-0 top-full mt-2 w-80 bg-white border rounded-xl shadow-lg z-50">
+            class="absolute right-0 top-full mt-2
+               w-80
+               bg-white border
+               rounded-xl
+               shadow-lg
+               z-50">
+
 
             <div class="p-4 border-b font-semibold">
               Invitations
             </div>
-            <div *ngIf="invitations.length === 0"
-                 class="p-4 text-sm text-gray-500">
+
+
+            <div
+              *ngIf="invitations.length === 0"
+              class="p-4 text-sm text-gray-500">
+
               No invitations.
+
             </div>
-            <div *ngFor="let invitation of invitations"
-                 class="p-4 border-b">
+
+
+            <div
+              *ngFor="let invitation of invitations"
+              class="p-4 border-b">
+
               {{ invitation.company.name }}
+
             </div>
+
+
           </div>
 
+
         </div>
+
+
 
 
         <!-- USER DROPDOWN -->
         <div class="relative user-menu">
 
+
           <button
             (click)="toggleUserMenu(); $event.stopPropagation()"
-            class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition">
+            class="flex items-center gap-2
+               px-3 py-2
+               rounded-full
+               hover:bg-slate-100
+               transition">
+
 
             <img
               [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"
               class="w-8 h-8 rounded-full object-cover border"
             />
 
-            <span class="text-sm font-medium text-gray-700 hidden md:block">
-          {{ user.name }}
 
+            <span class="text-sm font-medium text-slate-700">
+          {{ user.name }}
         </span>
+
 
           </button>
 
-          <div *ngIf="userMenuOpen"
-               class="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
 
-            <a routerLink="/account" class="block px-4 py-2 text-sm hover:bg-gray-100">
+
+
+          <!-- USER MENU -->
+          <div
+            *ngIf="userMenuOpen"
+            class="absolute right-0 mt-2
+               w-48
+               bg-white border
+               rounded-xl
+               shadow-lg
+               overflow-hidden
+               z-50">
+
+
+            <a
+              routerLink="/account"
+              class="block px-4 py-2 text-sm hover:bg-gray-100">
+
               My account
+
             </a>
 
-            <a *ngIf="authService.isCompanyMember()"
-               (click)="goCompanyDashboard()"
-               class="block px-4 py-2 text-sm hover:bg-gray-100">
+
+            <a
+              *ngIf="authService.isCompanyMember()"
+              (click)="goCompanyDashboard()"
+              class="block px-4 py-2 text-sm hover:bg-gray-100">
+
               Company Dashboard
+
             </a>
 
-            <button (click)="logout()"
-                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+
+            <button
+              (click)="logout()"
+              class="w-full text-left
+                 px-4 py-2
+                 text-sm
+                 text-red-600
+                 hover:bg-red-50">
+
               Logout
+
             </button>
+
 
           </div>
 
+
         </div>
+
 
       </ng-container>
 
-      <!-- GUEST TEMPLATE -->
-      <ng-template #guest>
-        <div class="flex items-center gap-3">
-          <a routerLink="/auth/login" class="text-sm text-gray-600 hover:text-black">
-            Login
-          </a>
 
-          <a routerLink="/auth/register"
-             class="text-sm px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">
-            Sign up
-          </a>
-        </div>
+
+
+
+      <!-- GUEST -->
+      <ng-template #desktopGuest>
+
+        <a
+          routerLink="/auth/login"
+          class="text-sm font-medium
+             text-slate-700
+             hover:text-slate-900
+             transition">
+
+          Sign in
+
+        </a>
+
+
       </ng-template>
 
+
     </div>
+
+
   </div>
 
-  <!-- NAVBAR -->
-  <app-navbar></app-navbar>
+
+  <div class="hidden md:block">
+    <app-navbar></app-navbar>
+  </div>
+
+  <div class="md:hidden">
+    <app-mobile-sidebar
+      [open]="mobileMenuOpen"
+      (close)="mobileMenuOpen = false">
+    </app-mobile-sidebar>  </div>
 
 </header>

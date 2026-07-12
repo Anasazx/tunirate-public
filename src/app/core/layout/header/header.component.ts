@@ -8,12 +8,13 @@ import { CompanyInvitationService } from '../../../features/company/services/com
 import { SharedService } from '../../services/sharedService/shared.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import {filter} from 'rxjs';
+import {MobileSidebarComponent} from '../mobile-sidebar/mobile-sidebar.component';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent],
+  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -150,6 +151,18 @@ export class HeaderComponent implements OnInit {
       .subscribe(() => this.loadInvitations());
   }
 
+
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
+  }
+
+
+  mobileMenuOpen = false;
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
 
 
   @HostListener('document:click', ['$event'])

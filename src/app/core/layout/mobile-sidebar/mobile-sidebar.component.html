@@ -1,0 +1,143 @@
+<div
+  *ngIf="open"
+  class="fixed inset-0 z-[100] md:hidden"
+>
+
+  <!-- Overlay -->
+  <div
+    class="absolute inset-0 bg-black/30"
+    (click)="close.emit()">
+  </div>
+
+
+  <!-- Sidebar -->
+  <aside
+    class="
+      absolute left-0 top-0
+      h-full w-72
+      bg-white
+      shadow-xl
+      p-5
+      overflow-y-auto
+    "
+  >
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+
+      <span class="font-semibold text-lg text-slate-900">
+        Categories
+      </span>
+
+
+      <button
+        (click)="close.emit()"
+        class="p-2 rounded-lg hover:bg-slate-100">
+
+        ✕
+
+      </button>
+
+    </div>
+
+
+
+    <!-- Categories -->
+    <nav class="space-y-3">
+
+      <!-- All -->
+      <a
+        routerLink="/"
+        class="block px-3 py-2 rounded-lg text-sm font-medium transition"
+
+        [class.bg-slate-900]="!currentCategory"
+        [class.text-white]="!currentCategory"
+
+        [class.bg-transparent]="currentCategory"
+        [class.text-slate-700]="currentCategory"
+        [class.hover:bg-slate-100]="currentCategory"
+      >
+        All
+      </a>
+
+      <!-- Category -->
+
+      <div *ngFor="let category of categories">
+
+        <!-- Category -->
+
+        <a
+
+          routerLink="/"
+
+          [queryParams]="{ category: category.name }"
+
+          (click)="close.emit()"
+
+          class="block px-3 py-2 rounded-lg text-sm font-semibold transition"
+
+          [class.bg-slate-900]="currentCategory === category.name"
+
+          [class.text-white]="currentCategory === category.name"
+
+          [class.bg-transparent]="currentCategory !== category.name"
+
+          [class.text-slate-800]="currentCategory !== category.name"
+
+          [class.hover:bg-slate-100]="currentCategory !== category.name"
+
+        >
+
+          {{ category.name }}
+
+        </a>
+
+        <!-- Subcategories -->
+
+        <div
+
+          class="ml-5 mt-1 border-l border-slate-200 pl-3 space-y-1"
+
+        >
+
+          <a
+
+            *ngFor="let sub of category.subcategories"
+
+            routerLink="/"
+
+            [queryParams]="{
+
+        category: category.name,
+
+        subcategory: sub.name
+
+      }"
+
+            (click)="close.emit()"
+
+            class="block py-2 text-sm transition"
+
+            [class.font-bold]="currentSubcategory === sub.name"
+
+            [class.text-slate-900]="currentSubcategory === sub.name"
+
+            [class.text-slate-600]="currentSubcategory !== sub.name"
+
+            [class.hover:bg-slate-100]="currentSubcategory !== sub.name"
+
+          >
+
+            {{ sub.name }}
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </nav>
+
+  </aside>
+
+</div>
