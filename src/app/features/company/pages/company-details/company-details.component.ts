@@ -8,6 +8,7 @@ import {CompanyDetailResponse} from '../../models/companyDTO/companyDetailRespon
 import {ProductResponse} from '../../../product/models/productDTO/productResponse.model';
 import {SOCIAL_ICON_MAP} from '../../../../core/mapping/social-icon-map';
 import {ProductService} from '../../../product/services/productService/product.service';
+import {CompanyStatus} from '../../enums/companyStatus.enum.model';
 
 
 @Component({
@@ -109,4 +110,5 @@ export class CompanyDetailsComponent implements OnInit {
     }
   }
 
+  protected readonly CompanyStatus = CompanyStatus;
 }
