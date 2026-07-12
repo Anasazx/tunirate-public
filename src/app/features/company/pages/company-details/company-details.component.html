@@ -137,10 +137,6 @@
               {{ product.name }}
             </h2>
 
-            <span class="text-xs text-slate-400">
-              #{{ product.id }}
-            </span>
-
           </div>
 
           <!-- DESCRIPTION -->
@@ -152,7 +148,7 @@
           <div class="mt-auto pt-3 flex items-center justify-between text-xs text-slate-500">
 
             <span>
-              {{ product.createdAt | date:'mediumDate' }}
+              Added {{ product.createdAt | date:'mediumDate' }}
             </span>
 
             <span class="text-sky-600 font-medium">

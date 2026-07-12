@@ -23,17 +23,6 @@ export class HeaderComponent implements OnInit {
 
   @Output() searchChange = new EventEmitter<string>();
 
-  searchQuery = '';
-
-  //TODO; MAKE THIS AN INDEPENDENT DTO TO REUSE IT!
-  suggestions: {
-    id: number;
-    name: string;
-    type: 'PRODUCT' | 'COMPANY';
-    logoUrl?: string;
-    verified?: boolean;
-  }[] = [];
-
   invitations: any[] = [];
   invitationCount = 0;
   showInvitations = false;
@@ -99,19 +88,11 @@ export class HeaderComponent implements OnInit {
       .subscribe(() => this.loadInvitations());
   }
 
-
-
-  closeMobileMenu() {
-    this.mobileMenuOpen = false;
-  }
-
-
   mobileMenuOpen = false;
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
-
 
   @HostListener('document:click', ['$event'])
   closeMenus(event: MouseEvent) {
