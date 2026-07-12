@@ -9,12 +9,13 @@ import { SharedService } from '../../services/sharedService/shared.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import {filter} from 'rxjs';
 import {MobileSidebarComponent} from '../mobile-sidebar/mobile-sidebar.component';
+import {SearchBarComponent} from '../search-bar/search-bar.component';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent],
+  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent, SearchBarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -70,59 +71,6 @@ export class HeaderComponent implements OnInit {
     this.userMenuOpen = !this.userMenuOpen;
     this.showInvitations = false;
     console.log(this.userMenuOpen)
-  }
-
-  /* ---------------- SEARCH ---------------- */
-
-  onSearch(): void {
-    const query = this.searchQuery.trim();
-    this.searchChange.emit(query);
-
-    if (!query) {
-      this.suggestions = [];
-      return;
-    }
-
-    this.searchService.search(query).subscribe({
-      next: (res) => {
-        const products = (res.products || []).map(product => ({
-          id: product.id,
-          name: product.name,
-          type: 'PRODUCT' as const,
-          logoUrl: product.imageUrl,
-          verified: false
-        }));
-
-        const companies = (res.companies || []).map(company => ({
-          id: company.id,
-          name: company.name,
-          type: 'COMPANY' as const,
-          logoUrl: company.logoUrl,
-          status: company.status ?? false
-        }));
-
-        this.suggestions = [...products, ...companies]
-          .filter((item, index, arr) =>
-            index === arr.findIndex(x => x.id === item.id && x.type === item.type)
-          )
-          .slice(0, 6);
-      },
-      error: () => {
-        this.suggestions = [];
-      }
-    });
-  }
-
-  selectSuggestion(item: any): void {
-    this.searchQuery = item.name;
-    this.suggestions = [];
-    this.searchChange.emit(item.name);
-
-    this.router.navigate(
-      item.type === 'COMPANY'
-        ? ['/company', item.id]
-        : ['/product', item.id]
-    );
   }
 
   /* ---------------- INVITATIONS ---------------- */
