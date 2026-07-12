@@ -183,6 +183,8 @@ export class ProductDetailsComponent implements OnInit {
 
       });
 
+    console.log(this.loading)
+
   }
 
   // ===================== REVIEW CRUD =====================

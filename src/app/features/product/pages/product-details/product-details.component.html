@@ -1,4 +1,4 @@
-<div class="space-y-5">
+<div class="w-full space-y-4 sm:space-y-5 px-0 sm:px-0">
 
   <!-- Back -->
   <div>
@@ -12,12 +12,13 @@
   </div>
 
   <!-- Product header card -->
-  <div class="bg-white rounded-2xl border border-slate-200 p-6">
-    <div class="flex flex-col lg:flex-row gap-8">
+  <div class="w-full bg-white rounded-2xl border border-slate-200 p-4 sm:p-6">
+
+    <div class="flex flex-col lg:flex-row gap-5 items-start">
 
       <!-- Image gallery -->
-      <div class="lg:w-2/5 shrink-0">
-        <div class="relative aspect-square rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
+      <div class="w-full lg:w-2/5 shrink-0">
+        <div class="relative aspect-square max-w-md mx-auto lg:max-w-none rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
 
           <!-- MAIN IMAGE -->
           <img
@@ -64,14 +65,32 @@
 
 
 
-        <h1 class="text-4xl font-bold text-slate-900 leading-tight">
+        <h1
+
+          class="
+            text-2xl
+            sm:text-3xl
+            lg:text-4xl
+            font-bold
+            text-slate-900
+            leading-tight
+            break-words
+          "
+        >
           {{ product?.name }}
         </h1>
 
 
 
         <!-- Company -->
-        <div class="flex items-center gap-3 my-2">
+        <div class="
+          flex
+          flex-wrap
+          items-center
+          gap-3
+          my-3
+        "
+        >
 
           <img
             *ngIf="product?.companyLogoUrl as logo"
@@ -107,7 +126,12 @@
         <!-- Description -->
         <div class="mt-4">
           <p
-            class="text-sm text-gray-600 leading-relaxed"
+            class="
+            text-sm
+            sm:text-base
+            text-gray-600
+            leading-relaxed
+            "
             [class.line-clamp-4]="!descExpanded">
             {{ product?.description }}
           </p>
@@ -120,35 +144,83 @@
         </div>
 
         <!-- Rating overview -->
-        <div *ngIf="(product?.reviewsCount ?? 0) > 0"
-          class="mt-6 pt-5 border-t border-slate-100 flex items-center gap-6">
-          <div class="text-center shrink-0">
-            <div class="text-4xl font-extrabold text-slate-900 leading-none">{{ (product?.averageRating || 0).toFixed(1) }}</div>
-            <div class="flex justify-center gap-0.5 text-yellow-400 mt-1.5 text-sm leading-none">
-              <span *ngFor="let i of getSolidStars(product?.averageRating || 0)">★</span>
-              <span *ngFor="let i of getOutlineStars(product?.averageRating || 0)" class="text-slate-200">★</span>
+        <div
+          *ngIf="(product?.reviewsCount ?? 0) > 0"
+          class="
+    mt-6
+    pt-5
+    border-t
+    border-slate-100
+    flex
+    items-center
+    gap-4
+  "
+        >
+
+          <!-- Overall rating -->
+          <div class="shrink-0 text-center">
+
+            <div class="text-4xl font-extrabold text-slate-900 leading-none">
+              {{ (product?.averageRating || 0).toFixed(1) }}
             </div>
-            <div class="text-xs text-gray-400 mt-1">{{ product?.reviewsCount ?? 0 }} reviews</div>
+
+            <div class="flex justify-center gap-0.5 text-yellow-400 mt-1 text-sm">
+      <span *ngFor="let i of getSolidStars(product?.averageRating || 0)">
+        ★
+      </span>
+
+              <span
+                *ngFor="let i of getOutlineStars(product?.averageRating || 0)"
+                class="text-slate-200">
+        ★
+      </span>
+            </div>
+
+            <div class="text-xs text-gray-400 mt-1">
+              {{ product?.reviewsCount ?? 0 }} reviews
+            </div>
+
           </div>
-          <div class="flex-1 space-y-1.5 min-w-0">
-            <div *ngFor="let star of [5,4,3,2,1]" class="flex items-center gap-2">
-              <span class="text-[11px] text-gray-400 w-2 shrink-0">{{ star }}</span>
-              <svg class="w-3 h-3 text-yellow-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+
+
+          <!-- Distribution -->
+          <div class="flex-1 min-w-[180px] space-y-1.5">
+
+            <div
+              *ngFor="let star of [5,4,3,2,1]"
+              class="flex items-center gap-2"
+            >
+
+      <span class="text-[11px] text-gray-400 w-3 text-right shrink-0">
+        {{ star }}
+      </span>
+
+              <svg
+                class="w-3 h-3 text-yellow-400 shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.175 0l-3.37 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.285-3.957z"/>
               </svg>
-              <div class="flex-1 bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div class="bg-yellow-400 h-full rounded-full transition-all duration-500"
-                  [style.width.%]="getStarPercent(star)"></div>
+
+
+              <div class="flex-1 min-w-0 bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                <div
+                  class="bg-yellow-400 h-full rounded-full transition-all duration-500"
+                  [style.width.%]="getStarPercent(star)">
+                </div>
               </div>
+
+
             </div>
+
           </div>
+
         </div>
 
         <div
           *ngIf="product?.reviewsCount === 0"
           class="mt-6 pt-6 border-t border-slate-100 flex flex-col items-center justify-center text-center gap-3"
         >
-
           <!-- Icon -->
             <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -174,10 +246,10 @@
   </div>
 
   <!-- Reviews + form -->
-  <div class="flex flex-col lg:flex-row gap-5">
+  <div class="w-full flex flex-col lg:flex-row gap-5 items-stretch">
 
     <!-- Reviews column -->
-    <div class="flex-1 min-w-0 space-y-4">
+    <div class="basis-0 grow min-w-0 w-full space-y-4">
 
       <!-- Section heading -->
       <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest px-0.5">
@@ -192,25 +264,43 @@
       </div>
 
       <!-- Review list -->
-      <div class="space-y-3">
+      <div class="space-y-3 w-full">
         <div *ngFor="let review of reviews"
-          class="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-shadow hover:shadow-md"
+             class="
+              bg-white
+              rounded-xl
+              sm:rounded-2xl
+              border
+              border-slate-200
+              overflow-hidden
+              transition-shadow
+              hover:shadow-md
+             "
           [class.ring-2]="reviewIsMine(review.user.id)"
           [class.ring-blue-200]="reviewIsMine(review.user.id)">
 
-          <div class="flex">
-            <div class="flex-1 p-4">
+          <div class="flex w-full">
+            <div class="flex-1 min-w-0 p-3 sm:p-4">
 
               <!-- Header -->
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex items-center gap-3">
+              <div
+                class="
+                  flex
+                  flex-col
+                  sm:flex-row
+                  sm:items-start
+                  sm:justify-between
+                  gap-3
+                "
+              >
+                <div class="flex items-start gap-3 min-w-0">
                   <img [src]="sharedService.getImageUrl(review.user.avatarUrl)"
                     class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0">
                   <div>
 
                     <div class="flex items-center gap-2 flex-wrap">
 
-                      <span class="text-sm font-semibold text-slate-900">
+                      <span class="text-sm font-semibold text-slate-900 break-words">
                         {{ review.user.name }}
                       </span>
 
@@ -228,7 +318,18 @@
                   </div>
                 </div>
 
-                <div class="flex flex-col items-end gap-1.5 shrink-0">
+                <div
+                  class="
+                    flex
+                    flex-row
+                    sm:flex-col
+                    items-center
+                    sm:items-end
+                    gap-3
+                    sm:gap-1.5
+                    shrink-0
+                  "
+                >
                   <div class="flex gap-0.5 text-yellow-400 text-sm leading-none">
                     <span *ngFor="let i of getSolidStars(review.rating)">★</span>
                     <span *ngFor="let i of getOutlineStars(review.rating)" class="text-slate-200">★</span>
@@ -248,7 +349,15 @@
               </div>
 
               <!-- Body -->
-              <p class="mt-3 text-sm text-gray-600 leading-relaxed">{{ review.content }}</p>
+              <p
+                class="
+                  mt-3
+                  text-sm
+                  text-gray-600
+                  leading-relaxed
+                  break-words
+                "
+              >{{ review.content }}</p>
 
               <!-- Comments -->
               <div class="mt-3.5 pt-3 border-t border-slate-50">
@@ -278,7 +387,7 @@
                        class="rounded-lg bg-slate-50 px-3 py-2 text-[12px]">
 
                     <!-- HEADER -->
-                    <div class="flex items-center gap-2 mb-1">
+                    <div class="flex items-start gap-2 mb-1">
 
                       <!-- AVATAR -->
                       <img
@@ -319,8 +428,16 @@
                     </button>
 
                     <!-- REPLY INPUT -->
-                    <div *ngIf="replyingToCommentId === c.id"
-                         class="mt-1.5 flex gap-1.5">
+                    <div
+                      *ngIf="replyingToCommentId === c.id"
+                      class="
+                        mt-1.5
+                        flex
+                        flex-col
+                        sm:flex-row
+                        gap-1.5
+                      "
+                    >
 
                       <input
                         [(ngModel)]="replyText"
@@ -362,11 +479,33 @@
 
 
 
-                  <div class="flex gap-2 pt-1">
+                  <div
+                    class="
+                      flex
+                      flex-col
+                      sm:flex-row
+                      gap-2
+                      pt-1
+                    "
+                  >
                     <input [(ngModel)]="review.newComment" placeholder="Add a comment…"
                       class="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[12px] text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all">
-                    <button (click)="addComment(review)"
-                      class="rounded-lg bg-slate-900 hover:bg-slate-700 px-4 py-1.5 text-[12px] font-semibold text-white transition-colors">
+                    <button
+                      (click)="addComment(review)"
+                      class="
+                        rounded-lg
+                        bg-slate-900
+                        hover:bg-slate-700
+                        px-4
+                        py-1.5
+                        text-[12px]
+                        font-semibold
+                        text-white
+                        transition-colors
+                        w-full
+                        sm:w-auto
+                      "
+                    >
                       Post
                     </button>
                   </div>
@@ -382,12 +521,16 @@
     </div>
 
     <!-- Review form -->
-    <app-review-form
-      [productId]="product?.id"
-      [myReview]="myReview"
-      [submittingReview]="submittingReview"
-      (reviewSubmitted)="submitReview($event)">
-    </app-review-form>
+    <div class="w-full lg:basis-72 shrink-0">
+
+      <app-review-form
+        [productId]="product?.id"
+        [myReview]="myReview"
+        [submittingReview]="submittingReview"
+        (reviewSubmitted)="submitReview($event)">
+      </app-review-form>
+
+    </div>
 
   </div>
 
