@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
-import {ReviewResponse} from '../../../../../../core/model/dto/reviewDTO/reviewResponse.model';
-import {ReviewRequest} from '../../../../../../core/model/dto/reviewDTO/reviewRequest.model';
+import {ReviewResponse} from '../../../../../../core/models/dto/reviewDTO/reviewResponse.model';
+import {ReviewRequest} from '../../../../../../core/models/dto/reviewDTO/reviewRequest.model';
 
 @Component({
   selector: 'app-review-form',

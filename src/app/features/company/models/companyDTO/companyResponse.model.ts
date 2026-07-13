@@ -1,5 +1,5 @@
 import {ProductStatus} from '../../../product/enums/productStatus.enum.model';
-import {Country} from '../../../../core/model/enums/country.enum.model';
+import {Country} from '../../../../core/models/enums/country.enum.model';
 
 export interface CompanyResponse {
   id: number;

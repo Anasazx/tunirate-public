@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SharedService } from '../sharedService/shared.service';
-import { CommentRequest } from '../../model/dto/commentDTO/commentRequest.model';
-import { CommentResponse } from '../../model/dto/commentDTO/commentResponse.model';
-import {Page} from '../../model/page.model';
+import { CommentRequest } from '../../models/dto/commentDTO/commentRequest.model';
+import { CommentResponse } from '../../models/dto/commentDTO/commentResponse.model';
+import {Page} from '../../models/page.model';
 
 
 @Injectable({

@@ -1,18 +1,19 @@
 import { CommonModule, Location } from '@angular/common';
-import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import { ReviewResponse } from '../../../../core/model/dto/reviewDTO/reviewResponse.model';
+import { ReviewResponse } from '../../../../core/models/dto/reviewDTO/reviewResponse.model';
 import { DetailedProduct } from '../../models/detailedProduct.model';
-import { CommentResponse } from '../../../../core/model/dto/commentDTO/commentResponse.model';
+import { CommentResponse } from '../../../../core/models/dto/commentDTO/commentResponse.model';
 import { ProductService } from '../../services/productService/product.service';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
 import { ReviewService } from '../../../../core/services/reviewService/review.service';
 import { CommentService } from '../../../../core/services/commentService/comment.service';
-import { ReviewRequest } from '../../../../core/model/dto/reviewDTO/reviewRequest.model';
+import { ReviewRequest } from '../../../../core/models/dto/reviewDTO/reviewRequest.model';
 import {ReviewFormComponent} from './components/review-form/review-form.component';
 import {AuthService} from '../../../auth/services/authService/auth.service';
 import {AuthRequiredComponent} from '../../../../core/sharedComponents/auth-required/auth-required.component';
+import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
 
 
 type ReviewWithComments = ReviewResponse & {
@@ -27,7 +28,7 @@ type ReviewWithComments = ReviewResponse & {
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent, AuthRequiredComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent, AuthRequiredComponent, ImageUrlPipe],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })

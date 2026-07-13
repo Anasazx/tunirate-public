@@ -6,7 +6,7 @@
     <div class="relative group">
 
       <img
-        [src]="sharedService.getImageUrl(user.avatarUrl)"
+        [src]="user.avatarUrl | imageUrl"
         class="w-16 h-16 rounded-full border object-cover"
       />
 

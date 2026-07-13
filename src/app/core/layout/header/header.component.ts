@@ -10,12 +10,13 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import {filter} from 'rxjs';
 import {MobileSidebarComponent} from '../mobile-sidebar/mobile-sidebar.component';
 import {SearchBarComponent} from '../search-bar/search-bar.component';
+import {ImageUrlPipe} from '../../pipes/image-url.pipe';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent, SearchBarComponent],
+  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent, SearchBarComponent, ImageUrlPipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

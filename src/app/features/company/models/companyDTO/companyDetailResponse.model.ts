@@ -1,4 +1,4 @@
-import {Country} from '../../../../core/model/enums/country.enum.model';
+import {Country} from '../../../../core/models/enums/country.enum.model';
 import {SocialLink} from '../socialLink.model';
 import {Industry} from '../../enums/industry.enum.model';
 import {CompanyStatus} from '../../enums/companyStatus.enum.model';

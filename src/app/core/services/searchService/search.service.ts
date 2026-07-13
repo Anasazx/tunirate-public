@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SharedService } from '../sharedService/shared.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {SearchResponse} from '../../model/dto/searchDTO/searchResponse.model';
+import {SearchResponse} from '../../models/dto/searchDTO/searchResponse.model';
 
 
 @Injectable({

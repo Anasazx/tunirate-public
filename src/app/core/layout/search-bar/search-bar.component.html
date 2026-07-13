@@ -73,7 +73,7 @@
 
           <img
             *ngIf="item.type === 'COMPANY'"
-            [src]="sharedService.getImageUrl(item.logoUrl)"
+            [src]="item.logoUrl | imageUrl"
             class="h-6 w-6 rounded-full object-cover border">
 
 

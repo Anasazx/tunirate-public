@@ -4,12 +4,13 @@ import { UserService } from '../../../user/services/userService/user.service';
 import { UserResponse } from '../../../user/models/userDTO/userResponse.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Country } from '../../../../core/model/enums/country.enum.model';
+import { Country } from '../../../../core/models/enums/country.enum.model';
 import {UpdateUserRequest} from '../../../user/models/userDTO/updateUserRequest.model';
+import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
 
 @Component({
   selector: 'app-profile-card',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImageUrlPipe],
   templateUrl: './profile-card.component.html',
   styleUrl: './profile-card.component.css'
 })

@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SharedService } from '../sharedService/shared.service';
-import { ReviewResponse } from '../../model/dto/reviewDTO/reviewResponse.model';
-import { ReviewRequest } from '../../model/dto/reviewDTO/reviewRequest.model';
-import {MinimizedReviewResponse} from '../../model/dto/reviewDTO/minimizedReviewResponse.model';
-import {ProductReviewsResponse} from '../../model/dto/reviewDTO/productReviewsResponse.model';
-import {Page} from '../../model/page.model';
+import { ReviewResponse } from '../../models/dto/reviewDTO/reviewResponse.model';
+import { ReviewRequest } from '../../models/dto/reviewDTO/reviewRequest.model';
+import {MinimizedReviewResponse} from '../../models/dto/reviewDTO/minimizedReviewResponse.model';
+import {ProductReviewsResponse} from '../../models/dto/reviewDTO/productReviewsResponse.model';
+import {Page} from '../../models/page.model';
 
 
 @Injectable({

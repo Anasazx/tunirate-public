@@ -3,10 +3,11 @@ import {CommonModule} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import {SharedService} from '../../../../core/services/sharedService/shared.service';
 import {AuthService} from '../../../auth/services/authService/auth.service';
+import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
 
 @Component({
   selector: 'app-account-header',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ImageUrlPipe],
   templateUrl: './account-header.component.html',
   styleUrl: './account-header.component.css'
 })

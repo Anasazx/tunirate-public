@@ -91,7 +91,7 @@
             class="p-1 rounded-full hover:bg-gray-100">
 
             <img
-              [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"
+              [src]="user.avatarUrl | imageUrl"
               class="w-8 h-8 rounded-full object-cover border">
 
           </button>
@@ -245,7 +245,7 @@
 
 
             <img
-              [src]="sharedService.getImageUrl(user.avatarUrl) || 'assets/default-avatar.png'"
+              [src]="user.avatarUrl | imageUrl"
               class="w-8 h-8 rounded-full object-cover border"
             />
 

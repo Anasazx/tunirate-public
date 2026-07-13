@@ -1,18 +1,20 @@
-import {Component, EventEmitter, HostListener, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {AuthService} from '../../../features/auth/services/authService/auth.service';
 import {Router} from '@angular/router';
 import {SearchService} from '../../services/searchService/search.service';
 import {SharedService} from '../../services/sharedService/shared.service';
+import {ImageUrlPipe} from '../../pipes/image-url.pipe';
 
 @Component({
   selector: 'app-search-bar',
-    imports: [
-        FormsModule,
-        NgForOf,
-        NgIf
-    ],
+  imports: [
+    FormsModule,
+    NgForOf,
+    NgIf,
+    ImageUrlPipe
+  ],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })

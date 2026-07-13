@@ -16,7 +16,7 @@
 
           <!-- LOGO -->
           <img
-            [src]="sharedService.getImageUrl(company?.logoUrl)"
+            [src]="company?.logoUrl  | imageUrl"
             class="
             h-12 w-12
             sm:h-14 sm:w-14
@@ -171,7 +171,7 @@
   <!-- BANNER -->
   <div *ngIf="company?.bannerUrl" class="rounded-xl overflow-hidden border h-70">
     <img
-      [src]="sharedService.getImageUrl(company?.bannerUrl)"
+      [src]="company?.bannerUrl | imageUrl"
       class="w-full h-full object-cover"
     />
   </div>
@@ -193,7 +193,7 @@
         <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
 
           <img
-            [src]="sharedService.getImageUrl(product.imageUrl)"
+            [src]="product.imageUrl | imageUrl"
             [alt]="product.name"
             class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />

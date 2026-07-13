@@ -21,9 +21,8 @@
         <div class="relative aspect-square max-w-md mx-auto lg:max-w-none rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
 
           <!-- MAIN IMAGE -->
-          <!--[src]="sharedService.getImageUrl(selectedImage) || sharedService.getImageUrl(product?.images?.[0]?.url)"-->
           <img
-            [src]="sharedService.getImageUrl(selectedImage)"
+            [src]="selectedImage | imageUrl"
             alt="product"
             class="w-full h-full object-cover transition"
           />
@@ -94,8 +93,7 @@
         >
 
           <img
-            *ngIf="product?.companyLogoUrl as logo"
-            [src]="sharedService.getImageUrl(logo)"
+            [src]="product?.companyLogoUrl | imageUrl"
             class="h-10 w-10 rounded-full border border-slate-200 object-cover shrink-0"
           />
 
@@ -295,7 +293,7 @@
                 "
               >
                 <div class="flex items-start gap-3 min-w-0">
-                  <img [src]="sharedService.getImageUrl(review.user.avatarUrl)"
+                  <img [src]="review.user.avatarUrl | imageUrl"
                     class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0">
                   <div>
 
@@ -392,7 +390,7 @@
 
                       <!-- AVATAR -->
                       <img
-                        [src]="sharedService.getImageUrl(c.actorAvatarUrl)"
+                        [src]="c.actorAvatarUrl | imageUrl"
                         class="w-6 h-6 rounded-full object-cover border"
                       />
 

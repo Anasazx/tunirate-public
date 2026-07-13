@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import {MinimizedReviewResponse} from '../../../../core/model/dto/reviewDTO/minimizedReviewResponse.model';
+import {MinimizedReviewResponse} from '../../../../core/models/dto/reviewDTO/minimizedReviewResponse.model';
 import {ReviewService} from '../../../../core/services/reviewService/review.service';
 import {RouterLink} from '@angular/router';
 

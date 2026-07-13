@@ -1,4 +1,4 @@
-import {Country} from '../../../../core/model/enums/country.enum.model';
+import {Country} from '../../../../core/models/enums/country.enum.model';
 
 export interface UpdateUserRequest {
   email: string;

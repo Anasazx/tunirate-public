@@ -9,12 +9,13 @@ import {ProductResponse} from '../../../product/models/productDTO/productRespons
 import {SOCIAL_ICON_MAP} from '../../../../core/mapping/social-icon-map';
 import {ProductService} from '../../../product/services/productService/product.service';
 import {CompanyStatus} from '../../enums/companyStatus.enum.model';
+import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
 
 
 @Component({
   selector: 'app-company-details',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ImageUrlPipe],
   templateUrl: './company-details.component.html',
   styleUrl: './company-details.component.css'
 })

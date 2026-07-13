@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/authService/auth.service';
-import { Country } from '../../../../core/model/enums/country.enum.model';
+import { Country } from '../../../../core/models/enums/country.enum.model';
 import { RegisterRequest } from '../../models/authDTO/registerRequest.model';
 import {FormsModule} from '@angular/forms';
 

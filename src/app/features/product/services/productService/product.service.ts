@@ -4,7 +4,7 @@ import { SharedService } from '../../../../core/services/sharedService/shared.se
 import { Observable } from 'rxjs';
 import { ProductResponse } from '../../models/productDTO/productResponse.model';
 import { DetailedProduct } from '../../models/detailedProduct.model';
-import {Page} from '../../../../core/model/page.model';
+import {Page} from '../../../../core/models/page.model';
 
 
 @Injectable({
