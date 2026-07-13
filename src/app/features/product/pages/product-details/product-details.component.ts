@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import {Component, HostListener, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import { ReviewResponse } from '../../../../core/model/dto/reviewDTO/reviewResponse.model';
@@ -12,6 +12,7 @@ import { CommentService } from '../../../../core/services/commentService/comment
 import { ReviewRequest } from '../../../../core/model/dto/reviewDTO/reviewRequest.model';
 import {ReviewFormComponent} from './components/review-form/review-form.component';
 import {AuthService} from '../../../auth/services/authService/auth.service';
+import {AuthRequiredComponent} from '../../../../core/sharedComponents/auth-required/auth-required.component';
 
 
 type ReviewWithComments = ReviewResponse & {
@@ -26,7 +27,7 @@ type ReviewWithComments = ReviewResponse & {
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent, AuthRequiredComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
@@ -65,6 +66,8 @@ export class ProductDetailsComponent implements OnInit {
 
   currentImageIndex = 0;
 
+  showAuthModal = false;
+
   // ===================== INIT =====================
   constructor(
     private productService: ProductService,
@@ -73,7 +76,7 @@ export class ProductDetailsComponent implements OnInit {
     public sharedService: SharedService,
     private reviewService: ReviewService,
     private commentService: CommentService,
-    private authService: AuthService
+    protected authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -103,89 +106,6 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
-  // ===================== LOAD REVIEWS =====================
-  private loadReviews() {
-
-    if (this.loading || this.last) return;
-
-    this.loading = true;
-
-    this.reviewService
-      .getReviewsByProductId(this.productId, this.page, this.size)
-      .subscribe({
-
-        next: (response) => {
-
-          this.totalReviews = response.reviews.totalElements;
-
-          if (this.page === 0) {
-            this.myReview = response.myReview;
-
-            if (this.myReview) {
-              this.reviewContent = this.myReview.content ?? '';
-              this.selectedRating = this.myReview.rating ?? 0;
-            }
-          }
-
-
-          let newReviews = response.reviews.content
-            .filter(r => !this.myReview || r.id !== this.myReview.id)
-            .map(r => ({
-              ...r,
-              showComments: false,
-              comments: [],
-              newComment: '',
-              commentsPage: 0,
-              commentsTotal: r.commentsCount ?? 0,
-              commentsLoading: false
-            }));
-
-
-          // Add my review first only on the first page
-          if (this.page === 0 && this.myReview) {
-
-            const myReviewWithState = {
-              ...this.myReview,
-              showComments: false,
-              comments: [],
-              newComment: '',
-              commentsPage: 0,
-              commentsTotal: this.myReview.commentsCount ?? 0,
-              commentsLoading: false
-            };
-
-            this.reviews = [
-              myReviewWithState,
-              ...newReviews
-            ];
-
-          } else {
-
-            this.reviews = [
-              ...this.reviews,
-              ...newReviews
-            ];
-
-          }
-
-
-          this.product!.reviews = this.reviews;
-
-          this.page++;
-          this.last = response.reviews.last;
-          this.loading = false;
-        },
-
-        error: err => {
-          console.error(err);
-          this.loading = false;
-        }
-
-      });
-
-    console.log(this.loading)
-
-  }
 
   // ===================== REVIEW CRUD =====================
   submitReview(request: ReviewRequest) {
@@ -214,6 +134,8 @@ export class ProductDetailsComponent implements OnInit {
         }
 
         this.myReview = saved;
+        this.product!.reviewsCount = this.reviews.length;
+        this.product!.reviews = this.reviews;
         this.submittingReview = false;
       },
       error: err => {
@@ -407,13 +329,117 @@ export class ProductDetailsComponent implements OnInit {
     this.selectedImage = images[this.currentImageIndex].url;
   }
 
-  @HostListener('window:scroll')
-  onScroll() {
-    const position = window.innerHeight + window.scrollY;
-    const height = document.documentElement.scrollHeight;
-    if (position >= height - 300) {
-      this.loadReviews();
-    }
+
+  private observer?: IntersectionObserver;
+
+  ngOnDestroy() {
+    this.observer?.disconnect();
+  }
+
+  private requestInProgress = false;
+
+  // ===================== LOAD REVIEWS =====================
+  private loadReviews() {
+
+    console.log("log reviews method called!!")
+
+    if (this.requestInProgress || this.last) return;
+
+    this.requestInProgress = true;
+    this.loading = true;
+
+    this.reviewService
+      .getReviewsByProductId(this.productId, this.page, this.size)
+      .subscribe({
+        next: (response) => {
+
+          this.totalReviews = response.reviews.totalElements;
+
+          if (this.page === 0) {
+            this.myReview = response.myReview;
+
+            if (this.myReview) {
+              this.reviewContent = this.myReview.content ?? '';
+              this.selectedRating = this.myReview.rating ?? 0;
+            }
+          }
+
+          const newReviews = response.reviews.content
+            .filter(r => !this.myReview || r.id !== this.myReview.id)
+            .map(r => ({
+              ...r,
+              showComments: false,
+              comments: [],
+              newComment: '',
+              commentsPage: 0,
+              commentsTotal: r.commentsCount ?? 0,
+              commentsLoading: false
+            }));
+
+          if (this.page === 0 && this.myReview) {
+
+            const myReviewWithState = {
+              ...this.myReview,
+              showComments: false,
+              comments: [],
+              newComment: '',
+              commentsPage: 0,
+              commentsTotal: this.myReview.commentsCount ?? 0,
+              commentsLoading: false
+            };
+
+            this.reviews = [
+              myReviewWithState,
+              ...newReviews
+            ];
+
+          } else {
+
+            this.reviews = [
+              ...this.reviews,
+              ...newReviews
+            ];
+
+          }
+
+          this.product!.reviews = this.reviews;
+
+          this.page++;
+          this.last = response.reviews.last;
+
+          this.loading = false;
+          this.requestInProgress = false;
+        },
+
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+          this.requestInProgress = false;
+        }
+      });
+  }
+
+  @ViewChild('loadMoreTrigger')
+  loadMoreTrigger?: ElementRef;
+  ngAfterViewInit() {
+    if (!this.loadMoreTrigger) return;
+    this.observer = new IntersectionObserver(
+      entries => {
+        if (
+          entries[0].isIntersecting &&
+          !this.loading &&
+          !this.last
+        ) {
+          this.loadReviews();
+        }
+      },
+      {
+        rootMargin: '100px'
+      }
+    );
+    this.observer.observe(
+      this.loadMoreTrigger.nativeElement
+    );
   }
 
 }

@@ -21,8 +21,9 @@
         <div class="relative aspect-square max-w-md mx-auto lg:max-w-none rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
 
           <!-- MAIN IMAGE -->
+          <!--[src]="sharedService.getImageUrl(selectedImage) || sharedService.getImageUrl(product?.images?.[0]?.url)"-->
           <img
-            [src]="sharedService.getImageUrl(selectedImage) || sharedService.getImageUrl(product?.images?.[0]?.url)"
+            [src]="sharedService.getImageUrl(selectedImage)"
             alt="product"
             class="w-full h-full object-cover transition"
           />
@@ -147,14 +148,14 @@
         <div
           *ngIf="(product?.reviewsCount ?? 0) > 0"
           class="
-    mt-6
-    pt-5
-    border-t
-    border-slate-100
-    flex
-    items-center
-    gap-4
-  "
+            mt-6
+            pt-5
+            border-t
+            border-slate-100
+            flex
+            items-center
+            gap-4
+          "
         >
 
           <!-- Overall rating -->
@@ -517,6 +518,7 @@
 
         </div>
         <div *ngIf="loading" class="pt-2 text-center divide-gray-400">Loading reviews...</div>
+        <div #loadMoreTrigger class="h-10"></div>
       </div>
     </div>
 
@@ -535,3 +537,11 @@
   </div>
 
 </div>
+
+
+
+<app-auth-required
+  *ngIf="showAuthModal"
+  (close)="showAuthModal = false"
+>
+</app-auth-required>
