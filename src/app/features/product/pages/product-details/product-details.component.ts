@@ -108,8 +108,20 @@ export class ProductDetailsComponent implements OnInit {
   }
 
 
+  showAuthModelIfNoAuthUser(): boolean {
+    if (!this.authService.getCurrentUser) {
+      this.showAuthModal = true;
+      return true;
+    }
+    return false;
+  }
+
   // ===================== REVIEW CRUD =====================
   submitReview(request: ReviewRequest) {
+
+    if (this.showAuthModelIfNoAuthUser()) {
+      return;
+    }
 
     this.submittingReview = true;
 
@@ -261,6 +273,9 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   startReply(comment: any) {
+    if (this.showAuthModelIfNoAuthUser()) {
+      return;
+    }
     this.replyingToCommentId = comment.id;
     this.replyText = '';
   }
