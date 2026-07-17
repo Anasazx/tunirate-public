@@ -1,0 +1,62 @@
+name: Deploy TuniRate Frontend
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+
+      - name: Install dependencies
+        run: npm install
+
+
+      - name: Build Angular
+        run: npm run build -- --configuration production
+
+
+      - name: Copy Angular build to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.VPS_SSH_KEY }}
+
+          source: dist/**/browser/*
+          target: /home/ubuntu/frontend-build
+
+
+      - name: Deploy frontend
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.VPS_SSH_KEY }}
+
+          script: |
+
+            sudo rm -rf /var/www/tunirate/browser/*
+
+            sudo cp -r /home/ubuntu/frontend-build/* /var/www/tunirate/browser/
+
+            sudo nginx -t
+
+            sudo systemctl reload nginx
