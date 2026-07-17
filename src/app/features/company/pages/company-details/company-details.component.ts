@@ -25,6 +25,8 @@ export class CompanyDetailsComponent implements OnInit {
 
   products: ProductResponse[] = [];
 
+  totalProducts = 0;
+
   protected readonly ProductStatus = ProductStatus;
 
   companyId!: number;
@@ -83,6 +85,8 @@ export class CompanyDetailsComponent implements OnInit {
           ...this.products,
           ...res.content
         ];
+
+        this.totalProducts = res.totalElements;
 
         this.page++;
         this.last = res.last;
