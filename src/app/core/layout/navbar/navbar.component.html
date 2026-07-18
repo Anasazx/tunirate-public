@@ -1,8 +1,8 @@
 <div
-  class="bg-white border-b relative pb-1"
+  class="bg-white border-b relative pb-2"
   (mouseleave)="hideSubcategories()">
 
-  <div class="max-w-fit mx-auto px-6 pb-3 pt-2">
+  <div class="max-w-fit mx-auto px-6">
 
     <!-- Categories -->
     <div class="flex flex-wrap items-center justify-center gap-3">
@@ -10,7 +10,7 @@
       <button
         routerLink="/"
         (click)="clearSelection()"
-        class="h-10 px-5 rounded-full
+        class="h-9 px-5 rounded-full
          flex items-center justify-center
          text-sm font-medium
          border transition-all duration-200"
@@ -29,13 +29,18 @@
       <button
         *ngFor="let category of categories"
         routerLink="/"
-        [queryParams]="{ category: category.name }"
+          [queryParams]="{
+          category: category.name,
+          categoryId: category.id
+        }"
         (mouseenter)="showSubcategories(category.id)"
-        class="h-10 px-5 rounded-full
-         flex items-center justify-center
-         text-sm font-medium
-         border transition-all duration-200
-         whitespace-nowrap"
+        class="
+          h-9 px-5 rounded-full
+          flex items-center justify-center
+          text-sm font-medium
+          border transition-all duration-200
+          whitespace-nowrap
+        "
         [class.bg-slate-900]="selectedCategoryId === category.id"
         [class.text-white]="selectedCategoryId === category.id"
         [class.border-slate-900]="selectedCategoryId === category.id"
@@ -43,9 +48,7 @@
         [class.text-slate-700]="selectedCategoryId !== category.id"
         [class.border-slate-200]="selectedCategoryId !== category.id"
         [class.hover:bg-slate-200]="selectedCategoryId !== category.id">
-
         {{ category.name }}
-
       </button>
 
     </div>
@@ -70,19 +73,28 @@
           routerLink="/"
           [queryParams]="{
             category: category.name,
-            subcategory: sub.name
+            categoryId: category.id,
+            subcategory: sub.name,
+            subcategoryId: sub.id
           }"
-          class="h-9 px-4
-           rounded-full
-           flex items-center
-           text-sm font-medium
-           border border-slate-200
-           bg-white
-           text-slate-600
-           hover:bg-slate-900
-           hover:text-white
-           hover:border-slate-900
-           transition">
+          class="
+            h-9 px-4
+            rounded-full
+            flex items-center
+            text-sm font-medium
+            border transition
+          "
+          [class.bg-slate-900]="selectedSubcategoryId === sub.id"
+          [class.text-white]="selectedSubcategoryId === sub.id"
+          [class.border-slate-900]="selectedSubcategoryId === sub.id"
+
+          [class.bg-white]="selectedSubcategoryId !== sub.id"
+          [class.text-slate-600]="selectedSubcategoryId !== sub.id"
+          [class.border-slate-200]="selectedSubcategoryId !== sub.id"
+
+          [class.hover:bg-slate-900]="selectedSubcategoryId !== sub.id"
+          [class.hover:text-white]="selectedSubcategoryId !== sub.id"
+        >
 
           {{ sub.name }}
 

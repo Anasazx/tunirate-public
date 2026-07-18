@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import { CategoryService } from '../../../features/home/services/categoryService/category.service';
 import { SubcategoryService } from '../../../features/home/services/subcategoryService/subcategory.service';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -45,13 +45,20 @@ export class NavbarComponent implements OnInit {
 
   categories: HeaderCategory[] = [];
   selectedCategoryId: number | null = null;
+  selectedSubcategoryId: number | null = null;
 
   constructor(
     private categoryService: CategoryService,
-    private subcategoryService: SubcategoryService
+    private subcategoryService: SubcategoryService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParamMap.subscribe(params => {
+      this.selectedCategoryId = params.get('categoryId') ? Number(params.get('categoryId')) : null;
+      this.selectedSubcategoryId = params.get('subcategoryId') ? Number(params.get('subcategoryId')) : null;
+    });
+
     this.loadCategories();
   }
 

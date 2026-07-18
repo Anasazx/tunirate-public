@@ -23,9 +23,10 @@ export class HomeComponent implements OnInit{
   ){}
 
   products: ProductResponse[] = [];
-  filteredProducts: ProductResponse[] = [];
   selectedCategory = 'All';
   selectedSubcategory = 'All';
+  selectedCategoryId?: number;
+  selectedSubcategoryId?: number;
 
   page = 0;
   size = 20;
@@ -33,27 +34,16 @@ export class HomeComponent implements OnInit{
   loading = false;
 
   ngOnInit(): void {
-
     this.route.queryParamMap.subscribe(params => {
-
-      this.selectedCategory =
-
-        params.get('category') || 'All';
-
-      this.selectedSubcategory =
-
-        params.get('subcategory') || 'All';
-
+      this.selectedCategoryId = params.get('categoryId') ? Number(params.get('categoryId')) : undefined;
+      this.selectedSubcategoryId = params.get('subcategoryId') ? Number(params.get('subcategoryId')) : undefined;
+      this.selectedCategory = params.get('category') || 'All';
+      this.selectedSubcategory = params.get('subcategory') || 'All';
       this.products = [];
-
       this.page = 0;
-
       this.last = false;
-
       this.loadProducts();
-
     });
-
   }
 
   loadProducts() {
@@ -62,46 +52,25 @@ export class HomeComponent implements OnInit{
 
     this.loading = true;
 
-    this.productService.getProducts(this.page, this.size)
+    this.productService.getProducts(
+      this.page,
+      this.size,
+      this.selectedCategoryId,
+      this.selectedSubcategoryId
+    )
+
       .subscribe({
         next: (response) => {
           this.products.push(...response.content);
           this.page++;
           this.last = response.last;
           this.loading = false;
-          this.applyFilters();
         },
         error: err => {
           console.error(err);
           this.loading = false;
         }
       });
-
-  }
-
-  applyFilters() {
-
-    this.filteredProducts = this.products.filter(product => {
-
-      const productCategory =
-        product.categoryName ?? product.category;
-
-      const productSubcategory =
-        product.subcategoryName ??
-        product.subcategory ??
-        product.category;
-
-      const matchesCategory =
-        this.selectedCategory === 'All' ||
-        productCategory === this.selectedCategory;
-
-      const matchesSubcategory =
-        this.selectedSubcategory === 'All' ||
-        productSubcategory === this.selectedSubcategory;
-
-      return matchesCategory && matchesSubcategory;
-
-    });
 
   }
 

@@ -3,7 +3,6 @@ import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/co
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../features/auth/services/authService/auth.service';
-import { SearchService } from '../../services/searchService/search.service';
 import { CompanyInvitationService } from '../../../features/company/services/companyInvitationService/company-invitation.service';
 import { SharedService } from '../../services/sharedService/shared.service';
 import { NavbarComponent } from '../navbar/navbar.component';
@@ -33,7 +32,6 @@ export class HeaderComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private router: Router,
-    private searchService: SearchService,
     private companyInvitationService: CompanyInvitationService,
     public sharedService: SharedService,
   ) {}
