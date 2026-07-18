@@ -30,9 +30,9 @@
         *ngFor="let category of categories"
         routerLink="/"
           [queryParams]="{
-          category: category.name,
-          categoryId: category.id
-        }"
+            category: category.name,
+            categoryId: category.id
+          }"
         (mouseenter)="showSubcategories(category.id)"
         class="
           h-9 px-5 rounded-full

@@ -70,7 +70,10 @@
 
           routerLink="/"
 
-          [queryParams]="{ category: category.name }"
+          [queryParams]="{
+            category: category.name,
+            categoryId: category.id
+          }"
 
           (click)="close.emit()"
 
@@ -107,12 +110,11 @@
             routerLink="/"
 
             [queryParams]="{
-
-        category: category.name,
-
-        subcategory: sub.name
-
-      }"
+              category: category.name,
+              categoryId: category.id,
+              subcategory: sub.name,
+              subcategoryId: sub.id
+            }"
 
             (click)="close.emit()"
 
