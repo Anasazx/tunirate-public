@@ -47,13 +47,13 @@ export class CompanyDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     this.route.paramMap.subscribe(params => {
 
       const id = Number(params.get('id'));
       if (!id) return;
 
       this.companyId = id;
+      this.products = [];
 
       this.loadCompany();
 
@@ -61,7 +61,6 @@ export class CompanyDetailsComponent implements OnInit {
       this.loadProducts();
 
     });
-
   }
 
   loadCompany() {
