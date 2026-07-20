@@ -97,45 +97,75 @@
 
         <!-- Subcategories -->
 
+        <!-- Subcategories -->
         <div
-
           class="ml-5 mt-1 border-l border-slate-200 pl-3 space-y-1"
-
+          *ngIf="category.subcategories.length"
         >
 
           <a
-
-            *ngFor="let sub of category.subcategories"
+            *ngFor="
+      let sub of (
+        isExpanded(category.id)
+          ? category.subcategories
+          : category.subcategories.slice(0,2)
+      )
+    "
 
             routerLink="/"
 
             [queryParams]="{
-              category: category.name,
-              categoryId: category.id,
-              subcategory: sub.name,
-              subcategoryId: sub.id
-            }"
+      category: category.name,
+      categoryId: category.id,
+      subcategory: sub.name,
+      subcategoryId: sub.id
+    }"
 
             (click)="close.emit()"
 
-            class="block py-2 text-sm transition"
+            class="
+      block
+      py-2
+      text-sm
+      transition
+    "
 
             [class.font-bold]="currentSubcategory === sub.name"
-
             [class.text-slate-900]="currentSubcategory === sub.name"
-
             [class.text-slate-600]="currentSubcategory !== sub.name"
-
             [class.hover:bg-slate-100]="currentSubcategory !== sub.name"
-
           >
 
             {{ sub.name }}
 
           </a>
 
-        </div>
 
+
+          <!-- SEE MORE -->
+          <button
+            *ngIf="category.subcategories.length > 2"
+            (click)="toggleSubcategories(category.id)"
+
+            class="
+      mt-1
+      text-sm
+      font-medium
+      text-blue-600
+      hover:text-blue-800
+    "
+          >
+
+            {{
+              isExpanded(category.id)
+                ? 'Show less'
+                : 'See more'
+            }}
+
+          </button>
+
+
+        </div>
       </div>
 
     </nav>

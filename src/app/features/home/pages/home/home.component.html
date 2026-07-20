@@ -89,7 +89,7 @@
     </article>
   </div>
 
-  <div *ngIf="products.length === 0" class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
+  <div *ngIf="products.length === 0 && showNoProductFoundModel" class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
     No products found in {{ selectedSubcategory !== 'All' ? selectedSubcategory : selectedCategory }}.
   </div>
 </div>

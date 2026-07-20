@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit{
   selectedCategoryId?: number;
   selectedSubcategoryId?: number;
 
+  showNoProductFoundModel: boolean = false;
+
   page = 0;
   size = 20;
   last = false;
@@ -51,6 +53,7 @@ export class HomeComponent implements OnInit{
     if (this.loading || this.last) return;
 
     this.loading = true;
+    this.showNoProductFoundModel = false;
 
     this.productService.getProducts(
       this.page,
@@ -61,12 +64,14 @@ export class HomeComponent implements OnInit{
 
       .subscribe({
         next: (response) => {
+          this.showNoProductFoundModel = true;
           this.products.push(...response.content);
           this.page++;
           this.last = response.last;
           this.loading = false;
         },
         error: err => {
+          this.showNoProductFoundModel = true;
           console.error(err);
           this.loading = false;
         }

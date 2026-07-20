@@ -4,19 +4,25 @@
 
   <div class="max-w-fit mx-auto px-6">
 
-    <!-- Categories -->
+    <!-- CATEGORIES -->
     <div class="flex flex-wrap items-center justify-center gap-3">
 
+
+      <!-- ALL -->
       <button
         routerLink="/"
         (click)="clearSelection()"
-        class="h-9 px-5 rounded-full
-         flex items-center justify-center
-         text-sm font-medium
-         border transition-all duration-200"
+        class="
+          h-9 px-5 rounded-full
+          flex items-center justify-center
+          text-sm font-medium
+          border
+          transition-all duration-200
+        "
         [class.bg-slate-900]="selectedCategoryId === null"
         [class.text-white]="selectedCategoryId === null"
         [class.border-slate-900]="selectedCategoryId === null"
+
         [class.bg-slate-100]="selectedCategoryId !== null"
         [class.text-slate-700]="selectedCategoryId !== null"
         [class.border-slate-200]="selectedCategoryId !== null">
@@ -26,92 +32,141 @@
       </button>
 
 
+
+      <!-- CATEGORIES -->
       <button
         *ngFor="let category of categories"
         routerLink="/"
-          [queryParams]="{
-            category: category.name,
-            categoryId: category.id
-          }"
+        [queryParams]="{
+          category: category.name,
+          categoryId: category.id
+        }"
         (mouseenter)="showSubcategories(category.id)"
         class="
           h-9 px-5 rounded-full
           flex items-center justify-center
           text-sm font-medium
-          border transition-all duration-200
+          border
+          transition-all duration-200
           whitespace-nowrap
         "
         [class.bg-slate-900]="selectedCategoryId === category.id"
         [class.text-white]="selectedCategoryId === category.id"
         [class.border-slate-900]="selectedCategoryId === category.id"
+
         [class.bg-slate-100]="selectedCategoryId !== category.id"
         [class.text-slate-700]="selectedCategoryId !== category.id"
         [class.border-slate-200]="selectedCategoryId !== category.id"
+
         [class.hover:bg-slate-200]="selectedCategoryId !== category.id">
+
         {{ category.name }}
+
       </button>
+
 
     </div>
 
 
-    <!-- Subcategories -->
+
+
+    <!-- SUBCATEGORIES DROPDOWN -->
     <div
       *ngIf="hoveredCategoryId !== null && activeCategory() as category"
       @subCategoryAnimation
-      class="absolute top-full left-0 w-full z-50"
+      class="
+        absolute
+        top-full
+        left-0
+        w-full
+        z-50
+      "
       (mouseenter)="showSubcategories(category.id)"
     >
 
+
       <div
-        class="flex flex-wrap justify-center gap-3
-         bg-white border border-slate-200
-         shadow-lg rounded-b-2xl
-         px-6 py-4">
+        class="
+          bg-white
+          border
+          border-slate-200
+          shadow-lg
+          rounded-b-2xl
+          px-6
+          py-4
+        "
+      >
 
-        <a
-          *ngFor="let sub of category.subcategories"
-          routerLink="/"
-          [queryParams]="{
-            category: category.name,
-            categoryId: category.id,
-            subcategory: sub.name,
-            subcategoryId: sub.id
-          }"
+
+        <!-- HAS SUBCATEGORIES -->
+        <div
+          *ngIf="category.subcategories.length > 0"
           class="
-            h-9 px-4
-            rounded-full
-            flex items-center
-            text-sm font-medium
-            border transition
+            flex
+            flex-wrap
+            justify-center
+            gap-3
           "
-          [class.bg-slate-900]="selectedSubcategoryId === sub.id"
-          [class.text-white]="selectedSubcategoryId === sub.id"
-          [class.border-slate-900]="selectedSubcategoryId === sub.id"
-
-          [class.bg-white]="selectedSubcategoryId !== sub.id"
-          [class.text-slate-600]="selectedSubcategoryId !== sub.id"
-          [class.border-slate-200]="selectedSubcategoryId !== sub.id"
-
-          [class.hover:bg-slate-900]="selectedSubcategoryId !== sub.id"
-          [class.hover:text-white]="selectedSubcategoryId !== sub.id"
         >
 
-          {{ sub.name }}
+          <a
+            *ngFor="let sub of category.subcategories"
+            routerLink="/"
+            [queryParams]="{
+              category: category.name,
+              categoryId: category.id,
+              subcategory: sub.name,
+              subcategoryId: sub.id
+            }"
+            class="
+              h-9 px-4
+              rounded-full
+              flex items-center
+              text-sm font-medium
+              border
+              transition
+            "
 
-        </a>
+            [class.bg-slate-900]="selectedSubcategoryId === sub.id"
+            [class.text-white]="selectedSubcategoryId === sub.id"
+            [class.border-slate-900]="selectedSubcategoryId === sub.id"
+
+            [class.bg-white]="selectedSubcategoryId !== sub.id"
+            [class.text-slate-600]="selectedSubcategoryId !== sub.id"
+            [class.border-slate-200]="selectedSubcategoryId !== sub.id"
+
+            [class.hover:bg-slate-900]="selectedSubcategoryId !== sub.id"
+            [class.hover:text-white]="selectedSubcategoryId !== sub.id"
+          >
+
+            {{ sub.name }}
+
+          </a>
+
+
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div
+          *ngIf="category.subcategories.length === 0"
+          class="
+            h-9
+            flex
+            items-center
+            justify-center
+            text-sm
+            text-slate-400
+          "
+        >
+          No subcategories
+        </div>
+
 
       </div>
 
-
-      <div
-        *ngIf="!category.subcategories.length"
-        class="text-center text-slate-400 py-8 bg-white">
-
-        No subcategories
-
-      </div>
 
     </div>
+
 
   </div>
 

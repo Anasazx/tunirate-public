@@ -22,6 +22,7 @@ export class MobileSidebarComponent implements OnInit {
   currentCategory: string | null = null;
   currentSubcategory: string | null = null;
 
+  expandedCategories = new Set<number>();
 
   constructor(
     private categoryService: CategoryService,
@@ -85,6 +86,18 @@ export class MobileSidebarComponent implements OnInit {
 
       });
 
+  }
+
+  toggleSubcategories(categoryId: number) {
+    if (this.expandedCategories.has(categoryId)) {
+      this.expandedCategories.delete(categoryId);
+    } else {
+      this.expandedCategories.add(categoryId);
+    }
+  }
+
+  isExpanded(categoryId: number): boolean {
+    return this.expandedCategories.has(categoryId);
   }
 
 }
