@@ -1,7 +1,15 @@
 <!-- LEFT SIDEBAR -->
 <div
   *ngIf="authService.currentUser$ | async as user"
-  class="md:col-span-1 bg-white h-full border border-gray-200 rounded-2xl p-5 sticky top-20 shadow-sm">
+  class="
+    h-full
+    bg-white
+    border
+    border-gray-200
+    rounded-2xl
+    p-5
+    shadow-sm
+  ">
 
   <!-- USER -->
   <div class="flex flex-col items-center text-center">
@@ -30,6 +38,7 @@
       routerLink="/account/profile"
       routerLinkActive="bg-blue-50 text-blue-700 font-semibold"
       [routerLinkActiveOptions]="{ exact: true }"
+      (click)="close()"
       class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition">
 
       <i class="fa-regular fa-user text-gray-500 w-5 text-center"></i>
@@ -41,6 +50,7 @@
     <a
       routerLink="/account/reviews"
       routerLinkActive="bg-blue-50 text-blue-700 font-semibold"
+      (click)="close()"
       class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition">
 
       <i class="fa-regular fa-star text-gray-500 w-5 text-center"></i>

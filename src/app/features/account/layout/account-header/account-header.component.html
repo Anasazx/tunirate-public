@@ -1,73 +1,126 @@
-<div class="bg-white border-b">
+<div class="bg-white border-b sticky top-0 z-50">
 
-  <div class="max-w-6xl mx-auto px-4 h-16 grid grid-cols-3 items-center">
+  <div
+    class="
+      max-w-6xl mx-auto px-4
+      h-14
+      flex items-center justify-between
+    "
+  >
 
-    <!-- LEFT: BRAND (same as main header) -->
-    <div class="justify-self-start">
-      <a routerLink="/" class="font-bold text-xl text-gray-800">
+
+    <!-- LEFT -->
+    <div class="flex items-center gap-3">
+
+
+      <!-- MOBILE BURGER -->
+      <button
+
+        class="
+        md:hidden
+        p-2
+        rounded-lg
+        hover:bg-gray-100
+      "
+        (click)="toggleMenu()"
+      >
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 text-gray-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"/>
+
+        </svg>
+
+      </button>
+
+
+
+      <!-- BRAND DESKTOP -->
+      <a
+        routerLink="/"
+        class="
+          hidden md:block
+          font-bold
+          text-lg
+          text-gray-800
+        "
+      >
         ReviewHub
       </a>
-    </div>
-
-    <!-- CENTER (optional empty or label) -->
-    <div class="justify-self-center text-sm text-gray-500">
-      Account Settings
-    </div>
-
-    <!-- RIGHT: ACTIONS -->
-    <div class="justify-self-end flex items-center gap-4">
-
-      <!-- Home -->
-      <a routerLink="/" class="text-sm text-gray-600 hover:text-black">
-        ← Home
-      </a>
-
-      <ng-container *ngIf="authService.currentUser$ | async as user">
-
-        <!-- User Dropdown -->
-        <div class="relative">
-
-          <button (click)="toggleUserMenu()"
-                  class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 transition">
-
-            <img
-              [src]="user.avatarUrl | imageUrl"
-              class="w-8 h-8 rounded-full object-cover border"
-            />
-
-            <span class="text-sm font-medium text-gray-700 hidden md:block">
-            {{ user.name }}
-          </span>
-
-          </button>
 
 
-          <div *ngIf="userMenuOpen"
-               class="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-lg overflow-hidden z-50">
 
-            <a routerLink="/account" class="block px-4 py-2 text-sm hover:bg-gray-100">
-              My account
-            </a>
+      <!-- SECTION TITLE -->
+      <div
 
-            <a *ngIf="authService.isCompanyMember()"
-               (click)="goCompanyDashboard()"
-               class="block px-4 py-2 text-sm hover:bg-gray-100">
-              Company Dashboard
-            </a>
+        class="
+        hidden md:block
+        absolute
+        left-1/2
+        -translate-x-1/2
+        text-sm
+        font-semibold
+        text-gray-800
+      "
+      >
+        Account Settings
+      </div>
 
-            <button (click)="logout()"
-                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-              Logout
-            </button>
+      <!-- MOBILE TITLE -->
 
-          </div>
+      <div
 
-        </div>
-
-      </ng-container>
+        class="
+        md:hidden
+        text-base
+        font-semibold
+        text-gray-800
+        absolute
+        left-1/2
+        -translate-x-1/2
+      "
+      >
+        Account
+      </div>
 
 
     </div>
+
+
+
+    <!-- BACK -->
+    <a
+      routerLink="/"
+      class="
+        text-sm
+        text-gray-600
+        hover:text-black
+        transition
+        flex
+        items-center
+        gap-1
+      "
+    >
+
+      <span class="md:hidden">
+        Back
+      </span>
+
+      <span class="hidden sm:inline">
+        Home
+      </span>
+
+    </a>
+
 
   </div>
 

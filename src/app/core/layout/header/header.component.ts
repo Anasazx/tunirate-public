@@ -29,6 +29,8 @@ export class HeaderComponent implements OnInit {
 
   userMenuOpen = false;
 
+  logoutConfirmOpen = false;
+
   constructor(
     public authService: AuthService,
     private router: Router,
@@ -91,6 +93,12 @@ export class HeaderComponent implements OnInit {
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  confirmLogout(): void {
+    this.logoutConfirmOpen = false;
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 
   @HostListener('document:click', ['$event'])

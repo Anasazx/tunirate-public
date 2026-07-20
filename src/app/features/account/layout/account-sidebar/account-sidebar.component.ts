@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {SharedService} from '../../../../core/services/sharedService/shared.service';
 import {AuthService} from '../../../auth/services/authService/auth.service';
@@ -17,6 +17,12 @@ import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
   styleUrl: './account-sidebar.component.css'
 })
 export class AccountSidebarComponent {
+
+  @Output() closeSidebar = new EventEmitter<void>();
+
+  close() {
+    this.closeSidebar.emit();
+  }
 
   constructor(
     public sharedService: SharedService,

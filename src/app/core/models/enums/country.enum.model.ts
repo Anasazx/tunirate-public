@@ -3,4 +3,5 @@ export enum Country {
   ALGERIA = 'ALGERIA',
   MOROCCO = 'MOROCCO',
   FRANCE = 'FRANCE',
+  OTHER = 'OTHER',
 }
