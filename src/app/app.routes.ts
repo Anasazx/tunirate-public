@@ -14,40 +14,38 @@ import {MyCommentsComponent} from './features/account/pages/my-comments/my-comme
 
 export const routes: Routes = [
   {
-    path: 'auth/login',
-    component: LoginComponent,
+    path: 'auth',
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent }
+    ]
   },
-  {
-    path: 'auth/register',
-    component: RegisterComponent,
-  },
+
   {
     path: 'account',
     component: AccountLayoutComponent,
     children: [
-      { path: '', component: ProfileCardComponent },
       { path: 'profile', component: ProfileCardComponent },
       { path: 'security', component: SecurityComponent },
       { path: 'reviews', component: MyReviewsComponent },
       { path: 'comments', component: MyCommentsComponent },
-    ],
+      { path: '', redirectTo: 'profile', pathMatch: 'full' }
+    ]
   },
+
   {
     path: '',
     component: MainComponent,
     children: [
       { path: '', component: HomeComponent },
       { path: 'product/:id', component: ProductDetailsComponent },
-      { path: 'company/:id', component: CompanyDetailsComponent },
-    ],
+      { path: 'company/:id', component: CompanyDetailsComponent }
+    ]
   },
 
-
-
-
-  // {
-  //   path: '**',
-  //   redirectTo: '/'
-  // },
+  {
+    path: '**',
+    redirectTo: ''
+  }
 
 ];
