@@ -10,6 +10,7 @@ import {MyReviewsComponent} from './features/account/pages/my-reviews/my-reviews
 import {SecurityComponent} from './features/account/pages/security/security.component';
 import {ProfileCardComponent} from './features/account/pages/profile-card/profile-card.component';
 import {MyCommentsComponent} from './features/account/pages/my-comments/my-comments.component';
+import {MySuggestionsComponent} from './features/account/pages/my-suggestions/my-suggestions.component';
 
 
 export const routes: Routes = [
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'security', component: SecurityComponent },
       { path: 'reviews', component: MyReviewsComponent },
       { path: 'comments', component: MyCommentsComponent },
+      { path: 'suggestions', component: MySuggestionsComponent },
       { path: '', redirectTo: 'profile', pathMatch: 'full' }
     ]
   },

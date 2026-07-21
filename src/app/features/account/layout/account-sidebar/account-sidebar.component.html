@@ -54,7 +54,18 @@
       class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition">
 
       <i class="fa-regular fa-star text-gray-500 w-5 text-center"></i>
-      <span>My Reviews</span>
+      <span>Reviews</span>
+
+    </a>
+    <a
+      routerLink="/account/suggestions"
+      routerLinkActive="bg-blue-50 text-blue-700 font-semibold"
+      (click)="close()"
+      class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition">
+
+      <i class="fa-regular fa-lightbulb text-gray-500 w-5 text-center"></i>
+
+      <span>Suggestions</span>
 
     </a>
     <!--

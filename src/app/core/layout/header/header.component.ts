@@ -10,14 +10,43 @@ import {filter} from 'rxjs';
 import {MobileSidebarComponent} from '../mobile-sidebar/mobile-sidebar.component';
 import {SearchBarComponent} from '../search-bar/search-bar.component';
 import {ImageUrlPipe} from '../../pipes/image-url.pipe';
+import {SuggestProductService} from '../../services/suggestProductService/suggest-product.service';
+import {AuthRequiredComponent} from '../../sharedComponents/auth-required/auth-required.component';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent, SearchBarComponent, ImageUrlPipe],
+  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent, SearchBarComponent, ImageUrlPipe, AuthRequiredComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
+  animations: [
+    trigger('toastAnimation', [
+      transition(':enter', [
+        style({
+          opacity: 0,
+          transform: 'translateX(100%)'
+        }),
+        animate(
+          '300ms ease-out',
+          style({
+            opacity: 1,
+            transform: 'translateX(0)'
+          })
+        )
+      ]),
+      transition(':leave', [
+        animate(
+          '300ms ease-in',
+          style({
+            opacity: 0,
+            transform: 'translateX(100%)'
+          })
+        )
+      ])
+    ])
+  ]
 })
 export class HeaderComponent implements OnInit {
 
@@ -31,12 +60,24 @@ export class HeaderComponent implements OnInit {
 
   logoutConfirmOpen = false;
 
+  showAuthModal= false;
+
   constructor(
     public authService: AuthService,
     private router: Router,
     private companyInvitationService: CompanyInvitationService,
     public sharedService: SharedService,
+    private suggestProductService: SuggestProductService
   ) {}
+
+
+  showAuthModelIfNoAuthUser(): boolean {
+    if (!this.authService.getCurrentUser) {
+      this.showAuthModal = true;
+      return true;
+    }
+    return false;
+  }
 
   ngOnInit() {
     this.authService.currentUser$.pipe(
@@ -79,6 +120,13 @@ export class HeaderComponent implements OnInit {
       });
   }
 
+  suggestProductOpenMethod(){
+    if (this.showAuthModelIfNoAuthUser()) {
+      return;
+    }
+    this.suggestProductOpen = true;
+  }
+
   accept(id: number): void {
     this.companyInvitationService.acceptInvitation(id)
       .subscribe(() => this.loadInvitations());
@@ -99,6 +147,64 @@ export class HeaderComponent implements OnInit {
     this.logoutConfirmOpen = false;
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  suggestProductOpen = false;
+  suggestionSuccess = false;
+
+  suggestion = {
+    name: '',
+    companyName: '',
+    description: ''
+  };
+
+
+  submitSuggestion(){
+
+    if (this.showAuthModelIfNoAuthUser()) {
+      return;
+    }
+
+
+    this.suggestProductService
+      .createSuggestion(this.suggestion)
+      .subscribe({
+
+        next:()=>{
+
+          // close modal
+          this.suggestProductOpen = false;
+
+
+          // reset form
+          this.suggestion = {
+            name:'',
+            companyName:'',
+            description:''
+          };
+
+
+          // show success message
+          this.suggestionSuccess = true;
+
+
+          // hide after 3 seconds
+          setTimeout(() => {
+            this.suggestionSuccess = false;
+          }, 3000);
+
+        },
+
+
+        error:()=>{
+
+          // optional later
+          // show error toast
+
+        }
+
+      });
+
   }
 
   @HostListener('document:click', ['$event'])
