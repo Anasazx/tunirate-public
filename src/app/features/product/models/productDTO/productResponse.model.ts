@@ -18,5 +18,7 @@ export interface ProductResponse {
   createdById?: number;
   updatedByName?: string;
   updatedById?: number;
+  reviewsAvg: number;
+  reviewCount: number;
   status: ProductStatus;
 }

@@ -1,6 +1,7 @@
 <div class="space-y-8">
 
   <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+
     <article
       *ngFor="let product of products"
       class="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -17,76 +18,103 @@
         </div>
       </div>
 
-<div class="flex flex-1 flex-col p-5">
+      <div class="flex flex-1 flex-col p-5">
 
-  <div class="flex items-start justify-between gap-4">
+        <div class="flex items-start justify-between gap-4">
 
-    <!-- LEFT -->
-    <div>
-      <h2
-        class="text-xl font-semibold text-slate-900 mb-3 cursor-pointer hover:underline"
-        [routerLink]="['/product', product.id]"
-      >
-        {{ product.name }}
-      </h2>
+          <!-- LEFT -->
+          <div>
+            <h2
+              class="text-xl font-semibold text-slate-900 mb-3 cursor-pointer hover:underline"
+              [routerLink]="['/product', product.id]"
+            >
+              {{ product.name }}
+            </h2>
 
-      <p class="mt-1 text-sm font-medium text-slate-500 flex items-center gap-2">
+            <p class="mt-1 text-sm font-medium text-slate-500 flex items-center gap-2">
 
-        <img
-          [src]="product.companyLogoUrl | imageUrl"
-          alt="Company logo"
-          class="h-8 w-8 rounded-full object-cover border"
-        />
+              <img
+                [src]="product.companyLogoUrl | imageUrl"
+                alt="Company logo"
+                class="h-8 w-8 rounded-full object-cover border"
+              />
 
-        <span
-          class="leading-none cursor-pointer hover:underline flex items-center gap-1"
-          [routerLink]="['/company', product.companyId]"
-        >
-          {{ product.companyName }}
+              <span
+                class="leading-none cursor-pointer hover:underline flex items-center gap-1"
+                [routerLink]="['/company', product.companyId]"
+              >
+                {{ product.companyName }}
 
-          <!-- VERIFIED BADGE -->
-          <svg
-            *ngIf="product.companyIsVerified"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            class="h-4 w-4 shrink-0 text-sky-500"
-            fill="currentColor"
-            title="Verified Company"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path
-              d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
-              fill="white"
-            />
-          </svg>
+                <!-- VERIFIED BADGE -->
+                <svg
+                  *ngIf="product.companyIsVerified"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  class="h-4 w-4 shrink-0 text-sky-500"
+                  fill="currentColor"
+                  title="Verified Company"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path
+                    d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
+                    fill="white"
+                  />
+                </svg>
 
-        </span>
+              </span>
 
-      </p>
-    </div>
+            </p>
+          </div>
 
-    <!-- RIGHT -->
-      </div>
+              <!-- RIGHT -->
+              <div class="flex items-center gap-1 text-sm">
 
-      <p class="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">
-        {{ product.description }}
-      </p>
+                <i *ngIf="product.reviewCount > 0" class="fa-solid fa-star text-yellow-400"></i>
+
+                <span
+                  *ngIf="product.reviewCount > 0"
+                  class="font-semibold text-slate-700"
+                >
+                  {{ product.reviewsAvg | number:'1.1-1' }}
+                </span>
+
+                <span
+                  *ngIf="product.reviewCount > 0"
+                  class="text-slate-400 text-xs"
+                >
+                  ({{ product.reviewCount }})
+                </span>
+
+                <span
+                  *ngIf="product.reviewCount === 0"
+                  class="text-xs text-slate-400"
+                >
+                  —
+                </span>
+
+              </div>
+
+            </div>
+
+            <p class="mt-4 text-sm leading-6 text-slate-600 line-clamp-3">
+              {{ product.description }}
+            </p>
 
 
-      <!-- BUTTON (FORCED BOTTOM) -->
-      <div class="mt-auto pt-6">
-        <a
-          [href]="'/product/' + product.id"
-          class="inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
-        >
-          View details
-        </a>
-      </div>
+            <!-- BUTTON (FORCED BOTTOM) -->
+            <div class="mt-auto pt-6">
+              <a
+                [href]="'/product/' + product.id"
+                class="inline-flex w-full items-center justify-center rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+              >
+                View details
+              </a>
+            </div>
 
-    </div>
-
+          </div>
 
     </article>
+
   </div>
 
   <div *ngIf="products.length === 0 && showNoProductFoundModel" class="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">
