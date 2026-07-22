@@ -142,56 +142,20 @@
 
 
 
-    <div class="flex items-center gap-2">
+    <div class="relative w-full">
 
-      <app-search-bar class="flex-1"></app-search-bar>
-
+      <app-search-bar></app-search-bar>
 
       <button
         (click)="suggestProductOpenMethod()"
-        class="
-      hidden md:flex
-      items-center gap-2
-      px-4 py-2
-      rounded-xl
-      text-sm
-      font-medium
-      text-slate-700
-      bg-slate-100
-      hover:bg-slate-200
-      transition
-      whitespace-nowrap
-    "
-      >
-
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"/>
-
-        </svg>
-
-
-        Didn't find it?
-
+        class="absolute right-2 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 text-xs text-sky-600 hover:text-sky-700 font-medium bg-white px-2">
+        + Suggest
       </button>
 
     </div>
 
     <!-- DESKTOP USER MENU -->
-    <div
-      class="hidden md:flex
-         justify-self-end
-         items-center gap-3">
-
+    <div class="hidden md:flex justify-self-end items-center gap-3">
 
       <!-- AUTH STATE -->
       <ng-container *ngIf="authService.currentUser$ | async as user; else desktopGuest">
@@ -355,10 +319,6 @@
 
       </ng-container>
 
-
-
-
-
       <!-- GUEST -->
       <ng-template #desktopGuest>
 
@@ -375,7 +335,6 @@
 
 
       </ng-template>
-
 
     </div>
 
