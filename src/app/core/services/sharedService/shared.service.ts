@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class SharedService {
 
   publicUrl = "https://reviewhood.tech/api";
-
+  imageUrl = "https://reviewhood.tech/uploads";
 
   constructor() {}
 
@@ -14,7 +14,7 @@ export class SharedService {
     if (!imageUrl) {
       return 'https://placehold.co/600x400/EEE/31343C';
     }
-    return `${imageUrl}`;
+    return `${this.imageUrl}/${imageUrl}`;
   }
 
 }

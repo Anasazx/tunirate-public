@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
-import {AuthService} from '../../../features/auth/services/authService/auth.service';
 import {Router} from '@angular/router';
 import {SearchService} from '../../services/searchService/search.service';
 import {SharedService} from '../../services/sharedService/shared.service';
@@ -34,7 +33,6 @@ export class SearchBarComponent {
   }[] = [];
 
   constructor(
-    public authService: AuthService,
     private router: Router,
     private searchService: SearchService,
     public sharedService: SharedService,
@@ -57,7 +55,7 @@ export class SearchBarComponent {
           id: product.id,
           name: product.name,
           type: 'PRODUCT' as const,
-          logoUrl: product.imageUrl,
+          logoUrl: product.imageUrl?.url,
           verified: false
         }));
 

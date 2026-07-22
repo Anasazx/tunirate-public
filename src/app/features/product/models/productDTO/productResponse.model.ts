@@ -1,4 +1,5 @@
 import { ProductStatus } from "../../enums/productStatus.enum.model";
+import {ProductImageResponse} from './productImageResponse.model';
 
 export interface ProductResponse {
   id: number;
@@ -12,7 +13,7 @@ export interface ProductResponse {
   companyName: string;
   companyIsVerified?: boolean;
   companyLogoUrl?: string;
-  imageUrl: string;
+  imageUrl?: ProductImageResponse;
   createdAt: string;
   createdByName?: string;
   createdById?: number;
