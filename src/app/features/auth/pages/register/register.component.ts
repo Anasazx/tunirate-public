@@ -18,6 +18,10 @@ export class RegisterComponent {
   loading = false;
   error: string | null = null;
 
+  showPassword = false;
+
+  passwordValue = '';
+  confirmPasswordValue = '';
 
   constructor(
     private auth: AuthService,

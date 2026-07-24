@@ -24,6 +24,8 @@ export class LoginComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  showPassword = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
