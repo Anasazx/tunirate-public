@@ -89,11 +89,6 @@ export class HeaderComponent implements OnInit {
 
   /* ---------------- AUTH ---------------- */
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
-
   goCompanyDashboard(): void {
     this.router.navigate(['/']); // future update
   }

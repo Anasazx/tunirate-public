@@ -1,23 +1,131 @@
-<div class="min-h-screen bg-gray-50 flex items-center justify-center">
+<div class="min-h-screen bg-slate-100 flex items-center justify-center">
   <div class="container mx-auto p-4">
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden lg:flex">
 
       <!-- Left Panel: Branding -->
-      <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-purple-600 p-12 flex-col justify-between">
-        <div>
-          <h1 class="text-white text-4xl font-extrabold">ReviewHood</h1>
-          <p class="text-white text-opacity-80 mt-4">
-            Real reviews from real people. Your trusted guide to making better choices.
+      <div
+        class="
+    hidden lg:flex lg:w-1/2
+    bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900
+    p-12
+    flex-col
+    justify-between
+    relative
+    overflow-hidden
+  "
+      >
+
+        <!-- Decorative circles -->
+        <div
+          class="
+      absolute
+      -top-20
+      -right-20
+      w-72
+      h-72
+      rounded-full
+      bg-sky-400/20
+      blur-3xl
+    "
+        ></div>
+
+        <div
+          class="
+      absolute
+      -bottom-20
+      -left-20
+      w-80
+      h-80
+      rounded-full
+      bg-purple-500/20
+      blur-3xl
+    "
+        ></div>
+
+
+        <!-- Brand -->
+        <div class="relative z-10">
+
+          <div class="flex items-center gap-3">
+
+            <img
+              src="/icon.png"
+              alt="ReviewHood"
+              class="w-12 h-12 object-contain"
+            />
+
+            <h1 class="text-white text-4xl font-extrabold tracking-tight">
+              ReviewHood
+            </h1>
+
+          </div>
+
+
+          <p
+            class="
+        text-slate-300
+        mt-6
+        text-lg
+        leading-relaxed
+        max-w-md
+      "
+          >
+            Real reviews from real people.
+            Discover trusted opinions and make better choices.
           </p>
+
+
+          <div
+            class="
+        mt-8
+        flex
+        items-center
+        gap-3
+        text-sm
+        text-slate-300
+      "
+          >
+
+            <div
+              class="
+          flex
+          items-center
+          justify-center
+          w-9
+          h-9
+          rounded-full
+          bg-white/10
+        "
+            >
+              ★
+            </div>
+
+            <span>
+        Honest opinions. No ads. No bias.
+      </span>
+
+          </div>
+
         </div>
-        <div class="text-white text-opacity-60 text-sm">
+
+
+        <!-- Footer -->
+        <div
+          class="
+      relative
+      z-10
+      text-slate-400
+      text-sm
+    "
+        >
           © {{ currentYear }} ReviewHood. All rights reserved.
         </div>
+
       </div>
 
       <!-- Right Panel: Login Form -->
       <div class="w-full lg:w-1/2 p-8 lg:p-12">
-        <a routerLink="/" class="mb-4 inline-flex items-center text-sm font-medium text-blue-600 hover:underline">← Back to Home</a>
+        <a routerLink="/" class="mb-4 inline-flex items-center text-sm font-medium text-sky-600 hover:text-sky-700 transition">← Back to Home</a>
         <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome Back!</h2>
         <p class="text-gray-600 mb-8">Sign in to continue to your account.</p>
 
@@ -26,7 +134,7 @@
           <div class="mb-6">
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
             <input #email type="email" id="email" name="email"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
                    placeholder="you@example.com" required>
           </div>
 
@@ -34,24 +142,31 @@
           <div class="mb-6">
             <div class="flex justify-between items-baseline">
               <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-              <a href="#" class="text-sm text-blue-600 hover:underline">Forgot password?</a>
+              <a href="#" class="text-sm text-sky-600 hover:text-sky-700 transition">Forgot password?</a>
             </div>
             <input #password type="password" id="password" name="password"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
                    placeholder="••••••••" required>
           </div>
 
           <!-- Login Button -->
           <div>
             <button type="submit" [disabled]="loading"
-                    class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-60">
+                    class="w-full text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:ring-4 bg-sky-600 hover:bg-sky-700 focus:ring-sky-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-60">
               <span *ngIf="!loading">Sign In</span>
               <span *ngIf="loading">Signing in…</span>
             </button>
           </div>
         </form>
 
-        <div *ngIf="error" class="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700">{{ error }}</div>
+        <div *ngIf="error" class="mt-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">{{ error }}</div>
+
+        <!-- Sign Up Link -->
+        <div class="mt-8 text-center">
+          <p class="text-sm text-gray-600">
+            Don't have an account? <a routerLink="/auth/register" class="font-medium text-sky-600 hover:text-sky-700 transition">Sign up</a>
+          </p>
+        </div>
 
         <!-- Social Logins -->
         <div class="mt-8">
@@ -60,7 +175,7 @@
               <div class="w-full border-t border-gray-300"></div>
             </div>
             <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">Or continue with</span>
+              <span class="px-2 bg-white text-slate-500">Or continue with</span>
             </div>
           </div>
 
@@ -74,12 +189,7 @@
         </div>
 
 
-        <!-- Sign Up Link -->
-        <div class="mt-8 text-center">
-          <p class="text-sm text-gray-600">
-            Don't have an account? <a routerLink="/auth/register" class="font-medium text-blue-600 hover:underline">Sign up</a>
-          </p>
-        </div>
+
       </div>
 
     </div>

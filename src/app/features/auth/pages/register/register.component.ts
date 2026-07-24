@@ -18,9 +18,6 @@ export class RegisterComponent {
   loading = false;
   error: string | null = null;
 
-  selectedCountry: Country | null = null;
-
-  countries = Object.values(Country);
 
   constructor(
     private auth: AuthService,
@@ -50,10 +47,6 @@ export class RegisterComponent {
       return;
     }
 
-    if (!this.selectedCountry) {
-      this.error = 'Please select your country.';
-      return;
-    }
 
     this.loading = true;
 
@@ -61,7 +54,6 @@ export class RegisterComponent {
       name: username,
       email: email,
       password: password,
-      country: this.selectedCountry!
     };
 
     this.auth.register(registerRequest).subscribe({
