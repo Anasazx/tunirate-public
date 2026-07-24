@@ -50,6 +50,8 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  currentYear = new Date().getFullYear();
+
   onSubmit(email: string, password: string, event: Event) {
     event.preventDefault();
     this.error = null;

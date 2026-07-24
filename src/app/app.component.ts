@@ -27,6 +27,6 @@ export class AppComponent {
     this.authService.initAuth();
   }
 
-  title = 'tunirate';
+  title = 'ReviewHood';
 
 }

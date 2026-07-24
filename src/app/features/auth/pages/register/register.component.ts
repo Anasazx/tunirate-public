@@ -27,6 +27,8 @@ export class RegisterComponent {
     private router: Router
   ) {}
 
+  currentYear = new Date().getFullYear();
+
   onSubmit(
     username: string,
     email: string,
