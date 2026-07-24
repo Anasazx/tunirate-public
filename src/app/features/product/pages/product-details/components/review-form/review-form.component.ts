@@ -51,7 +51,6 @@ export class ReviewFormComponent implements OnChanges{
   }
 
   submit() {
-    console.log("submit review on!")
     if (!this.productId || this.selectedRating === 0) {
       return;
     }

@@ -165,7 +165,6 @@ export class ProductDetailsComponent implements OnInit {
 
   deleteReview(review: ReviewResponse) {
 
-    console.log("this is the current user: ", this.authService.getCurrentUser)
 
     if (!this.reviewIsMine(review.user.id) || !this.product) return;
 
@@ -356,8 +355,6 @@ export class ProductDetailsComponent implements OnInit {
 
   // ===================== LOAD REVIEWS =====================
   private loadReviews() {
-
-    console.log("log reviews method called!!")
 
     if (this.requestInProgress || this.last) return;
 

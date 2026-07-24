@@ -101,7 +101,6 @@ export class HeaderComponent implements OnInit {
   toggleUserMenu(): void {
     this.userMenuOpen = !this.userMenuOpen;
     this.showInvitations = false;
-    console.log(this.userMenuOpen)
   }
 
   /* ---------------- INVITATIONS ---------------- */

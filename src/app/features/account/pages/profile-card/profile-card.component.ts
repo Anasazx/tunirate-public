@@ -28,7 +28,6 @@ export class ProfileCardComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getMyProfile().subscribe({
       next: (res) => {this.user = res;
-        console.log("this is the result", res);
       }
 
     });
