@@ -41,7 +41,7 @@ export class RegisterComponent {
 
     this.error = null;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !confirm) {
       this.error = 'All fields are required.';
       return;
     }
@@ -51,6 +51,17 @@ export class RegisterComponent {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      this.error = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (password.length < 8) {
+      this.error = 'Password must contain at least 8 characters.';
+      return;
+    }
 
     this.loading = true;
 
