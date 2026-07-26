@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/authService/auth.service';
-import { Country } from '../../../../core/models/enums/country.enum.model';
 import { RegisterRequest } from '../../models/authDTO/registerRequest.model';
 import {FormsModule} from '@angular/forms';
 
@@ -74,7 +73,7 @@ export class RegisterComponent {
     this.auth.register(registerRequest).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/verify']);
       },
       error: (err) => {
         this.loading = false;

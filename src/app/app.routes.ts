@@ -11,6 +11,7 @@ import {SecurityComponent} from './features/account/pages/security/security.comp
 import {ProfileCardComponent} from './features/account/pages/profile-card/profile-card.component';
 import {MyCommentsComponent} from './features/account/pages/my-comments/my-comments.component';
 import {MySuggestionsComponent} from './features/account/pages/my-suggestions/my-suggestions.component';
+import {VerifyEmailComponent} from './features/auth/pages/verify-email/verify-email.component';
 
 
 export const routes: Routes = [
@@ -18,7 +19,9 @@ export const routes: Routes = [
     path: 'auth',
     children: [
       { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'register', component: RegisterComponent },
+      { path: 'verify', component: VerifyEmailComponent }
+
     ]
   },
 
