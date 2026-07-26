@@ -21,6 +21,10 @@ export class AuthService {
 
   currentUser$ = this.currentUserSubject.asObservable();
 
+  private authReadySubject = new BehaviorSubject<boolean>(false);
+
+  authReady$ = this.authReadySubject.asObservable();
+
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
@@ -32,12 +36,25 @@ export class AuthService {
 
   initAuth(): void {
     const token = this.tokenService.getToken();
-    if (!token) return;
+
+    if (!token) {
+      this.authReadySubject.next(true);
+      return;
+    }
 
     this.loadCurrentUser().subscribe({
-      error: () => {
-        this.logout(); // IMPORTANT fallback
+
+      next: () => {
+        console.log("USER LOADED", this.currentUserSubject.value);
+        this.authReadySubject.next(true);
+      },
+
+      error: (err) => {
+        console.log("LOAD USER FAILED", err);
+        this.logout();
+        this.authReadySubject.next(true);
       }
+
     });
   }
 

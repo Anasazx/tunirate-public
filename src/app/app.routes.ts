@@ -12,22 +12,30 @@ import {ProfileCardComponent} from './features/account/pages/profile-card/profil
 import {MyCommentsComponent} from './features/account/pages/my-comments/my-comments.component';
 import {MySuggestionsComponent} from './features/account/pages/my-suggestions/my-suggestions.component';
 import {VerifyEmailComponent} from './features/auth/pages/verify-email/verify-email.component';
+import {guestGuard} from './core/guards/guestGuard/guest.guard';
+import {emailVerificationGuard} from './core/guards/emailVerificationGuard/email-verification.guard';
+import {authGuard} from './core/guards/authGuard/auth.guard';
 
 
 export const routes: Routes = [
   {
     path: 'auth',
     children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'verify', component: VerifyEmailComponent }
+      //This is public but not when logged in
+      { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+      //This is public but not when logged in
+      { path: 'register', component: RegisterComponent, canActivate: [guestGuard]  },
+      //This is public but not when email is verified
+      { path: 'verify', component: VerifyEmailComponent, canActivate: [emailVerificationGuard]  }
 
     ]
   },
 
+  //This is when logged in
   {
     path: 'account',
     component: AccountLayoutComponent,
+    canActivate: [authGuard],
     children: [
       { path: 'profile', component: ProfileCardComponent },
       { path: 'security', component: SecurityComponent },
@@ -38,6 +46,7 @@ export const routes: Routes = [
     ]
   },
 
+  //This is public
   {
     path: '',
     component: MainComponent,
