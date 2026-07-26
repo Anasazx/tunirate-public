@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Country } from '../../../../core/models/enums/country.enum.model';
 import {UpdateUserRequest} from '../../../user/models/userDTO/updateUserRequest.model';
 import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-profile-card',
@@ -22,14 +23,15 @@ export class ProfileCardComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    public sharedService: SharedService
+    public sharedService: SharedService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.userService.getMyProfile().subscribe({
-      next: (res) => {this.user = res;
+      next: (res) => {
+        this.user = res;
       }
-
     });
   }
 
@@ -93,6 +95,10 @@ export class ProfileCardComponent implements OnInit {
         console.error('Avatar upload failed', err);
       }
     });
+  }
+
+  verifyEmail() {
+    this.router.navigate(['/auth/verify'], {queryParams: {send: true}});
   }
 
 }

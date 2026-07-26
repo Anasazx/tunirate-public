@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgForOf, NgIf } from '@angular/common';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import { AuthService } from '../../services/authService/auth.service';
 import { EmailVerificationService } from '../../../../core/services/EmailVerificationService/email-verification.service';
@@ -32,6 +32,7 @@ export class VerifyEmailComponent implements OnInit{
   constructor(
     public authService: AuthService,
     private emailVerificationService: EmailVerificationService,
+    private route: ActivatedRoute,
     private router: Router
   ) {
 
@@ -43,11 +44,36 @@ export class VerifyEmailComponent implements OnInit{
 
   ngOnInit() {
 
-    this.startResendCooldown();
     this.authService.currentUser$
-      .subscribe(user => {
-        this.email = user?.email ?? '';
-      });
+      .subscribe(user => {this.email = user?.email ?? '';});
+
+    this.route.queryParams.subscribe(params => {
+
+      if (params['send'] === 'true') {
+
+        this.emailVerificationService.requestVerificationCode()
+          .subscribe({
+
+            next: () => {
+              this.error = '';
+              this.startResendCooldown();
+            },
+
+            error: err => {
+              this.error =
+                err.error?.message ?? 'Verification failed';
+            }
+
+          });
+
+      }
+
+      else {
+        this.startResendCooldown();
+      }
+
+    });
+
   }
 
   startResendCooldown() {

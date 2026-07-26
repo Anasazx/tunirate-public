@@ -116,31 +116,51 @@
 
         <span class="text-gray-500">Email</span>
 
-        <ng-container *ngIf="editingField !== 'email'; else editEmail">
+        <div class="flex items-center gap-2 flex-wrap">
 
-          <span class="font-medium text-gray-800">
-            {{ user.email }}
-          </span>
+      <span class="font-medium text-gray-800">
+        {{ user.email }}
+      </span>
 
-          <span class="text-xs text-gray-400" *ngIf="!user.emailVerified">Email is not verified</span>
 
-        </ng-container>
+          <!-- Verified -->
+          <span
+            *ngIf="user.emailVerified"
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full
+               text-xs font-medium bg-green-100 text-green-700">
 
-        <ng-template #editEmail>
-          <input
-            [(ngModel)]="editModel.email"
-            class="mt-1 w-full border rounded-lg px-3 py-2"
-          />
-        </ng-template>
+        ✓ Verified
+
+      </span>
+
+
+          <!-- Not verified -->
+          <button
+            *ngIf="!user.emailVerified"
+            (click)="verifyEmail()"
+            class="inline-flex items-center px-2 py-1 rounded-full
+               text-xs font-semibold bg-red-100 text-red-700
+               hover:bg-red-200 transition">
+
+            Verify email
+
+          </button>
+
+        </div>
+
       </div>
+
 
       <!-- EDIT BUTTON -->
       <button
         *ngIf="editingMode"
         (click)="startEdit('email')"
         class="text-sm text-gray-400 hover:text-gray-700 transition">
+
         Edit
+
       </button>
+
     </div>
 
   </div>
