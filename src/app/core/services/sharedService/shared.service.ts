@@ -9,8 +9,6 @@ export class SharedService {
   imageUrl = "https://reviewhood.tech/uploads";
 
 
-  //publicUrl = "http://localhost:8080";
-  //imageUrl = "http://localhost:9000/uploads";
 
   constructor() {}
 
