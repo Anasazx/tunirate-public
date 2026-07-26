@@ -21,17 +21,14 @@ export const routes: Routes = [
   {
     path: 'auth',
     children: [
-      //This is public but not when logged in
       { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
-      //This is public but not when logged in
       { path: 'register', component: RegisterComponent, canActivate: [guestGuard]  },
-      //This is public but not when email is verified
       { path: 'verify', component: VerifyEmailComponent, canActivate: [emailVerificationGuard]  }
+
 
     ]
   },
 
-  //This is when logged in
   {
     path: 'account',
     component: AccountLayoutComponent,
@@ -46,7 +43,6 @@ export const routes: Routes = [
     ]
   },
 
-  //This is public
   {
     path: '',
     component: MainComponent,

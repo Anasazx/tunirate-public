@@ -24,6 +24,7 @@ export class VerifyEmailComponent implements OnInit{
   loading = false;
   error = '';
   success = false;
+  showSkipConfirm = false;
 
   resendCooldown = 30;
   canResend = false;
@@ -162,9 +163,6 @@ export class VerifyEmailComponent implements OnInit{
 
   }
 
-
-
-
   resend() {
     if (!this.canResend) {
       return;
@@ -181,4 +179,22 @@ export class VerifyEmailComponent implements OnInit{
         }
       });
   }
+
+  skip() {
+    this.router.navigate(['/']);
+  }
+
+  openSkipConfirm() {
+    this.showSkipConfirm = true;
+  }
+
+  closeSkipConfirm() {
+    this.showSkipConfirm = false;
+  }
+
+  confirmSkip() {
+    this.showSkipConfirm = false;
+    this.skip();
+  }
+
 }
