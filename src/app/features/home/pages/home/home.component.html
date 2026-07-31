@@ -46,7 +46,7 @@
                   class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:underline"
                   [routerLink]="['/company', product.companyId]">
 
-          {{ product.companyName }}
+                  {{ product.companyName }}
 
                   <svg
                     *ngIf="product.companyIsVerified"
@@ -55,14 +55,14 @@
                     class="h-4 w-4 text-sky-500"
                     fill="currentColor">
 
-            <circle cx="12" cy="12" r="10"/>
-            <path
-              d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
-              fill="white"/>
+                    <circle cx="12" cy="12" r="10"/>
+                    <path
+                      d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
+                      fill="white"/>
 
-          </svg>
+                  </svg>
 
-        </span>
+                </span>
 
               </div>
 
@@ -74,19 +74,19 @@
                   <i class="fa-solid fa-star text-yellow-400"></i>
 
                   <span class="font-semibold">
-            {{ product.reviewsAvg | number:'1.1-1' }}
-          </span>
+                    {{ product.reviewsAvg | number:'1.1-1' }}
+                  </span>
 
                   <span class="text-xs text-slate-400">
-            ({{ product.reviewCount }})
-          </span>
+                    ({{ product.reviewCount }})
+                  </span>
 
                 </ng-container>
 
                 <ng-template #noReviews>
-          <span class="text-xs text-slate-400">
-            No reviews
-          </span>
+                  <span class="text-xs text-slate-400">
+                    No reviews
+                  </span>
                 </ng-template>
 
               </div>

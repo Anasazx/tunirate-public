@@ -12,6 +12,8 @@ export interface CommentResponse {
   repliedToActorId: number | null;
   repliedToActorType: ActorType | null;
   repliedToActorName: string | null;
+  likeCount: number,
+  liked: boolean,
   createdAt: string;
 }
 

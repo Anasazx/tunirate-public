@@ -331,16 +331,23 @@
                     <span *ngFor="let i of getSolidStars(review.rating)">★</span>
                     <span *ngFor="let i of getOutlineStars(review.rating)" class="text-slate-200">★</span>
                   </div>
-                  <button *ngIf="reviewIsMine(review.user.id)" (click)="deleteReview(review)"
-                    [disabled]="deletingReviewId === review.id"
-                    class="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <button
+                    *ngIf="reviewIsMine(review.user.id)"
+                    (click)="openDeleteModal(review)"
+                    class="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 transition-colors">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
                       <polyline points="3 6 5 6 21 6"/>
                       <path d="M19 6l-1 14H6L5 6"/>
-                      <path d="M10 11v6"/><path d="M14 11v6"/>
+                      <path d="M10 11v6"/>
+                      <path d="M14 11v6"/>
                     </svg>
-                    {{ deletingReviewId === review.id ? 'Deleting…' : 'Delete' }}
+
+                    Delete
                   </button>
                 </div>
               </div>
@@ -356,22 +363,55 @@
                 "
               >{{ review.content }}</p>
 
+              <!-- Review actions -->
+              <div class="mt-3 flex items-center gap-4 text-sm">
+
+                <button
+                  (click)="toggleReviewLike(review)"
+                  class="flex items-center gap-1.5 transition-colors"
+                  [class.text-blue-600]="review.liked"
+                  [class.text-gray-400]="!review.liked">
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       class="w-4 h-4"
+                       fill="currentColor"
+                       viewBox="0 0 20 20">
+                    <path d="M3.172 5.172A4 4 0 018.828 5L10 6.172 11.172 5A4 4 0 1117 10.828l-7 7-7-7a4 4 0 010-5.656z"/>
+                  </svg>
+
+                  {{ review.likeCount }}
+                </button>
+
+                <button
+                  (click)="toggleComments(review)"
+                  class="flex items-center gap-1.5 text-gray-400 hover:text-slate-700">
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                       class="w-4 h-4"
+                       fill="none"
+                       viewBox="0 0 24 24"
+                       stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                  </svg>
+
+                  {{ review.commentsCount }}
+                </button>
+
+              </div>
+
+
               <!-- Comments -->
-              <div class="mt-3.5 pt-3 border-t border-slate-50">
+              <div class="mt-3.5 pt-3 border-t border-slate-50" *ngIf="review.showComments">
 
                 <div *ngIf="review.previewComment && !review.showComments"
                   class="mb-2.5 rounded-lg bg-slate-50 px-3 py-2 text-[12px] text-gray-500">
                   <span class="font-semibold text-blue-600">{{ review.previewComment.actorName }}: </span>
                   {{ review.previewComment.content }}
                 </div>
-
-                <button (click)="toggleComments(review)"
-                  class="flex items-center gap-1.5 text-[12px] font-medium text-gray-400 hover:text-slate-700 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                  </svg>
-                  {{ review.showComments ? 'Hide' : review.commentsCount + ' comments' }}
-                </button>
 
                 <div *ngIf="review.showComments" class="mt-3 space-y-1.5">
 
@@ -416,46 +456,38 @@
                       {{ c.content }}
                     </p>
 
-                    <!-- ACTIONS -->
-                    <button
-                      (click)="startReply(c)"
-                      class="mt-1.5 text-[11px] text-gray-400 hover:text-blue-500 font-medium transition-colors">
-
-                      Reply
-                    </button>
-
-                    <!-- REPLY INPUT -->
-                    <div
-                      *ngIf="replyingToCommentId === c.id"
-                      class="
-                        mt-1.5
-                        flex
-                        flex-col
-                        sm:flex-row
-                        gap-1.5
-                      "
-                    >
-
-                      <input
-                        [(ngModel)]="replyText"
-                        placeholder="Reply…"
-                        class="flex-1 rounded-lg border border-slate-200 px-2 py-1 text-[12px] focus:outline-none focus:ring-2 focus:ring-slate-300"
-                      />
+                    <!-- Actions -->
+                    <div class="mt-2 flex items-center gap-4">
 
                       <button
-                        (click)="sendReply(c)"
-                        class="bg-slate-900 hover:bg-slate-700 text-white px-3 py-1 rounded-lg text-[11px] font-semibold transition-colors">
+                        (click)="toggleCommentLike(c)"
+                        class="inline-flex items-center text-[11px] font-medium transition-colors"
+                        [class.text-blue-600]="c.liked"
+                        [class.text-gray-400]="!c.liked">
 
-                        Send
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          class="w-4 h-4 mr-1">
+
+                          <path d="M12.001 20.727l-.717-.653C5.463 14.77 2 11.61 2 7.75 2 4.857 4.238 2.5 7.05 2.5c1.59 0 3.116.76 4.05 1.965C12.834 3.26 14.36 2.5 15.95 2.5 18.762 2.5 21 4.857 21 7.75c0 3.86-3.463 7.02-9.284 12.324l-.715.653z"/>
+                        </svg>
+
+                        <span>{{ c.likeCount }}</span>
                       </button>
 
                       <button
-                        (click)="cancelReply()"
-                        class="text-gray-400 hover:text-gray-600 text-[11px] px-1 transition-colors">
-                        ✕
+                        (click)="startReply(c)"
+                        class="text-[11px] text-gray-400 hover:text-blue-500 font-medium transition-colors">
+
+                        Reply
                       </button>
 
                     </div>
+
+
+
 
                   </div>
 
@@ -476,38 +508,83 @@
 
 
 
-                  <div
-                    class="
-                      flex
-                      flex-col
-                      sm:flex-row
-                      gap-2
-                      pt-1
-                    "
-                  >
-                    <input [(ngModel)]="review.newComment" placeholder="Add a comment…"
-                      class="flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[12px] text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:bg-white transition-all">
-                    <button
-                      (click)="addComment(review)"
+                  <div class="mt-3 flex items-center gap-2">
+
+                    <input
+                      [(ngModel)]="commentText"
+                      [placeholder]="
+      replyingToCommentId
+      ? 'Replying to ' + replyingToActorName + '...'
+      : 'Add a comment...'
+    "
                       class="
-                        rounded-lg
-                        bg-slate-900
-                        hover:bg-slate-700
-                        px-4
-                        py-1.5
+      flex-1
+      rounded-full
+      border
+      border-slate-200
+      bg-slate-50
+      px-4
+      py-2
+      text-[12px]
+      text-gray-800
+      placeholder-gray-400
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-100
+      focus:bg-white
+      transition-all
+    "
+                    />
+
+
+                    <button
+                      (click)="
+      replyingToCommentId
+      ? sendReply(review)
+      : addComment(review)
+    "
+                      class="
+      rounded-full
+      bg-blue-600
+      hover:bg-blue-700
+      px-4
+      py-2
+      text-[12px]
+      font-semibold
+      text-white
+    "
+                    >
+                      Send
+                    </button>
+
+
+                    <button
+                      *ngIf="replyingToCommentId"
+                      (click)="cancelReply()"
+                      class="
+                        shrink-0
+                        rounded-full
+                        border
+                        border-slate-200
+                        bg-white
+                        px-3
+                        py-2
                         text-[12px]
-                        font-semibold
-                        text-white
+                        font-medium
+                        text-gray-500
+                        hover:bg-slate-50
+                        hover:text-slate-700
                         transition-colors
-                        w-full
-                        sm:w-auto
                       "
                     >
-                      Post
+                      Cancel
                     </button>
+
                   </div>
 
+
                 </div>
+
               </div>
             </div>
           </div>
@@ -541,3 +618,78 @@
   (close)="showAuthModal = false"
 >
 </app-auth-required>
+
+
+
+
+<div
+  *ngIf="showDeleteModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+
+
+  <div class="bg-white rounded-2xl shadow-xl w-[320px] p-6">
+
+
+    <div class="flex items-center gap-3 mb-4">
+
+      <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+        <svg
+          class="w-6 h-6 text-red-500"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M3 6h18"/>
+          <path d="M8 6V4.5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1V6"/>
+          <path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/>
+          <path d="M10 11v6"/>
+          <path d="M14 11v6"/>
+
+        </svg>
+      </div>
+
+
+      <h3 class="font-semibold text-gray-900">
+        Delete review?
+      </h3>
+
+    </div>
+
+
+    <p class="text-sm text-gray-500 mb-6">
+      Are you sure you want to delete this review?
+      This action cannot be undone.
+    </p>
+
+
+
+    <div class="flex justify-end gap-3">
+
+
+      <button
+        (click)="closeDeleteModal()"
+        class="px-4 py-2 text-sm rounded-xl bg-gray-100 hover:bg-gray-200">
+        Cancel
+      </button>
+
+
+
+      <button
+        (click)="confirmDelete()"
+        [disabled]="deletingReviewId !== null"
+        class="px-4 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600 disabled:opacity-50">
+
+        {{ deletingReviewId ? 'Deleting...' : 'Delete' }}
+
+      </button>
+
+
+    </div>
+
+  </div>
+
+</div>

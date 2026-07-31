@@ -7,6 +7,7 @@ import { ReviewRequest } from '../../models/dto/reviewDTO/reviewRequest.model';
 import {MinimizedReviewResponse} from '../../models/dto/reviewDTO/minimizedReviewResponse.model';
 import {ProductReviewsResponse} from '../../models/dto/reviewDTO/productReviewsResponse.model';
 import {Page} from '../../models/page.model';
+import {LikeStatus} from '../../models/dto/like-status.model';
 
 
 @Injectable({
@@ -60,6 +61,21 @@ export class ReviewService {
 
   deleteReview(id: number): Observable<void> {
     return this.http.delete<void>(`${this.reviewUrl}/${id}`);
+  }
+
+  // Like review
+  addLike(reviewId: number): Observable<LikeStatus> {
+    return this.http.post<LikeStatus>(
+      `${this.reviewUrl}/${reviewId}/likes`,
+      {}
+    );
+  }
+
+  // Remove like
+  removeLike(reviewId: number): Observable<LikeStatus> {
+    return this.http.delete<LikeStatus>(
+      `${this.reviewUrl}/${reviewId}/likes`
+    );
   }
 
 }

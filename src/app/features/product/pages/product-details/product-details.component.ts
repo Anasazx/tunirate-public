@@ -52,6 +52,9 @@ export class ProductDetailsComponent implements OnInit {
   descExpanded = false;
   selectedImage: string | null = '';
 
+  replyingToCommentId: number | null = null;
+  replyingToActorName = '';
+
   totalReviews: number = 0;
 
   page = 0;
@@ -62,12 +65,12 @@ export class ProductDetailsComponent implements OnInit {
   productId!: number;
 
   //Reply logic
-  replyingToCommentId: number | null = null;
-  replyText = '';
 
   currentImageIndex = 0;
 
   showAuthModal = false;
+
+  commentText = '';
 
   // ===================== INIT =====================
   constructor(
@@ -163,25 +166,47 @@ export class ProductDetailsComponent implements OnInit {
     return id === this.authService.getCurrentUser?.id;
   }
 
-  deleteReview(review: ReviewResponse) {
+  showDeleteModal = false;
+  reviewToDelete: ReviewResponse | null = null;
+
+  openDeleteModal(review: ReviewResponse) {
+    this.reviewToDelete = review;
+    this.showDeleteModal = true;
+  }
 
 
-    if (!this.reviewIsMine(review.user.id) || !this.product) return;
+  closeDeleteModal() {
+    this.reviewToDelete = null;
+    this.showDeleteModal = false;
+  }
 
-    if (!confirm('Delete your review?')) return;
+
+  confirmDelete() {
+
+    if (!this.reviewToDelete) return;
+
+    const review = this.reviewToDelete;
 
     this.deletingReviewId = review.id;
 
     this.reviewService.deleteReview(review.id).subscribe({
+
       next: () => {
 
-        this.reviews = this.reviews.filter(r => r.id !== review.id);
+        this.reviews = this.reviews.filter(
+          r => r.id !== review.id
+        );
+
         this.product!.reviews = this.reviews;
 
+        this.closeDeleteModal();
         this.deletingReviewId = null;
       },
+
+
       error: err => {
         console.error(err);
+        this.closeDeleteModal();
         this.deletingReviewId = null;
       }
     });
@@ -194,19 +219,26 @@ export class ProductDetailsComponent implements OnInit {
   // ===================== COMMENTS =====================
   addComment(review: ReviewWithComments) {
 
-    if (!review.newComment?.trim()) return;
+    if (!this.commentText.trim()) return;
 
     this.commentService.createComment(review.id, {
-      content: review.newComment
+      content: this.commentText
     }).subscribe({
+
       next: (comment) => {
 
-        review.comments = [comment, ...(review.comments || [])];
+        review.comments = [
+          comment,
+          ...(review.comments || [])
+        ];
 
-        review.commentsCount = (review.commentsCount || 0) + 1;
+        review.commentsCount =
+          (review.commentsCount || 0) + 1;
 
-        review.newComment = '';
+
+        this.commentText = '';
       },
+
       error: console.error
     });
   }
@@ -270,56 +302,57 @@ export class ProductDetailsComponent implements OnInit {
   goBack() {
     this.location.back();
   }
-
-  startReply(comment: any) {
+  startReply(comment: CommentResponse) {
     if (this.showAuthModelIfNoAuthUser()) {
       return;
     }
     this.replyingToCommentId = comment.id;
-    this.replyText = '';
+    this.replyingToActorName = comment.actorName;
+    this.commentText = '';
   }
 
   cancelReply() {
     this.replyingToCommentId = null;
-    this.replyText = '';
+    this.replyingToActorName = '';
+    this.commentText = '';
   }
 
-  sendReply(comment: any) {
+  sendReply(review: ReviewWithComments) {
 
-    if (!this.replyText.trim()) return;
+    if (!this.commentText.trim() || !this.replyingToCommentId) {
+      return;
+    }
+
 
     const request = {
-      content: this.replyText,
-      reviewId: comment.reviewId
+      content: this.commentText,
+      reviewId: review.id
     };
 
-    this.commentService.replyToComment(comment.id, request).subscribe({
-      next: (newReply) => {
 
-        // find review
-        const review = this.reviews.find(r => r.id === comment.reviewId);
+    this.commentService
+      .replyToComment(this.replyingToCommentId, request)
+      .subscribe({
 
-        if (!review) return;
+        next: (newReply) => {
 
-        // init array if needed
-        if (!review.comments) {
-          review.comments = [];
-        }
+          review.comments = [
+            ...(review.comments || []),
+            newReply
+          ];
 
-        // 👇 add new reply instantly (OPTIMISTIC UI)
-        review.comments = [...review.comments, newReply];
 
-        // update count
-        review.commentsCount = (review.commentsCount || 0) + 1;
+          review.commentsCount =
+            (review.commentsCount || 0) + 1;
 
-        // reset UI
-        this.replyingToCommentId = null;
-        this.replyText = '';
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+
+          this.cancelReply();
+
+        },
+
+        error: console.error
+
+      });
   }
 
   nextImage() {
@@ -430,6 +463,36 @@ export class ProductDetailsComponent implements OnInit {
           this.requestInProgress = false;
         }
       });
+  }
+
+
+  toggleReviewLike(review: ReviewResponse) {
+    if (review.liked) {
+      this.reviewService.removeLike(review.id).subscribe(() => {
+        review.liked = false;
+        review.likeCount--;
+      });
+    } else {
+      this.reviewService.addLike(review.id).subscribe(() => {
+        review.liked = true;
+        review.likeCount++;
+      });
+    }
+  }
+
+
+  toggleCommentLike(comment: CommentResponse) {
+    if (comment.liked) {
+      this.commentService.removeLike(comment.id).subscribe(() => {
+        comment.liked = false;
+        comment.likeCount--;
+      });
+    } else {
+      this.commentService.addLike(comment.id).subscribe(() => {
+        comment.liked = true;
+        comment.likeCount++;
+      });
+    }
   }
 
   @ViewChild('loadMoreTrigger')

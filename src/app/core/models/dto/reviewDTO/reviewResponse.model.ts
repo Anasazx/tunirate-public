@@ -8,6 +8,8 @@ export interface ReviewResponse {
   user: MinimizedUserResponse;
   commentsCount: number;
   previewComment?: CommentResponse;
+  likeCount: number,
+  liked: boolean,
   createdAt: string;
 
 

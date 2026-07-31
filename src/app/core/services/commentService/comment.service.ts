@@ -5,7 +5,7 @@ import { SharedService } from '../sharedService/shared.service';
 import { CommentRequest } from '../../models/dto/commentDTO/commentRequest.model';
 import { CommentResponse } from '../../models/dto/commentDTO/commentResponse.model';
 import {Page} from '../../models/page.model';
-
+import {LikeStatus} from '../../models/dto/like-status.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +46,21 @@ export class CommentService {
     return this.http.post<CommentResponse>(
       `${this.commentUrl}/reply/${parentCommentId}`,
       request
+    );
+  }
+
+  // Like comment
+  addLike(commentId: number): Observable<LikeStatus> {
+    return this.http.post<LikeStatus>(
+      `${this.commentUrl}/${commentId}/likes`,
+      {}
+    );
+  }
+
+  // Remove like
+  removeLike(commentId: number): Observable<LikeStatus> {
+    return this.http.delete<LikeStatus>(
+      `${this.commentUrl}/${commentId}/likes`
     );
   }
 
