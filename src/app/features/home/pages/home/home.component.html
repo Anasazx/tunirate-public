@@ -6,7 +6,7 @@
       *ngFor="let product of products"
       class="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
     >
-      <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+      <div class="relative aspect-[4/3] overflow-hidden bg-slate-100 ">
         <img
           [src]="product.imageUrl?.url | imageUrl"
           [alt]="product.name"
@@ -26,7 +26,7 @@
           <div class="flex-1 min-w-0">
 
             <h2
-              class="text-xl font-semibold text-slate-900 hover:underline line-clamp-2"
+              class="text-xl font-semibold text-slate-900 hover:underline line-clamp-2 cursor-pointer"
               [routerLink]="['/product', product.id]">
 
               {{ product.name }}
@@ -43,7 +43,7 @@
                   class="h-8 w-8 rounded-full border object-cover">
 
                 <span
-                  class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:underline"
+                  class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:underline cursor-pointer"
                   [routerLink]="['/company', product.companyId]">
 
                   {{ product.companyName }}
