@@ -1,6 +1,5 @@
 <div
-  class="bg-white border-b relative pb-2"
-  (mouseleave)="hideSubcategories()">
+  class="bg-white border-b relative pb-2">
 
   <div class="max-w-fit mx-auto px-6">
 
@@ -35,42 +34,47 @@
 
       <!-- CATEGORIES -->
       <button
-        *ngFor="let category of categories"
+
+        *ngFor="let subcategory of beautySubcategories"
         routerLink="/"
         [queryParams]="{
-          category: category.name,
-          categoryId: category.id
+          category: beautyCategory?.name,
+          categoryId: beautyCategory?.id,
+          subcategory: subcategory.name,
+          subcategoryId: subcategory.id
         }"
-        (mouseenter)="showSubcategories(category.id)"
-        class="
-          h-9 px-5 rounded-full
-          flex items-center justify-center
-          text-sm font-medium
-          border
-          transition-all duration-200
-          whitespace-nowrap
-        "
-        [class.bg-slate-900]="selectedCategoryId === category.id"
-        [class.text-white]="selectedCategoryId === category.id"
-        [class.border-slate-900]="selectedCategoryId === category.id"
 
-        [class.bg-slate-100]="selectedCategoryId !== category.id"
-        [class.text-slate-700]="selectedCategoryId !== category.id"
-        [class.border-slate-200]="selectedCategoryId !== category.id"
+      class="
+        h-9 px-5 rounded-full
+        flex items-center justify-center
+        text-sm font-medium
+        border
+        transition-all duration-200
+        whitespace-nowrap
+      "
+      [class.bg-slate-900]="selectedSubcategoryId === subcategory.id"
+      [class.text-white]="selectedSubcategoryId === subcategory.id"
+      [class.border-slate-900]="selectedSubcategoryId === subcategory.id"
 
-        [class.hover:bg-slate-200]="selectedCategoryId !== category.id">
+      [class.bg-slate-100]="selectedSubcategoryId !== subcategory.id"
+      [class.text-slate-700]="selectedSubcategoryId !== subcategory.id"
+      [class.border-slate-200]="selectedSubcategoryId !== subcategory.id"
 
-        {{ category.name }}
+      [class.hover:bg-slate-200]="selectedSubcategoryId !== subcategory.id">
 
-      </button>
+      {{ subcategory.name }}
 
-
-    </div>
+    </button>
 
 
+  </div>
 
 
-    <!-- SUBCATEGORIES DROPDOWN -->
+
+
+  <!-- SUBCATEGORIES DROPDOWN -->
+    <!--
+
     <div
       *ngIf="hoveredCategoryId !== null && activeCategory() as category"
       @subCategoryAnimation
@@ -98,9 +102,8 @@
       >
 
 
-        <!-- HAS SUBCATEGORIES -->
         <div
-          *ngIf="category.subcategories.length > 0"
+          *ngIf="category.subcategories!.length > 0"
           class="
             flex
             flex-wrap
@@ -146,9 +149,8 @@
 
         </div>
 
-        <!-- EMPTY STATE -->
         <div
-          *ngIf="category.subcategories.length === 0"
+          *ngIf="category.subcategories?.length === 0"
           class="
             h-9
             flex
@@ -166,8 +168,7 @@
 
 
     </div>
-
-
+    -->
   </div>
 
 </div>

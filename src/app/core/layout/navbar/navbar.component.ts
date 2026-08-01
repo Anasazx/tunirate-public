@@ -4,12 +4,11 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import { CategoryService } from '../../../features/home/services/categoryService/category.service';
 import { SubcategoryService } from '../../../features/home/services/subcategoryService/subcategory.service';
 import { trigger, transition, style, animate } from '@angular/animations';
-
-type HeaderCategory = any;
+import {CategoryResponse} from '../../../features/home/models/categoryDTO/categoryResponse.model';
 
 @Component({
   selector: 'app-navbar',
-  imports: [NgForOf, NgIf, RouterLink],
+  imports: [NgForOf, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
   animations: [
@@ -43,7 +42,7 @@ type HeaderCategory = any;
 
 export class NavbarComponent implements OnInit {
 
-  categories: HeaderCategory[] = [];
+  categories: CategoryResponse[] = [];
   selectedCategoryId: number | null = null;
   selectedSubcategoryId: number | null = null;
 
@@ -87,6 +86,7 @@ export class NavbarComponent implements OnInit {
     this.selectedCategoryId = null;
   }
 
+  /*
   loadCategories(): void {
     this.categoryService.getAllCategories().subscribe({
       next: (categories) => {
@@ -103,6 +103,54 @@ export class NavbarComponent implements OnInit {
         });
       },
       error: () => { this.categories = []; }
+    });
+  }
+*/
+  beautyCategory: CategoryResponse | null = null;
+
+  beautySubcategories: { id: number; name: string }[] = [];
+
+  loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (categories) => {
+
+        this.subcategoryService.getAllSubcategories().subscribe({
+          next: (subcategories) => {
+
+            this.categories = (categories ?? []).map(category => ({
+              ...category,
+              subcategories: (subcategories ?? [])
+                .filter(s => s.categoryId === category.id)
+                .map(s => ({
+                  id: s.id,
+                  name: s.name
+                }))
+            }));
+
+
+            // Find Beauty category
+            this.beautyCategory = this.categories.find(
+              c => c.name.toLowerCase() === 'beauty'
+            ) ?? null;
+
+
+            // Extract Beauty subcategories
+            this.beautySubcategories = this.beautyCategory?.subcategories ?? [];
+
+          },
+          error: () => {
+            this.categories = [];
+            this.beautyCategory = null;
+            this.beautySubcategories = [];
+          }
+        });
+
+      },
+      error: () => {
+        this.categories = [];
+        this.beautyCategory = null;
+        this.beautySubcategories = [];
+      }
     });
   }
 
