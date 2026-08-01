@@ -60,11 +60,53 @@
         All
       </a>
 
-      <!-- Category -->
+      <!-- Beauty Subcategories -->
+      <div
+        *ngIf="beautyCategory"
+        class="space-y-1"
+      >
 
+        <a
+          *ngFor="let sub of beautySubcategories"
+
+          routerLink="/"
+
+          [queryParams]="{
+      category: beautyCategory.name,
+      categoryId: beautyCategory.id,
+      subcategory: sub.name,
+      subcategoryId: sub.id
+    }"
+
+          (click)="close.emit()"
+
+          class="
+      block
+      px-3
+      py-2
+      rounded-lg
+      text-sm
+      font-medium
+      transition
+    "
+
+          [class.bg-slate-900]="currentSubcategory === sub.name"
+          [class.text-white]="currentSubcategory === sub.name"
+
+          [class.text-slate-700]="currentSubcategory !== sub.name"
+          [class.hover:bg-slate-100]="currentSubcategory !== sub.name"
+        >
+
+          {{ sub.name }}
+
+        </a>
+
+      </div>
+
+      <!-- Category -->
+      <!--
       <div *ngFor="let category of categories">
 
-        <!-- Category -->
 
         <a
 
@@ -95,9 +137,7 @@
 
         </a>
 
-        <!-- Subcategories -->
 
-        <!-- Subcategories -->
         <div
           class="ml-5 mt-1 border-l border-slate-200 pl-3 space-y-1"
           *ngIf="category.subcategories.length"
@@ -142,7 +182,7 @@
 
 
 
-          <!-- SEE MORE -->
+
           <button
             *ngIf="category.subcategories.length > 2"
             (click)="toggleSubcategories(category.id)"
@@ -167,7 +207,7 @@
 
         </div>
       </div>
-
+ -->
     </nav>
 
   </aside>

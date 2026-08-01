@@ -41,7 +41,7 @@ export class MobileSidebarComponent implements OnInit {
 
   }
 
-
+/*
   loadCategories(): void {
 
     this.categoryService.getAllCategories()
@@ -88,6 +88,8 @@ export class MobileSidebarComponent implements OnInit {
 
   }
 
+ */
+
   toggleSubcategories(categoryId: number) {
     if (this.expandedCategories.has(categoryId)) {
       this.expandedCategories.delete(categoryId);
@@ -98,6 +100,73 @@ export class MobileSidebarComponent implements OnInit {
 
   isExpanded(categoryId: number): boolean {
     return this.expandedCategories.has(categoryId);
+  }
+
+  beautyCategory: SidebarCategory | null = null;
+
+  beautySubcategories: { id: number; name: string }[] = [];
+
+  loadCategories(): void {
+
+    this.categoryService.getAllCategories()
+      .subscribe({
+
+        next: (categories) => {
+
+          this.subcategoryService.getAllSubcategories()
+            .subscribe({
+
+              next: (subcategories) => {
+
+
+                this.categories = (categories ?? [])
+                  .map(category => ({
+
+                    ...category,
+
+                    subcategories: (subcategories ?? [])
+                      .filter(
+                        sub => sub.categoryId === category.id
+                      )
+                      .map(sub => ({
+                        id: sub.id,
+                        name: sub.name
+                      }))
+
+                  }));
+
+
+                // Find Beauty
+                this.beautyCategory = this.categories.find(
+                  c => c.name.toLowerCase() === 'beauty'
+                ) ?? null;
+
+
+                // Get Beauty subcategories
+                this.beautySubcategories =
+                  this.beautyCategory?.subcategories ?? [];
+
+
+              },
+
+              error: () => {
+                this.categories = [];
+                this.beautyCategory = null;
+                this.beautySubcategories = [];
+              }
+
+            });
+
+        },
+
+        error: () => {
+          this.categories = [];
+          this.beautyCategory = null;
+          this.beautySubcategories = [];
+        }
+
+      });
+
   }
 
 }
