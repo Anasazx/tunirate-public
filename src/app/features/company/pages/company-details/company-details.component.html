@@ -1,292 +1,178 @@
-<div class="max-w-5xl mx-auto p-3 sm:p-5 space-y-5">
-
+<div class="max-w-7xl mx-auto p-3 sm:p-5 space-y-5">
 
   <!-- HEADER -->
-  <div class="bg-white border rounded-2xl p-4 sm:p-6 shadow-sm">
+  <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-    <div class="grid grid-cols-1 gap-4">
+    <!-- BANNER (only if present) -->
+    <div *ngIf="company?.bannerUrl" class="h-40 bg-slate-100 sm:h-56">
+      <img [src]="company?.bannerUrl | imageUrl" class="h-full w-full object-cover" alt="Company banner"/>
+    </div>
 
+    <div class="p-4 sm:p-6">
 
-      <!-- ROW 1 : LOGO + NAME + SOCIALS -->
-      <div class="flex items-center justify-between gap-4">
+      <!-- LOGO -->
+      <img
+        [src]="company?.logoUrl | imageUrl"
+        class="h-20 w-20 rounded-full border-4 border-white bg-white object-cover shadow-sm sm:h-24 sm:w-24"
+        [class.-mt-14]="company?.bannerUrl"
+        [class.sm:-mt-16]="company?.bannerUrl"
+        alt="Company logo"
+      />
 
+      <!-- NAME + SOCIALS -->
+      <div class="mt-3 flex flex-wrap items-start justify-between gap-4">
 
-        <!-- LEFT -->
-        <div class="flex items-center gap-4 min-w-0">
+        <div class="min-w-0">
+          <h1 class="flex items-center gap-2 text-xl font-bold text-slate-900 sm:text-2xl">
+            <span class="truncate">{{ company?.name }}</span>
 
-          <!-- LOGO -->
-          <img
-            [src]="company?.logoUrl  | imageUrl"
-            class="
-            h-12 w-12
-            sm:h-14 sm:w-14
-            rounded-full
-            object-cover
-            border border-slate-200
-            shrink-0
-            bg-white
-          "
-          />
-
-
-          <!-- NAME -->
-          <h1
-            class="
-            text-lg
-            sm:text-2xl
-            font-bold
-            text-slate-900
-            flex
-            items-center
-            gap-2
-            min-w-0
-          "
-          >
-
-          <span class="truncate">
-            {{ company?.name }}
-          </span>
-
-
-            <!-- VERIFIED -->
             <svg
               *ngIf="company?.status === CompanyStatus.ACTIVE"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              class="h-5 w-5 text-sky-500 shrink-0"
+              class="h-5 w-5 flex-shrink-0 text-[#7e6907]"
               fill="currentColor"
             >
               <circle cx="12" cy="12" r="10"/>
-              <path
-                d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
-                fill="white"
-              />
+              <path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white"/>
             </svg>
-
-
           </h1>
-
         </div>
 
+        <div class="flex items-center gap-3">
 
-
-        <!-- SOCIALS -->
-        <div
-          *ngIf="company?.socialLinks?.length"
-          class="
-          flex
-          gap-2
-          shrink-0
-        "
-        >
-
-          <a
+          <!-- SOCIALS -->
+          <div *ngIf="company?.socialLinks?.length" class="flex gap-2">
+            <a
             *ngFor="let social of company?.socialLinks"
             [href]="formatUrl(social.url)"
             target="_blank"
-            class="
-            w-9 h-9
-            sm:w-10 sm:h-10
-            flex
-            items-center
-            justify-center
-            rounded-full
-            border
-            hover:bg-slate-900
-            transition
-          "
-          >
-
-            <img
-              [src]="socialIconMap[social.platform]"
-              class="w-5 h-5 sm:w-6 sm:h-6"
-            />
-
-          </a>
+            class="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 transition hover:border-[#7e6907]/30 hover:bg-[#7e6907]/5 sm:h-10 sm:w-10"
+            >
+            <img [src]="socialIconMap[social.platform]" class="h-5 w-5 sm:h-6 sm:w-6"/>
+            </a>
+          </div>
 
         </div>
 
-
       </div>
 
-
-
-
-      <!-- ROW 2 : DESCRIPTION -->
-      <p
-        class="
-        text-sm
-        text-slate-500
-        leading-relaxed
-      "
-      >
-
+      <!-- DESCRIPTION -->
+      <p class="mt-4 max-w-2xl text-sm leading-relaxed text-slate-500">
         {{ company?.description || 'No description available' }}
-
       </p>
 
+      <!-- META -->
+      <div class="mt-4 flex flex-wrap gap-2 text-xs">
+        <span *ngIf="company?.country" class="flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-slate-600">
+          <i class="fa-solid fa-location-dot text-[10px] text-slate-400"></i>
+          {{ company?.country }}
+        </span>
 
+        <span *ngIf="company?.industry" class="flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-slate-600">
+          <i class="fa-solid fa-briefcase text-[10px] text-slate-400"></i>
+          {{ company?.industry }}
+        </span>
 
-
-      <!-- ROW 3 : META -->
-      <div
-        class="
-        flex
-        flex-wrap
-        gap-2
-        text-xs
-      "
-      >
-
-      <span
-        *ngIf="company?.country"
-        class="px-3 py-1 rounded-full bg-slate-100 text-slate-600"
-      >
-        {{ company?.country }}
-      </span>
-
-
-        <span
-          *ngIf="company?.industry"
-          class="px-3 py-1 rounded-full bg-slate-100 text-slate-600"
-        >
-        {{ company?.industry }}
-      </span>
-
-
-        <span
-          *ngIf="company?.phoneNumber"
-          class="px-3 py-1 rounded-full bg-slate-100 text-slate-600"
-        >
-        {{ company?.phoneNumber }}
-      </span>
-
-
+        <span *ngIf="company?.phoneNumber" class="flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1.5 text-slate-600">
+          <i class="fa-solid fa-phone text-[10px] text-slate-400"></i>
+          {{ company?.phoneNumber }}
+        </span>
       </div>
-
 
     </div>
 
-  </div>
-  <!-- BANNER -->
-  <div *ngIf="company?.bannerUrl" class="rounded-xl overflow-hidden border h-70">
-    <img
-      [src]="company?.bannerUrl | imageUrl"
-      class="w-full h-full object-cover"
-    />
   </div>
 
   <!-- PRODUCTS -->
   <div class="bg-white border rounded-xl p-3 sm:p-5">
-    <h2 class="text-base font-semibold mb-4">
-      Products ({{ totalProducts }})
-    </h2>
 
-    <div class="grid gap-4 sm:gap-5 sm:grid-cols-2 xl:grid-cols-3">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <h2 class="text-base font-semibold">
+        Products ({{ totalProducts }})
+      </h2>
 
-      <article
-        *ngFor="let product of products"
-        class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+      <!-- SEARCH -->
+      <div class="relative w-full sm:w-64">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+          placeholder="Search products..."
+          class="w-full rounded-full border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm text-slate-700 outline-none transition focus:border-[#7e6907]/40 focus:bg-white"
+        />
+      </div>
+    </div>
+
+    <!-- SUBCATEGORY FILTER CHIPS -->
+    <div *ngIf="company?.subcategories?.length" class="mb-5 flex flex-wrap gap-2">
+      <button
+        (click)="selectSubcategory(null)"
+        class="rounded-full border px-3.5 py-1.5 text-xs font-medium transition"
+        [class.bg-slate-900]="selectedSubcategoryId === null"
+        [class.text-white]="selectedSubcategoryId === null"
+        [class.border-slate-900]="selectedSubcategoryId === null"
+        [class.border-slate-200]="selectedSubcategoryId !== null"
+        [class.text-slate-600]="selectedSubcategoryId !== null"
+        [class.hover:border-slate-300]="selectedSubcategoryId !== null"
       >
+        All
+      </button>
 
-        <!-- IMAGE -->
-        <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+      <button
+        *ngFor="let sub of company?.subcategories"
+        (click)="selectSubcategory(sub.id)"
+        class="rounded-full border px-3.5 py-1.5 text-xs font-medium transition"
+        [class.bg-slate-900]="selectedSubcategoryId === sub.id"
+        [class.text-white]="selectedSubcategoryId === sub.id"
+        [class.border-slate-900]="selectedSubcategoryId === sub.id"
+        [class.border-slate-200]="selectedSubcategoryId !== sub.id"
+        [class.text-slate-600]="selectedSubcategoryId !== sub.id"
+        [class.hover:border-slate-300]="selectedSubcategoryId !== sub.id"
+      >
+        {{ sub.name }}
+      </button>
+    </div>
 
-          <img
-            [src]="product.imageUrl?.url | imageUrl"
-            [alt]="product.name"
-            class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-          />
+    <!-- HEIGHT-STABILIZED RESULTS AREA -->
+    <div #productsContainer [style.minHeight.px]="lastProductsHeight">
 
-          <div class="absolute left-3 top-3 rounded-full bg-white/90 px-2 py-1 text-xs font-semibold text-slate-700">
-            {{ product.category || 'Other' }}
-          </div>
+      <div class="grid gap-4 sm:gap-5 sm:grid-cols-2 xl:grid-cols-3">
+        <app-product-card
+          *ngFor="let product of products"
+          [product]="product"
+          [showCompany]="true"
+        >
+        </app-product-card>
+      </div>
 
-        </div>
-
-        <!-- CONTENT -->
-        <div class="flex flex-1 flex-col p-4">
-
-          <!-- TITLE + RATING -->
-          <div class="flex items-baseline justify-between gap-3">
-
-            <h2
-              class="flex-1 min-w-0 text-base font-semibold text-slate-900 line-clamp-2">
-
-              {{ product.name }}
-
-            </h2>
-
-            <div
-              class="flex items-center gap-1 flex-shrink-0">
-
-              <ng-container *ngIf="product.reviewCount > 0; else noReviews">
-
-                <i class="fa-solid fa-star text-yellow-400 text-xs"></i>
-
-                <span class="text-sm font-semibold">
-        {{ product.reviewsAvg | number:'1.1-1' }}
-      </span>
-
-                <span class="text-xs text-slate-400">
-        ({{ product.reviewCount }})
-      </span>
-
-              </ng-container>
-
-              <ng-template #noReviews>
-      <span class="text-xs text-slate-400 whitespace-nowrap">
-        No reviews
-      </span>
-              </ng-template>
-
-            </div>
-
-          </div>
-
-          <!-- DESCRIPTION -->
-          <p class="mt-2 text-sm text-slate-600 line-clamp-2">
-            {{ product.description }}
-          </p>
-
-          <!-- FOOTER -->
-          <div class="mt-auto pt-3 flex items-center justify-between text-xs text-slate-500">
-
-            <span>
-              Added {{ product.createdAt | date:'mediumDate' }}
-            </span>
-
-            <span class="text-sky-600 font-medium">
-              {{ product.category || 'Other' }}
-            </span>
-
-          </div>
-
-          <!-- BUTTON -->
-          <a
-            [routerLink]="['/product', product.id]"
-            class="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-slate-900 py-2 text-sm font-semibold text-white hover:bg-slate-700"
-          >
-            View details
-          </a>
-
-        </div>
-      </article>
+      <!-- EMPTY -->
+      <div *ngIf="products.length === 0 && !loading" class="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+        <span *ngIf="searchTerm || selectedSubcategoryId">No products match your filters.</span>
+        <span *ngIf="!searchTerm && !selectedSubcategoryId">This company has no products yet.</span>
+      </div>
 
     </div>
 
-    <!-- EMPTY -->
-    <div
-      *ngIf="products?.length === 0"
-      class="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500"
-    >
-      This company has no products yet.
+    <!-- LOAD MORE -->
+    <div *ngIf="!last && products.length > 0" class="mt-6 flex justify-center">
+      <button
+        (click)="loadProducts()"
+        [disabled]="loading"
+        class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-[#7e6907]/30 hover:text-[#7e6907] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <i *ngIf="loading" class="fa-solid fa-spinner animate-spin text-xs"></i>
+        <span *ngIf="!loading">Load more products</span>
+        <span *ngIf="loading">Loading...</span>
+      </button>
     </div>
 
-    <div class="text-center mt-4 divide-gray-400" *ngIf="loading">Loading...</div>
+    <!-- END OF LIST -->
+    <p *ngIf="last && products.length > 0" class="mt-6 text-center text-sm text-slate-400">
+      Showing all {{ totalProducts }} products
+    </p>
 
   </div>
 
 </div>
-
-

@@ -1,21 +1,80 @@
-<footer class="bg-gray-100 border-t mt-10">
-  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between">
+<footer class="border-t mt-12 border-white/10 bg-[#002b12]">
+  <div class="mx-auto max-w-7xl px-5 py-16">
 
-    <!-- Left -->
-    <div class="text-gray-700 font-semibold">
-      ReviewHood
+    <div class="grid grid-cols-2 gap-10 md:grid-cols-5">
+
+      <!-- BRAND -->
+      <div class="col-span-2">
+        <a routerLink="/" class="flex items-center">
+          <img
+            src="/logoWhite.png"
+            alt="ReviewHood"
+            width="200"
+            height="60"
+            class="h-16 w-auto object-contain"
+          />
+        </a>
+        <p class="mt-3 max-w-xs text-sm leading-relaxed text-white/50">
+          Real opinions from real customers. No sponsored reviews, no fake ratings — just honest feedback on the products you care about.
+        </p>
+
+        <!-- SOCIALS -->
+        <div class="mt-5 flex items-center gap-3">
+          <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/50 transition hover:bg-[#f1d274]/15 hover:text-[#f1d274]">
+            <i class="fa-brands fa-instagram text-sm"></i>
+          </a>
+          <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/50 transition hover:bg-[#f1d274]/15 hover:text-[#f1d274]">
+            <i class="fa-brands fa-facebook-f text-sm"></i>
+          </a>
+          <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/50 transition hover:bg-[#f1d274]/15 hover:text-[#f1d274]">
+            <i class="fa-brands fa-tiktok text-sm"></i>
+          </a>
+          <a href="#" class="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white/50 transition hover:bg-[#f1d274]/15 hover:text-[#f1d274]">
+            <i class="fa-brands fa-x-twitter text-sm"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- COMPANY -->
+      <div>
+        <h3 class="text-sm font-semibold text-white">Company</h3>
+        <ul class="mt-4 space-y-3">
+          <li><a routerLink="/about" class="text-sm text-white/50 transition hover:text-[#f1d274]">About</a></li>
+          <!--<li><a routerLink="/contact" class="text-sm text-white/50 transition hover:text-[#f1d274]">Contact</a></li>-->
+          <li><a routerLink="/careers" class="text-sm text-white/50 transition hover:text-[#f1d274]">Careers</a></li>
+        </ul>
+      </div>
+
+      <!-- EXPLORE -->
+      <div>
+        <h3 class="text-sm font-semibold text-white">Explore</h3>
+        <ul class="mt-4 space-y-3">
+          <li><a routerLink="/categories" class="text-sm text-white/50 transition hover:text-[#f1d274]">Categories</a></li>
+          <li><a routerLink="/companies" class="text-sm text-white/50 transition hover:text-[#f1d274]">Companies</a></li>
+          <li><a routerLink="/suggest" class="text-sm text-white/50 transition hover:text-[#f1d274]">Suggest a product</a></li>
+        </ul>
+      </div>
+
+      <!-- LEGAL -->
+      <div>
+        <h3 class="text-sm font-semibold text-white">Legal</h3>
+        <ul class="mt-4 space-y-3">
+          <li><a routerLink="/terms" class="text-sm text-white/50 transition hover:text-[#f1d274]">Terms of service</a></li>
+          <li><a routerLink="/privacy" class="text-sm text-white/50 transition hover:text-[#f1d274]">Privacy policy</a></li>
+          <li><a routerLink="/guidelines" class="text-sm text-white/50 transition hover:text-[#f1d274]">Review guidelines</a></li>
+        </ul>
+      </div>
+
     </div>
 
-    <!-- Middle -->
-    <div class="text-sm text-gray-500 mt-2 md:mt-0">
-      Real opinions. No ads.
-    </div>
-
-    <!-- Right -->
-    <div class="flex gap-4 text-sm mt-2 md:mt-0">
-      <a href="#" class="text-gray-600 hover:text-black">About</a>
-      <a href="#" class="text-gray-600 hover:text-black">Terms</a>
-      <a href="#" class="text-gray-600 hover:text-black">Contact</a>
+    <!-- BOTTOM BAR -->
+    <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 md:flex-row">
+      <p class="text-xs text-white/40">
+        © {{ currentYear }} ReviewHood. All rights reserved.
+      </p>
+      <p class="text-xs text-white/40">
+        Made in Tunisia
+      </p>
     </div>
 
   </div>

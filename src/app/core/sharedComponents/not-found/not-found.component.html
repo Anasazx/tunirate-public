@@ -1,0 +1,82 @@
+<section class="relative flex min-h-full w-full flex-col items-center justify-center overflow-hidden">
+
+  <!-- FLOATING STARS -->
+  <i class="fa-solid fa-star pointer-events-none absolute -right-4 -top-8 rotate-[18deg] text-[160px] text-[#f1d274]/30 animate-float-a md:right-10 md:top-2 md:text-[200px]"></i>
+  <i class="fa-solid fa-star pointer-events-none absolute -left-10 bottom-0 -rotate-[15deg] text-[100px] text-[#b69c41]/15 animate-float-b md:left-4 md:bottom-4 md:text-[130px]"></i>
+  <i class="fa-solid fa-star pointer-events-none absolute right-[20%] top-[20%] rotate-[8deg] text-2xl text-[#f1d274]/60 animate-float-a-fast hidden md:block"></i>
+  <i class="fa-solid fa-star pointer-events-none absolute left-[15%] top-[65%] -rotate-[10deg] text-xl text-[#b69c41]/30 animate-float-b-fast hidden md:block"></i>
+
+
+  <div class="relative mx-auto max-w-5xl px-4 py-16 text-center">
+
+    <!-- BIG 404 WITH MAGNIFIER ILLUSTRATION -->
+    <div class="relative mx-auto mb-2 inline-flex items-center justify-center">
+      <span class="text-[110px] font-black leading-none tracking-tight text-[#7e6907]/10 md:text-[150px]">
+        404
+      </span>
+      <svg class="absolute h-16 w-16 text-[#7e6907] md:h-20 md:w-20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" stroke-linecap="round"/>
+        <path d="M20 20l-4.3-4.3" stroke-linecap="round"/>
+        <path d="M8 10.5h5" stroke-linecap="round" opacity="0.4"/>
+      </svg>
+    </div>
+
+    <h1 class="text-[26px] font-semibold tracking-[-0.01em] text-slate-900 md:text-[34px]">
+      This page went missing
+    </h1>
+
+    <p class="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-slate-500 md:text-base">
+      The link might be broken, or the page may have been moved. Let's get you back on track.
+    </p>
+
+    <div class="mx-auto mt-8 max-w-md">
+      <app-search-bar variant="hero"></app-search-bar>
+    </div>
+
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <button
+        (click)="goHome()"
+        class="inline-flex items-center gap-2 rounded-full bg-[#002b11] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00190a]"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3v-6a1 1 0 011-1h4a1 1 0 011 1v6h3a1 1 0 001-1V10"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to home
+      </button>
+
+      <a
+      routerLink="/products"
+      class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-[#7e6907]/30 hover:text-[#7e6907]"
+      >
+      Browse all products
+      </a>
+    </div>
+
+  </div>
+
+  <!-- QUICK LINKS STRIP -->
+  <div class="relative w-full border-t border-slate-100 py-8">
+    <div class="mx-auto max-w-2xl px-4">
+      <p class="mb-4 text-center text-xs font-semibold uppercase tracking-widest text-slate-400">
+        Or jump straight to
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <a routerLink="/categories"
+           class="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 transition hover:border-[#7e6907]/30 hover:text-[#7e6907]">
+          Categories
+        </a>
+        <a routerLink="/products"
+           class="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 transition hover:border-[#7e6907]/30 hover:text-[#7e6907]">
+          All products
+        </a>
+        <a routerLink="/about"
+           class="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 transition hover:border-[#7e6907]/30 hover:text-[#7e6907]">
+          About ReviewHood
+        </a>
+
+      </div>
+    </div>
+  </div>
+
+</section>

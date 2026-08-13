@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/authService/auth.service';
 
@@ -8,11 +9,13 @@ import {
   GoogleSigninButtonDirective
 } from '@abacritt/angularx-social-login';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterLink,
     GoogleSigninButtonDirective
   ],
@@ -23,39 +26,61 @@ export class LoginComponent implements OnInit {
 
   loading = false;
   error: string | null = null;
-
   showPassword = false;
+  passwordValue = '';
+  confirmPasswordValue = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private socialAuthService: SocialAuthService
-  ) {}
+    private socialAuthService: SocialAuthService,
+  ) {
+    console.log("Login Component Loaded")
+  }
 
   ngOnInit(): void {
+
     this.socialAuthService.authState.subscribe(user => {
-      if (!user) return;
+
+      if (!user) {
+        return;
+      }
 
       this.loading = true;
+      this.error = null;
 
       this.authService.googleLogin().subscribe({
+
         next: () => {
           this.loading = false;
           this.router.navigate(['/']);
         },
+
         error: (err) => {
           this.loading = false;
-          console.error(err);
-          this.error = 'Google login failed';
+
+          console.error('Google login failed:', err);
+
+          this.error =
+            err?.error?.message ||
+            err?.message ||
+            'Google login failed';
         }
+
       });
+
     });
+
   }
 
-  currentYear = new Date().getFullYear();
 
-  onSubmit(email: string, password: string, event: Event) {
+
+
+
+  onSubmit(email: string, password: string, event: Event): void {
+
     event.preventDefault();
+
     this.error = null;
 
     if (!email || !password) {
@@ -65,18 +90,31 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
 
-    this.authService.login({ email, password }).subscribe({
+    this.authService.login({
+      email,
+      password
+    }).subscribe({
+
       next: () => {
+
         this.loading = false;
         this.router.navigate(['/']);
+
       },
+
       error: (err) => {
+
         this.loading = false;
+
         this.error =
           err?.error?.message ||
           err?.message ||
           'Login failed';
+
       }
+
     });
+
   }
+
 }

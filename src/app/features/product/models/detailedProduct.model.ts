@@ -15,6 +15,7 @@ export interface DetailedProduct {
   reviewsCount: number;
   reviews: ReviewResponse[];
   images: ProductImageResponse[];
+  ratingDistribution?: Record<number, number>;
 }
 
 

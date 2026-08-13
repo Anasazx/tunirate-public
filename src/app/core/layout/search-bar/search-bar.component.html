@@ -1,97 +1,269 @@
-<div
-  class="w-full
-       md:max-w-xl
-       md:justify-self-center
-       mb-1"
->
+<!-- HEADER SEARCH -->
+<div *ngIf="variant === 'header'" class="hidden md:absolute md:left-1/2 md:top-1/2 md:block md:w-full md:max-w-md md:-translate-x-1/2 md:-translate-y-1/2">
+  <div class="relative">
 
-  <div class="relative w-full">
-
-
-
+    <!-- INPUT -->
     <input
       type="text"
       [(ngModel)]="searchQuery"
-      (input)="onSearch()"
-      placeholder="Search products, companies..."
-      class="
-        w-full
-        rounded-lg
-        border
-        px-3
-        pr-10
-        py-2
-        text-sm
-        focus:outline-none
-        focus:ring-2
-        focus:ring-gray-200
-      "
+      (input)="onInput()"
+      (keydown.enter)="goToSearch()"
+      placeholder="Search products, brands..."
+      autocomplete="off"
+      class="w-full rounded-full border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-11 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#079669] focus:bg-white focus:ring-2 focus:ring-[#079669]/20"
     />
+
+    <!-- SEARCH BUTTON -->
+    <button
+      type="button"
+      (click)="goToSearch()"
+      class="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-200/60 hover:text-[#079669]"
+    >
+      <i class="fa-solid fa-magnifying-glass text-xs"></i>
+    </button>
 
 
     <!-- SUGGESTIONS -->
     <div
-      *ngIf="suggestions.length"
-      class="absolute left-0 right-0 mt-2
-                 z-50 bg-white border
-                 rounded-xl shadow-lg
-                 overflow-hidden">
-
+      *ngIf="suggestions.length > 0"
+      class="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+    >
 
       <button
         *ngFor="let item of suggestions"
+        type="button"
         (click)="selectSuggestion(item)"
-        class="w-full flex items-center justify-between
-                   gap-3 px-4 py-2 text-sm
-                   hover:bg-gray-100">
+        class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-slate-50"
+      >
 
-
-        <div class="flex items-center gap-2">
-
+        <!-- IMAGE -->
+        <div
+          *ngIf="item.type === 'COMPANY' || item.imageUrl"
+          class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100"
+        >
 
           <img
-            *ngIf="item.type === 'COMPANY'"
-            [src]="item.logoUrl | imageUrl"
-            class="h-6 w-6 rounded-full object-cover border">
+            *ngIf="item.imageUrl"
+            [src]="item.imageUrl | imageUrl"
+            [alt]="item.name"
+            class="h-full w-full object-cover"
+          />
 
-
-          <span class="flex items-center gap-1">
-
-                {{ item.name }}
-
-            <svg
-              *ngIf="item.type === 'COMPANY' && item.verified"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              class="h-4 w-4 text-sky-500"
-              fill="currentColor">
-
-                  <circle cx="12" cy="12" r="10" />
-                  <path
-                    d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z"
-                    fill="white" />
-
-                </svg>
-
-              </span>
+          <i
+            *ngIf="!item.imageUrl"
+            class="fa-solid"
+            [class.fa-building]="item.type === 'COMPANY'"
+            [class.fa-box]="item.type === 'PRODUCT'"
+            class="text-sm text-slate-400"
+          ></i>
 
         </div>
 
 
-        <span
-          *ngIf="item.type === 'COMPANY'"
-          class="text-xs text-slate-400 font-medium">
+        <!-- NAME -->
+        <div class="min-w-0 flex-1">
 
-              company
+          <div class="truncate text-sm font-medium text-slate-800">
+            {{ item.name }}
+          </div>
 
-            </span>
+          <div class="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+            {{ item.type === 'COMPANY' ? 'Company' : 'Product' }}
+          </div>
 
+        </div>
+
+
+        <!-- ARROW -->
+        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300"></i>
 
       </button>
 
+    </div>
+
+  </div>
+
+</div>
+
+<!-- HERO SEARCH -->
+<div *ngIf="variant === 'hero'" class="relative">
+
+  <div
+    class="flex items-center gap-1 rounded-full border border-[#b69c41]/30 bg-white p-1.5 shadow-sm"
+  >
+
+    <!-- INPUT -->
+    <div class="relative flex-1">
+
+      <i
+        class="fa-solid fa-magnifying-glass pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-sm text-[#b69c41]"
+      ></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onInput()"
+        (keydown.enter)="goToSearch()"
+        placeholder="Search products, brands..."
+        autocomplete="off"
+        class="w-full rounded-full bg-transparent py-3.5 pl-11 pr-4 text-base text-slate-800 outline-none placeholder:text-slate-400"
+      />
 
     </div>
 
+    <!-- SEARCH BUTTON -->
+    <button
+      type="button"
+      (click)="goToSearch()"
+      class="flex-shrink-0 rounded-full bg-[#7e6907] px-6 py-3.5 text-base font-semibold text-white transition duration-150 hover:bg-[#5f4f05] active:scale-95"
+    >
+      Search
+    </button>
+
+  </div>
+
+
+  <!-- SUGGESTIONS -->
+  <div
+    *ngIf="suggestions.length > 0"
+    class="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white text-left shadow-xl"
+  >
+
+    <button
+      *ngFor="let item of suggestions"
+      type="button"
+      (click)="selectSuggestion(item)"
+      class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-slate-50"
+    >
+
+      <!-- IMAGE -->
+      <div
+        *ngIf="item.type === 'COMPANY' || item.imageUrl"
+        class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100"
+      >
+
+        <img
+          *ngIf="item.imageUrl"
+          [src]="item.imageUrl | imageUrl"
+          [alt]="item.name"
+          class="h-full w-full object-cover"
+        />
+
+        <i
+          *ngIf="!item.imageUrl"
+          class="fa-solid text-sm text-slate-400"
+          [class.fa-building]="item.type === 'COMPANY'"
+          [class.fa-box]="item.type === 'PRODUCT'"
+        ></i>
+
+      </div>
+
+
+      <!-- NAME -->
+      <div class="min-w-0 flex-1">
+
+        <div class="truncate text-sm font-medium text-slate-800">
+          {{ item.name }}
+        </div>
+
+        <div
+          class="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-slate-400"
+        >
+          {{ item.type === 'COMPANY' ? 'Company' : 'Product' }}
+        </div>
+
+      </div>
+
+
+      <!-- ARROW -->
+      <i
+        class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300"
+      ></i>
+
+    </button>
+
+  </div>
+
+</div>
+
+
+
+
+
+<!-- MOBILE SEARCH -->
+<div *ngIf="variant === 'mobile'" class="relative w-full">
+
+  <input
+    type="text"
+    [(ngModel)]="searchQuery"
+    (input)="onInput()"
+    (keydown.enter)="goToSearch()"
+    placeholder="Search products, brands..."
+    autocomplete="off"
+    autofocus
+    class="w-full rounded-full border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-11 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#079669] focus:bg-white focus:ring-2 focus:ring-[#079669]/20"
+  />
+
+  <button
+    type="button"
+    (click)="goToSearch()"
+    class="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-200/60 hover:text-[#079669]"
+  >
+    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+  </button>
+
+
+  <!-- SUGGESTIONS -->
+  <div
+    *ngIf="suggestions.length > 0"
+    class="absolute left-0 right-0 top-full z-[300] mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+  >
+
+    <button
+      *ngFor="let item of suggestions"
+      type="button"
+      (click)="selectSuggestion(item)"
+      class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-slate-50"
+    >
+
+      <!-- IMAGE -->
+      <div
+        *ngIf="item.type === 'COMPANY' || item.imageUrl"
+        class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100"
+      >
+
+        <img
+          *ngIf="item.imageUrl"
+          [src]="item.imageUrl | imageUrl"
+          [alt]="item.name"
+          class="h-full w-full object-cover"
+        />
+
+        <i
+          *ngIf="!item.imageUrl"
+          class="fa-solid text-sm text-slate-400"
+          [class.fa-building]="item.type === 'COMPANY'"
+          [class.fa-box]="item.type === 'PRODUCT'"
+        ></i>
+
+      </div>
+
+      <!-- NAME -->
+      <div class="min-w-0 flex-1">
+
+        <div class="truncate text-sm font-medium text-slate-800">
+          {{ item.name }}
+        </div>
+
+        <div class="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+          {{ item.type === 'COMPANY' ? 'Company' : 'Product' }}
+        </div>
+
+      </div>
+
+      <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300"></i>
+
+    </button>
 
   </div>
 

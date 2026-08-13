@@ -1,94 +1,126 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {FormsModule} from "@angular/forms";
-import {NgForOf, NgIf} from "@angular/common";
-import {Router} from '@angular/router';
-import {SearchService} from '../../services/searchService/search.service';
-import {SharedService} from '../../services/sharedService/shared.service';
-import {ImageUrlPipe} from '../../pipes/image-url.pipe';
+import {Component, ElementRef, HostListener, Input} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgForOf, NgIf } from '@angular/common';
+import { Router } from '@angular/router';
+import { Subject, debounceTime, distinctUntilChanged, switchMap, of, catchError } from 'rxjs';
+
+import { SearchService } from '../../services/searchService/search.service';
+import { ImageUrlPipe } from '../../pipes/image-url.pipe';
+import { SearchSuggestion } from '../../models/dto/searchDTO/searchSuggestion.model';
 
 @Component({
   selector: 'app-search-bar',
+  standalone: true,
   imports: [
     FormsModule,
-    NgForOf,
     NgIf,
-    ImageUrlPipe
+    NgForOf,
+    ImageUrlPipe,
   ],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent {
 
-  @Output() searchChange = new EventEmitter<string>();
+
+  @Input() variant: 'header' | 'hero' | 'mobile' = 'header';
 
   searchQuery = '';
+  suggestions: SearchSuggestion[] = [];
 
-  //TODO; MAKE THIS AN INDEPENDENT DTO TO REUSE IT!
-  suggestions: {
-    id: number;
-    name: string;
-    type: 'PRODUCT' | 'COMPANY';
-    logoUrl?: string;
-    verified?: boolean;
-  }[] = [];
+  private searchSubject = new Subject<string>();
 
   constructor(
     private router: Router,
     private searchService: SearchService,
-    public sharedService: SharedService,
-  ) {}
+    private elementRef: ElementRef
+  ) {
 
-  /* ---------------- SEARCH ---------------- */
+    this.searchSubject.pipe(
+      debounceTime(250),
+      distinctUntilChanged(),
 
-  onSearch(): void {
+      switchMap(query => {
+
+        if (!query) {
+          return of([]);
+        }
+
+        return this.searchService.searchSuggestions(query).pipe(
+          catchError(() => of([]))
+        );
+      })
+
+    ).subscribe(suggestions => {
+      this.suggestions = suggestions.slice(0, 6);
+    });
+  }
+
+  /**
+   * Called whenever the user types.
+   */
+  onInput(): void {
+
     const query = this.searchQuery.trim();
-    this.searchChange.emit(query);
 
     if (!query) {
       this.suggestions = [];
       return;
     }
 
-    this.searchService.search(query).subscribe({
-      next: (res) => {
-        const products = (res.products || []).map(product => ({
-          id: product.id,
-          name: product.name,
-          type: 'PRODUCT' as const,
-          logoUrl: product.imageUrl?.url,
-          verified: false
-        }));
-
-        const companies = (res.companies || []).map(company => ({
-          id: company.id,
-          name: company.name,
-          type: 'COMPANY' as const,
-          logoUrl: company.logoUrl,
-          status: company.status ?? false
-        }));
-
-        this.suggestions = [...products, ...companies]
-          .filter((item, index, arr) =>
-            index === arr.findIndex(x => x.id === item.id && x.type === item.type)
-          )
-          .slice(0, 6);
-      },
-      error: () => {
-        this.suggestions = [];
-      }
-    });
+    this.searchSubject.next(query);
   }
 
-  selectSuggestion(item: any): void {
-    this.searchQuery = item.name;
+  /**
+   * Normal search.
+   */
+  goToSearch(): void {
+
+    const query = this.searchQuery.trim();
+
+    if (!query) {
+      this.suggestions = [];
+      return;
+    }
+
     this.suggestions = [];
-    this.searchChange.emit(item.name);
 
     this.router.navigate(
-      item.type === 'COMPANY'
-        ? ['/company', item.id]
-        : ['/product', item.id]
+      ['/search'],
+      {
+        queryParams: {
+          q: query
+        }
+      }
     );
   }
+
+  /**
+   * User clicked an autocomplete suggestion.
+   */
+  selectSuggestion(item: SearchSuggestion): void {
+
+    this.searchQuery = item.name;
+    this.suggestions = [];
+
+    if (item.type === 'COMPANY') {
+
+      this.router.navigate(['/c', item.id]);
+
+    } else {
+
+      this.router.navigate(['/p', item.id]);
+
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.elementRef.nativeElement.contains(event.target);
+    if (!clickedInside) {
+      this.suggestions = [];
+    }
+  }
+
 
 }

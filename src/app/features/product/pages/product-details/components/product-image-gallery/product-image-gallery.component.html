@@ -1,0 +1,42 @@
+<div class="w-full">
+  <div class="relative aspect-square max-w-md mx-auto lg:max-w-none rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
+
+    <!-- MAIN IMAGE -->
+    <img
+      *ngIf="selectedImage"
+      [src]="selectedImage | imageUrl"
+      alt="product"
+      class="w-full h-full object-cover transition"
+    />
+
+    <!-- LEFT ARROW -->
+    <button
+      *ngIf="images.length > 1"
+      (click)="prevImage()"
+      class="absolute left-2 top-1/2 -translate-y-1/2
+             bg-black/40 hover:bg-black/70 text-white
+             w-8 h-8 rounded-full flex items-center justify-center
+             opacity-0 group-hover:opacity-100 transition">
+      ‹
+    </button>
+
+    <!-- RIGHT ARROW -->
+    <button
+      *ngIf="images.length > 1"
+      (click)="nextImage()"
+      class="absolute right-2 top-1/2 -translate-y-1/2
+             bg-black/40 hover:bg-black/70 text-white
+             w-8 h-8 rounded-full flex items-center justify-center
+             opacity-0 group-hover:opacity-100 transition">
+      ›
+    </button>
+
+    <!-- IMAGE COUNTER -->
+    <div
+      *ngIf="images.length > 1"
+      class="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-2 py-1 rounded-full">
+      {{ currentImageIndex + 1 }} / {{ images.length }}
+    </div>
+
+  </div>
+</div>

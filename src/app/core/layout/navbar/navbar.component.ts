@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
+import { NgForOf } from '@angular/common';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import { CategoryService } from '../../../features/home/services/categoryService/category.service';
 import { SubcategoryService } from '../../../features/home/services/subcategoryService/subcategory.service';
 import { trigger, transition, style, animate } from '@angular/animations';
-import {CategoryResponse} from '../../../features/home/models/categoryDTO/categoryResponse.model';
+import {CategoryResponse} from '../../models/dto/categoryDTO/categoryResponse.model';
 
 @Component({
   selector: 'app-navbar',

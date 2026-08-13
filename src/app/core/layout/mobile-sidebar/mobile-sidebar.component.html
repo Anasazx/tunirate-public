@@ -16,30 +16,27 @@
       absolute left-0 top-0
       h-full w-72
       bg-white
-      shadow-xl
       p-5
+      shadow-xl
       overflow-y-auto
     "
   >
 
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="mb-6 flex items-center justify-between">
 
-      <span class="font-semibold text-lg text-slate-900">
+      <span class="text-lg font-semibold text-slate-900">
         Categories
       </span>
 
-
       <button
         (click)="close.emit()"
-        class="p-2 rounded-lg hover:bg-slate-100">
-
+        class="rounded-lg p-2 hover:bg-slate-100"
+      >
         ✕
-
       </button>
 
     </div>
-
 
 
     <!-- Categories -->
@@ -47,8 +44,9 @@
 
       <!-- All -->
       <a
-        routerLink="/"
-        class="block px-3 py-2 rounded-lg text-sm font-medium transition"
+        routerLink="/products"
+        (click)="close.emit()"
+        class="block rounded-lg px-3 py-2 text-sm font-medium transition"
 
         [class.bg-slate-900]="!currentCategory"
         [class.text-white]="!currentCategory"
@@ -60,6 +58,7 @@
         All
       </a>
 
+
       <!-- Beauty Subcategories -->
       <div
         *ngIf="beautyCategory"
@@ -69,26 +68,24 @@
         <a
           *ngFor="let sub of beautySubcategories"
 
-          routerLink="/"
+          routerLink="/products"
 
           [queryParams]="{
-      category: beautyCategory.name,
-      categoryId: beautyCategory.id,
-      subcategory: sub.name,
-      subcategoryId: sub.id
-    }"
+            subcategoryId: sub.id,
+            subcategory: sub.name
+          }"
 
           (click)="close.emit()"
 
           class="
-      block
-      px-3
-      py-2
-      rounded-lg
-      text-sm
-      font-medium
-      transition
-    "
+            block
+            rounded-lg
+            px-3
+            py-2
+            text-sm
+            font-medium
+            transition
+          "
 
           [class.bg-slate-900]="currentSubcategory === sub.name"
           [class.text-white]="currentSubcategory === sub.name"
@@ -103,111 +100,6 @@
 
       </div>
 
-      <!-- Category -->
-      <!--
-      <div *ngFor="let category of categories">
-
-
-        <a
-
-          routerLink="/"
-
-          [queryParams]="{
-            category: category.name,
-            categoryId: category.id
-          }"
-
-          (click)="close.emit()"
-
-          class="block px-3 py-2 rounded-lg text-sm font-semibold transition"
-
-          [class.bg-slate-900]="currentCategory === category.name"
-
-          [class.text-white]="currentCategory === category.name"
-
-          [class.bg-transparent]="currentCategory !== category.name"
-
-          [class.text-slate-800]="currentCategory !== category.name"
-
-          [class.hover:bg-slate-100]="currentCategory !== category.name"
-
-        >
-
-          {{ category.name }}
-
-        </a>
-
-
-        <div
-          class="ml-5 mt-1 border-l border-slate-200 pl-3 space-y-1"
-          *ngIf="category.subcategories.length"
-        >
-
-          <a
-            *ngFor="
-      let sub of (
-        isExpanded(category.id)
-          ? category.subcategories
-          : category.subcategories.slice(0,2)
-      )
-    "
-
-            routerLink="/"
-
-            [queryParams]="{
-      category: category.name,
-      categoryId: category.id,
-      subcategory: sub.name,
-      subcategoryId: sub.id
-    }"
-
-            (click)="close.emit()"
-
-            class="
-      block
-      py-2
-      text-sm
-      transition
-    "
-
-            [class.font-bold]="currentSubcategory === sub.name"
-            [class.text-slate-900]="currentSubcategory === sub.name"
-            [class.text-slate-600]="currentSubcategory !== sub.name"
-            [class.hover:bg-slate-100]="currentSubcategory !== sub.name"
-          >
-
-            {{ sub.name }}
-
-          </a>
-
-
-
-
-          <button
-            *ngIf="category.subcategories.length > 2"
-            (click)="toggleSubcategories(category.id)"
-
-            class="
-      mt-1
-      text-sm
-      font-medium
-      text-blue-600
-      hover:text-blue-800
-    "
-          >
-
-            {{
-              isExpanded(category.id)
-                ? 'Show less'
-                : 'See more'
-            }}
-
-          </button>
-
-
-        </div>
-      </div>
- -->
     </nav>
 
   </aside>

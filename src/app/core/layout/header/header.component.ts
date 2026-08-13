@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
-import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../features/auth/services/authService/auth.service';
-import { CompanyInvitationService } from '../../../features/company/services/companyInvitationService/company-invitation.service';
 import { SharedService } from '../../services/sharedService/shared.service';
-import { NavbarComponent } from '../navbar/navbar.component';
-import {filter} from 'rxjs';
-import {MobileSidebarComponent} from '../mobile-sidebar/mobile-sidebar.component';
+import { filter } from 'rxjs';
+import { MobileSidebarComponent } from '../mobile-sidebar/mobile-sidebar.component';
+import { ImageUrlPipe } from '../../pipes/image-url.pipe';
+import { AuthRequiredComponent } from '../../sharedComponents/auth-required/auth-required.component';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ConfirmModalComponent } from '../../sharedComponents/confirm-modal/confirm-modal.component';
+import { SuggestProductModalComponent } from '../../sharedComponents/suggest-product-modal/suggest-product-modal.component';
+import {ToastService} from '../../services/toastService/toast.service';
 import {SearchBarComponent} from '../search-bar/search-bar.component';
-import {ImageUrlPipe} from '../../pipes/image-url.pipe';
-import {SuggestProductService} from '../../services/suggestProductService/suggest-product.service';
-import {AuthRequiredComponent} from '../../sharedComponents/auth-required/auth-required.component';
-import {animate, style, transition, trigger} from '@angular/animations';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NavbarComponent, MobileSidebarComponent, SearchBarComponent, ImageUrlPipe, AuthRequiredComponent],
+  imports: [CommonModule, RouterLink, FormsModule, MobileSidebarComponent, ImageUrlPipe, AuthRequiredComponent, ConfirmModalComponent, SuggestProductModalComponent, SearchBarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   animations: [
@@ -48,90 +48,38 @@ import {animate, style, transition, trigger} from '@angular/animations';
     ])
   ]
 })
+
 export class HeaderComponent implements OnInit {
 
   @Output() searchChange = new EventEmitter<string>();
 
-  invitations: any[] = [];
-  invitationCount = 0;
-  showInvitations = false;
-
   userMenuOpen = false;
-
   logoutConfirmOpen = false;
-
   showAuthModal= false;
+  mobileMenuOpen = false;
+  suggestProductOpen = false;
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private companyInvitationService: CompanyInvitationService,
     public sharedService: SharedService,
-    private suggestProductService: SuggestProductService
+    private toastService: ToastService,
   ) {}
 
-
-  showAuthModelIfNoAuthUser(): boolean {
-    if (!this.authService.getCurrentUser) {
-      this.showAuthModal = true;
-      return true;
-    }
-    return false;
-  }
-
   ngOnInit() {
-    this.authService.currentUser$.pipe(
-      filter(user => !!user)
-    ).subscribe(() => {
-      this.loadInvitations();
-    });
+    this.authService.currentUser$.pipe(filter(user => !!user)).subscribe(() => {});
   }
 
-  /* ---------------- AUTH ---------------- */
 
-  goCompanyDashboard(): void {
-    this.router.navigate(['/']); // future update
+  goToSearch(value: string) {
+    if (!value.trim()) return;
+    this.router.navigate(['/search'], { queryParams: { q: value } });
   }
 
   toggleUserMenu(): void {
     this.userMenuOpen = !this.userMenuOpen;
-    this.showInvitations = false;
   }
 
-  /* ---------------- INVITATIONS ---------------- */
-
-  toggleInvitations(): void {
-    this.showInvitations = !this.showInvitations;
-    this.userMenuOpen = false;
-    if (this.showInvitations) this.loadInvitations();
-  }
-
-  loadInvitations(): void {
-    this.companyInvitationService.getMyInvitations()
-      .subscribe(res => {
-        this.invitations = res;
-        this.invitationCount = res.filter(i => i.status === 'PENDING').length;
-      });
-  }
-
-  suggestProductOpenMethod(){
-    if (this.showAuthModelIfNoAuthUser()) {
-      return;
-    }
-    this.suggestProductOpen = true;
-  }
-
-  accept(id: number): void {
-    this.companyInvitationService.acceptInvitation(id)
-      .subscribe(() => this.loadInvitations());
-  }
-
-  reject(id: number): void {
-    this.companyInvitationService.rejectInvitation(id)
-      .subscribe(() => this.loadInvitations());
-  }
-
-  mobileMenuOpen = false;
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
@@ -143,62 +91,14 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  suggestProductOpen = false;
-  suggestionSuccess = false;
+  mobileSearchOpen = false;
 
-  suggestion = {
-    name: '',
-    companyName: '',
-    description: ''
-  };
+  openLogin(): void {
+    this.router.navigate(['/auth/login']);
+  }
 
-
-  submitSuggestion(){
-
-    if (this.showAuthModelIfNoAuthUser()) {
-      return;
-    }
-
-
-    this.suggestProductService
-      .createSuggestion(this.suggestion)
-      .subscribe({
-
-        next:()=>{
-
-          // close modal
-          this.suggestProductOpen = false;
-
-
-          // reset form
-          this.suggestion = {
-            name:'',
-            companyName:'',
-            description:''
-          };
-
-
-          // show success message
-          this.suggestionSuccess = true;
-
-
-          // hide after 3 seconds
-          setTimeout(() => {
-            this.suggestionSuccess = false;
-          }, 3000);
-
-        },
-
-
-        error:()=>{
-
-          // optional later
-          // show error toast
-
-        }
-
-      });
-
+  onSuggestionSubmitted() {
+    this.toastService.show("Suggestion sent!");
   }
 
   @HostListener('document:click', ['$event'])
@@ -206,9 +106,6 @@ export class HeaderComponent implements OnInit {
     const target = event.target as HTMLElement;
     if (!target.closest('.user-menu')) {
       this.userMenuOpen = false;
-    }
-    if (!target.closest('.notification-menu')) {
-      this.showInvitations = false;
     }
   }
 

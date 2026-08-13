@@ -1,0 +1,15 @@
+<div *ngIf="visible" @toastAnimation class="fixed top-20 right-5 z-[200] bg-white border shadow-lg rounded-xl px-5 py-4 flex items-center gap-3">
+  <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+    <i class="fa-solid fa-check text-green-600"></i>
+  </div>
+
+  <div>
+    <p class="font-semibold text-slate-900 text-sm">
+      {{ message }}
+    </p>
+
+    <p *ngIf="description" class="text-xs text-slate-500">
+      {{ description }}
+    </p>
+  </div>
+</div>

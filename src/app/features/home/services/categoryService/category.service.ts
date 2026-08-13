@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SharedService } from '../../../../core/services/sharedService/shared.service';
-import { CategoryResponse } from '../../models/categoryDTO/categoryResponse.model';
+import { CategoryResponse } from '../../../../core/models/dto/categoryDTO/categoryResponse.model';
 
 @Injectable({
   providedIn: 'root'

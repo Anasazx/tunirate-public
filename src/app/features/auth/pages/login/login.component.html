@@ -1,292 +1,240 @@
-<div class="min-h-screen bg-slate-100 flex items-center justify-center">
-  <div class="container mx-auto p-4">
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden lg:flex">
-
-      <!-- Left Panel: Branding -->
-      <div
-        class="
-    hidden lg:flex lg:w-1/2
-    bg-gradient-to-br from-slate-900 via-slate-800 to-sky-900
-    p-12
-    flex-col
-    justify-between
-    relative
-    overflow-hidden
-  "
-      >
-
-        <!-- Decorative circles -->
-        <div
-          class="
-      absolute
-      -top-20
-      -right-20
-      w-72
-      h-72
-      rounded-full
-      bg-sky-400/20
-      blur-3xl
-    "
-        ></div>
-
-        <div
-          class="
-      absolute
-      -bottom-20
-      -left-20
-      w-80
-      h-80
-      rounded-full
-      bg-purple-500/20
-      blur-3xl
-    "
-        ></div>
+<div class="mx-auto w-full max-w-md px-6 py-8 mt-16">
 
 
-        <!-- Brand -->
-        <div class="relative z-10">
+<!-- Header -->
+<div class="mb-7 text-center">
 
-          <div class="flex items-center gap-3">
+  <h1 class="text-2xl font-bold tracking-tight text-slate-900">
+    Welcome back
+  </h1>
 
-            <img
-              src="/icon.png"
-              alt="ReviewHood"
-              class="w-12 h-12 object-contain"
-            />
+  <p class="mt-2 text-sm text-slate-500">
+    Sign in to continue to your account.
+  </p>
 
-            <h1 class="text-white text-4xl font-extrabold tracking-tight">
-              ReviewHood
-            </h1>
-
-          </div>
-
-
-          <p
-            class="
-        text-slate-300
-        mt-6
-        text-lg
-        leading-relaxed
-        max-w-md
-      "
-          >
-            Real reviews from real people.
-            Discover trusted opinions and make better choices.
-          </p>
-
-
-          <div
-            class="
-        mt-8
-        flex
-        items-center
-        gap-3
-        text-sm
-        text-slate-300
-      "
-          >
-
-            <div
-              class="
-          flex
-          items-center
-          justify-center
-          w-9
-          h-9
-          rounded-full
-          bg-white/10
-        "
-            >
-              ★
-            </div>
-
-            <span>
-        Honest opinions. No ads. No bias.
-      </span>
-
-          </div>
-
-        </div>
-
-
-        <!-- Footer -->
-        <div
-          class="
-      relative
-      z-10
-      text-slate-400
-      text-sm
-    "
-        >
-          © {{ currentYear }} ReviewHood. All rights reserved.
-        </div>
-
-      </div>
-
-      <!-- Right Panel: Login Form -->
-      <div class="w-full lg:w-1/2 p-8 lg:p-12">
-        <a routerLink="/" class="mb-4 inline-flex items-center text-sm font-medium text-sky-600 hover:text-sky-700 transition">← Back to Home</a>
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome Back!</h2>
-        <p class="text-gray-600 mb-8">Sign in to continue to your account.</p>
-
-        <form (submit)="onSubmit(email.value, password.value, $event)">
-          <!-- Email Input -->
-          <div class="mb-6">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-            <input #email type="email" id="email" name="email"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
-                   placeholder="you@example.com" required>
-          </div>
-
-          <!-- Password Input -->
-          <div class="mb-6">
-
-            <div class="flex justify-between items-baseline">
-              <label
-                for="password"
-                class="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-
-              <a
-                href="#"
-                class="text-sm text-sky-600 hover:text-sky-700 transition">
-                Forgot password?
-              </a>
-            </div>
-
-
-            <div class="relative">
-
-              <input
-                #password
-                [type]="showPassword ? 'text' : 'password'"
-                id="password"
-                name="password"
-                class="
-                  w-full
-                  px-4
-                  py-3
-                  pr-12
-                  border
-                  border-gray-300
-                  rounded-xl
-                  focus:ring-2
-                  focus:ring-sky-500
-                  focus:border-sky-500
-                  outline-none
-                  transition-all
-                "
-                placeholder="••••••••"
-                required
-              />
-
-
-              <!-- Eye Button -->
-              <button
-                type="button"
-                (click)="showPassword = !showPassword"
-                class="
-        absolute
-        right-3
-        top-1/2
-        -translate-y-1/2
-        text-slate-500
-        hover:text-slate-700
-      "
-              >
-
-                <!-- Eye open -->
-                <svg
-                  *ngIf="!showPassword"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-
-                </svg>
-
-
-                <!-- Eye closed -->
-                <svg
-                  *ngIf="showPassword"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 012.132-3.592m3.038-2.408A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.05 10.05 0 01-4.132 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0zM3 3l18 18"/>
-
-                </svg>
-
-              </button>
-
-            </div>
-
-          </div>
-
-          <!-- Login Button -->
-          <div>
-            <button type="submit" [disabled]="loading"
-                    class="w-full text-white font-bold py-3 px-4 rounded-xl focus:outline-none focus:ring-4 bg-sky-600 hover:bg-sky-700 focus:ring-sky-300 transition-all duration-300 transform hover:scale-105 disabled:opacity-60">
-              <span *ngIf="!loading">Sign In</span>
-              <span *ngIf="loading">Signing in…</span>
-            </button>
-          </div>
-        </form>
-
-        <div *ngIf="error" class="mt-4 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-700">{{ error }}</div>
-
-        <!-- Sign Up Link -->
-        <div class="mt-8 text-center">
-          <p class="text-sm text-gray-600">
-            Don't have an account? <a routerLink="/auth/register" class="font-medium text-sky-600 hover:text-sky-700 transition">Sign up</a>
-          </p>
-        </div>
-
-        <!-- Social Logins -->
-        <div class="mt-8">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-slate-500">Or continue with</span>
-            </div>
-          </div>
-
-          <div class="mt-6 w-full flex justify-center">
-            <asl-google-signin-button
-              type="standard"
-              size="large">
-            </asl-google-signin-button>
-          </div>
-
-        </div>
-
-
-
-      </div>
-
-    </div>
-  </div>
 </div>
 
+
+<!-- Login Form -->
+<form
+  (submit)="onSubmit(email.value, password.value, $event)"
+  class="space-y-5"
+>
+
+  <!-- Email -->
+  <div>
+
+    <label
+      for="login-email"
+      class="mb-2 block text-sm font-medium text-slate-700"
+    >
+      Email address
+    </label>
+
+    <input
+      #email
+      type="email"
+      id="login-email"
+      name="email"
+      placeholder="you@example.com"
+      required
+      autocomplete="email"
+      class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition-all duration-200 placeholder-slate-400 focus:border-[#7e6907] focus:ring-4 focus:ring-[#7e6907]/10"
+    />
+
+  </div>
+
+
+  <!-- Password -->
+  <div>
+
+    <div class="mb-2 flex items-center justify-between">
+
+      <label
+        for="login-password"
+        class="text-sm font-medium text-slate-700"
+      >
+        Password
+      </label>
+
+      <button
+        type="button"
+        class="text-sm font-medium text-[#7e6907] transition-colors hover:text-[#5f4f05]"
+      >
+        Forgot password?
+      </button>
+
+    </div>
+
+
+    <div class="relative">
+
+      <input
+        #password
+        [type]="showPassword ? 'text' : 'password'"
+        id="login-password"
+        name="password"
+        placeholder="••••••••"
+        required
+        autocomplete="current-password"
+        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-slate-900 outline-none transition-all duration-200 placeholder-slate-400 focus:border-[#7e6907] focus:ring-4 focus:ring-[#7e6907]/10"
+      />
+
+
+      <!-- Password Toggle -->
+      <button
+        type="button"
+        (click)="showPassword = !showPassword"
+        class="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+        aria-label="Toggle password visibility"
+      >
+
+        <!-- Eye -->
+        <svg
+          *ngIf="!showPassword"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+          />
+        </svg>
+
+
+        <!-- Eye Off -->
+        <svg
+          *ngIf="showPassword"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.05 10.05 0 012.132-3.592m3.038-2.408A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.05 10.05 0 01-4.132 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0zM3 3l18 18"
+          />
+        </svg>
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- Error -->
+  <div
+    *ngIf="error"
+    class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+  >
+    {{ error }}
+  </div>
+
+
+  <!-- Login Button -->
+  <button
+    type="submit"
+    [disabled]="loading"
+    class="w-full rounded-xl bg-[#002b12] px-4 py-3 font-semibold text-white transition-all duration-200 hover:bg-[#00190a] focus:outline-none focus:ring-4 focus:ring-[#002b12]/15 disabled:cursor-not-allowed disabled:opacity-60"
+  >
+
+    <span
+      *ngIf="!loading"
+      class="flex items-center justify-center"
+    >
+      Sign in
+    </span>
+
+    <span
+      *ngIf="loading"
+      class="flex items-center justify-center gap-2"
+    >
+
+      <svg
+        class="h-4 w-4 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+
+      </svg>
+
+      Signing in…
+
+    </span>
+
+  </button>
+
+</form>
+
+
+<!-- Divider -->
+<div class="my-6 flex items-center gap-4">
+
+  <div class="h-px flex-1 bg-slate-200"></div>
+
+  <span class="text-xs font-medium uppercase tracking-wide text-slate-400">
+    Or
+  </span>
+
+  <div class="h-px flex-1 bg-slate-200"></div>
+
+</div>
+
+
+<!-- Google Login -->
+<div class="flex justify-center">
+
+  <asl-google-signin-button
+    type="standard"
+    size="large"
+  ></asl-google-signin-button>
+
+</div>
+
+
+<!-- Register -->
+<p class="mt-6 text-center text-sm text-slate-500">
+
+  Don't have an account?
+
+  <a
+    routerLink="/auth/register"
+    class="font-semibold text-[#7e6907] transition-colors hover:text-[#5f4f05]"
+  >
+    Sign up
+  </a>
+
+</p>
+
+
+</div>

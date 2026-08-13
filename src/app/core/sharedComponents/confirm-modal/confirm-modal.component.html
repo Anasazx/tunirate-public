@@ -1,0 +1,50 @@
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4">
+
+  <div class="w-full max-w-sm rounded-2xl bg-white shadow-xl p-5 border border-slate-100">
+
+    <div class="flex items-start gap-3">
+
+      <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+        <svg class="w-5 h-5 text-slate-600" fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+      </div>
+
+      <div>
+        <h2 class="text-base font-semibold text-slate-900">
+          {{ title }}
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+          {{ message }}
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="flex flex-col-reverse sm:flex-row gap-2 mt-6">
+
+      <button
+        (click)="cancel.emit()"
+        class="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm">
+        Cancel
+      </button>
+
+
+      <button
+        (click)="confirm.emit()"
+        class="flex-1 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm">
+        {{ confirmText }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

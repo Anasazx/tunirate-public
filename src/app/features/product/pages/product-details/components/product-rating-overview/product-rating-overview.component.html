@@ -1,0 +1,163 @@
+<div
+  *ngIf="reviewsCount > 0"
+  class="
+    mt-6
+    pt-5
+    border-t
+    border-slate-100
+    flex
+    items-center
+    gap-4
+  "
+>
+
+  <!-- Overall rating -->
+  <div class="shrink-0 text-center">
+
+    <div class="text-4xl font-extrabold text-slate-900 leading-none">
+      {{ averageRating.toFixed(1) }}
+    </div>
+
+    <!-- Stars -->
+    <div class="flex justify-center gap-0.5 mt-1">
+
+      <svg
+        *ngFor="let star of [1, 2, 3, 4, 5]"
+        class="w-4 h-4 shrink-0"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+
+        <!-- Half-star gradient -->
+        <defs *ngIf="getStarState(star) === 'half'">
+          <linearGradient
+            [id]="'halfStar' + star"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
+            <stop offset="50%" stop-color="#facc15" />
+            <stop offset="50%" stop-color="#e2e8f0" />
+          </linearGradient>
+        </defs>
+
+        <!-- Star -->
+        <path
+          [attr.fill]="
+            getStarState(star) === 'full'
+              ? '#facc15'
+              : getStarState(star) === 'half'
+                ? 'url(#halfStar' + star + ')'
+                : '#e2e8f0'
+          "
+          d="M9.049 2.927
+             c.3-.921 1.603-.921 1.902 0
+             l1.286 3.957
+             a1 1 0 0 0 .95.69
+             h4.162
+             c.969 0 1.371 1.24.588 1.81
+             l-3.37 2.448
+             a1 1 0 0 0-.364 1.118
+             l1.287 3.957
+             c.3.921-.755 1.688-1.54 1.118
+             l-3.37-2.448
+             a1 1 0 0 0-1.175 0
+             l-3.37 2.448
+             c-.784.57-1.838-.197-1.539-1.118
+             l1.287-3.957
+             a1 1 0 0 0-.364-1.118
+             L2.05 9.384
+             c-.783-.57-.38-1.81.588-1.81
+             h4.162
+             a1 1 0 0 0 .95-.69
+             l1.285-3.957z"
+        />
+
+      </svg>
+
+    </div>
+
+    <!-- Review count -->
+    <div class="text-xs text-gray-400 mt-1">
+      {{ reviewsCount }} reviews
+    </div>
+
+  </div>
+
+
+  <!-- Rating distribution -->
+  <div class="flex-1 min-w-[180px] space-y-1.5">
+
+    <div
+      *ngFor="let star of [5, 4, 3, 2, 1]"
+      class="flex items-center gap-2"
+    >
+
+      <!-- Number -->
+      <span
+        class="text-[11px] text-gray-400 w-3 text-right shrink-0"
+      >
+        {{ star }}
+      </span>
+
+      <!-- Star icon -->
+      <svg
+        class="w-3 h-3 text-yellow-400 shrink-0"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.049 2.927
+             c.3-.921 1.603-.921 1.902 0
+             l1.286 3.957
+             a1 1 0 0 0 .95.69
+             h4.162
+             c.969 0 1.371 1.24.588 1.81
+             l-3.37 2.448
+             a1 1 0 0 0-.364 1.118
+             l1.287 3.957
+             c.3.921-.755 1.688-1.54 1.118
+             l-3.37-2.448
+             a1 1 0 0 0-1.175 0
+             l-3.37 2.448
+             c-.784.57-1.838-.197-1.539-1.118
+             l1.287-3.957
+             a1 1 0 0 0-.364-1.118
+             L2.05 9.384
+             c-.783-.57-.38-1.81.588-1.81
+             h4.162
+             a1 1 0 0 0 .95-.69
+             l1.285-3.957z"
+        />
+      </svg>
+
+      <!-- Progress bar -->
+      <div
+        class="
+          flex-1
+          min-w-0
+          bg-slate-100
+          rounded-full
+          h-1.5
+          overflow-hidden
+        "
+      >
+        <div
+          class="
+            bg-yellow-400
+            h-full
+            rounded-full
+            transition-all
+            duration-500
+          "
+          [style.width.%]="getStarPercent(star)"
+        ></div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

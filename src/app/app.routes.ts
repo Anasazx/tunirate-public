@@ -4,7 +4,6 @@ import { CompanyDetailsComponent } from './features/company/pages/company-detail
 import { HomeComponent } from './features/home/pages/home/home.component';
 import { MainComponent } from './core/layout/main/main.component';
 import { LoginComponent } from './features/auth/pages/login/login.component';
-import { RegisterComponent } from './features/auth/pages/register/register.component';
 import {AccountLayoutComponent} from './features/account/layout/account-layout/account-layout.component';
 import {MyReviewsComponent} from './features/account/pages/my-reviews/my-reviews.component';
 import {SecurityComponent} from './features/account/pages/security/security.component';
@@ -15,20 +14,15 @@ import {VerifyEmailComponent} from './features/auth/pages/verify-email/verify-em
 import {guestGuard} from './core/guards/guestGuard/guest.guard';
 import {emailVerificationGuard} from './core/guards/emailVerificationGuard/email-verification.guard';
 import {authGuard} from './core/guards/authGuard/auth.guard';
+import {SearchComponent} from './features/search/pages/search/search.component';
+import {CategoriesComponent} from './features/category/pages/categories/categories.component';
+import {AllProductsComponent} from './features/product/pages/all-products/all-products.component';
+import {RegisterComponent} from './features/auth/pages/register/register.component';
+import {NotFoundComponent} from './core/sharedComponents/not-found/not-found.component';
+import {AboutComponent} from './features/about/about/about.component';
 
 
 export const routes: Routes = [
-  {
-    path: 'auth',
-    children: [
-      { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
-      { path: 'register', component: RegisterComponent, canActivate: [guestGuard]  },
-      { path: 'verify', component: VerifyEmailComponent, canActivate: [emailVerificationGuard]  }
-
-
-    ]
-  },
-
   {
     path: 'account',
     component: AccountLayoutComponent,
@@ -48,14 +42,23 @@ export const routes: Routes = [
     component: MainComponent,
     children: [
       { path: '', component: HomeComponent },
-      { path: 'product/:id', component: ProductDetailsComponent },
-      { path: 'company/:id', component: CompanyDetailsComponent }
+      { path: 'p/:id', component: ProductDetailsComponent },
+      { path: 'c/:id', component: CompanyDetailsComponent },
+      { path: 'search', component: SearchComponent },
+      { path: 'categories', component: CategoriesComponent },
+      { path: 'products', component: AllProductsComponent },
+      { path: 'auth/login', component: LoginComponent, canActivate: [guestGuard] },
+      { path: 'auth/register', component: RegisterComponent, canActivate: [guestGuard] },
+      { path: 'auth/verify', component: VerifyEmailComponent, canActivate: [emailVerificationGuard] },
+      { path: 'not-found', component: NotFoundComponent },
+      { path: 'about', component: AboutComponent }
+
     ]
   },
 
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'not-found'
   }
 
 ];

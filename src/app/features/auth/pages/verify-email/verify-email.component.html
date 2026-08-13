@@ -1,100 +1,95 @@
-<div class="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-6">
+<div class="bg-white flex items-center justify-center px-6 my-12">
 
-  <div class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8">
+  <div class="w-full max-w-md py-8">
 
-    <!-- Icon -->
-    <div
+    <!-- Verification Icon -->
+    <div class="flex justify-center">
 
-      class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-full flex items-center justify-center"
+      <div
+        class="flex h-14 w-14 items-center justify-center rounded-full"
+        [class.bg-slate-100]="!success"
+        [class.bg-green-100]="success"
+      >
 
-      [class.bg-sky-100]="!success"
+        <!-- Mail -->
+        <svg
+          *ngIf="!success"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7 text-slate-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2"
+          />
+        </svg>
 
-      [class.bg-green-100]="success">
+        <!-- Success -->
+        <svg
+          *ngIf="success"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-7 w-7 text-green-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+
+      </div>
+
+    </div>
+
+
+    <!-- Header -->
+    <div class="mt-6 text-center">
+
+      <h1 class="text-2xl font-bold tracking-tight text-slate-900">
+        {{ success ? 'Email verified!' : 'Verify your email' }}
+      </h1>
 
       <ng-container *ngIf="!success">
 
-        <!-- Mail icon -->
+        <p class="mt-2 text-sm leading-relaxed text-slate-500">
+          We sent a verification code to
+        </p>
 
-        <svg xmlns="http://www.w3.org/2000/svg"
-
-             class="w-7 h-7 sm:w-8 sm:h-8 text-sky-600"
-
-             fill="none"
-
-             viewBox="0 0 24 24"
-
-             stroke="currentColor">
-
-          <path
-
-            stroke-linecap="round"
-
-            stroke-linejoin="round"
-
-            stroke-width="2"
-
-            d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2"/>
-
-        </svg>
+        <p class="mt-1 break-all text-sm font-semibold text-slate-700">
+          {{ email }}
+        </p>
 
       </ng-container>
 
+
       <ng-container *ngIf="success">
 
-        <!-- Check icon -->
+        <p class="mt-3 text-sm leading-relaxed text-slate-500">
+          Your email has been successfully verified.
+        </p>
 
-        <svg xmlns="http://www.w3.org/2000/svg"
-
-             class="w-7 h-7 sm:w-8 sm:h-8 text-green-600"
-
-             fill="none"
-
-             viewBox="0 0 24 24"
-
-             stroke="currentColor">
-
-          <path
-
-            stroke-linecap="round"
-
-            stroke-linejoin="round"
-
-            stroke-width="2"
-
-            d="M5 13l4 4L19 7"/>
-
-        </svg>
+        <p class="mt-1 text-sm text-slate-400">
+          Redirecting...
+        </p>
 
       </ng-container>
 
     </div>
 
 
-    <h1 class="mt-5 sm:mt-6 text-2xl sm:text-3xl font-bold text-center text-slate-900">
-      {{ success ? 'Email Verified!' : 'Verify your email' }}
-    </h1>
-
-
-    <p class="mt-3 text-sm sm:text-base text-center text-slate-500 leading-relaxed">
-      <ng-container *ngIf="!success">
-        We sent a verification code to
-        <br>
-        <span class="font-semibold text-slate-700 break-all">
-      {{ email }}
-    </span>
-      </ng-container>
-      <ng-container *ngIf="success">
-      <div class="mt-8">
-        Your email has been successfully verified.
-        <br>
-        Redirecting...
-      </div>
-    </ng-container>
-    </p>
-
-
     <!-- OTP -->
-    <div *ngIf="!success" class="mt-8 flex justify-center gap-2 sm:gap-3">
+    <div
+      *ngIf="!success"
+      class="mt-8 flex justify-center gap-2 sm:gap-3"
+    >
 
       <input
         #codeInput
@@ -107,101 +102,183 @@
         (input)="moveNext($event, i)"
         (keydown)="backspace($event, i)"
         (paste)="paste($event)"
-        class="w-10 h-12 sm:w-12 sm:h-14 rounded-xl border text-xl sm:text-2xl font-semibold text-center outline-none focus:ring-2 focus:ring-sky-500">
+        class="h-12 w-10 rounded-xl border border-slate-300 bg-white text-center text-xl font-semibold text-slate-900 outline-none transition-all duration-200 focus:border-[#7e6907] focus:ring-4 focus:ring-[#7e6907]/10 sm:h-14 sm:w-12 sm:text-2xl"
+      />
+
     </div>
 
 
+    <!-- Error -->
+    <div
+      *ngIf="error && !success"
+      class="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700"
+    >
+      {{ error }}
+    </div>
+
+
+    <!-- Verify -->
     <button
       *ngIf="!success"
+      type="button"
       (click)="verify()"
       [disabled]="loading"
-      class="mt-8 w-full h-11 sm:h-12 rounded-xl bg-sky-600 text-white text-sm sm:text-base font-semibold hover:bg-sky-700 transition disabled:opacity-50">
+      class="mt-7 flex w-full items-center justify-center rounded-xl bg-[#002b12] px-4 py-3 font-semibold text-white transition-all duration-200 hover:bg-[#00190a] focus:outline-none focus:ring-4 focus:ring-[#002b12]/15 disabled:cursor-not-allowed disabled:opacity-60"
+    >
 
-      {{ loading ? 'Verifying...' : 'Verify Email' }}
+      <span
+        *ngIf="!loading"
+      >
+        Verify email
+      </span>
+
+      <span
+        *ngIf="loading"
+        class="flex items-center justify-center gap-2"
+      >
+
+        <svg
+          class="h-4 w-4 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          ></path>
+
+        </svg>
+
+        Verifying…
+
+      </span>
 
     </button>
 
-    <!-- Skip -->
 
+    <!-- Skip -->
     <button
       *ngIf="!success"
+      type="button"
       (click)="openSkipConfirm()"
       [disabled]="loading"
-      class="mt-3 w-full h-11 sm:h-12 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm sm:text-base font-medium hover:bg-slate-50 transition disabled:opacity-50">
+      class="mt-3 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 transition-all duration-200 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+    >
       Skip for now
     </button>
 
-    <p *ngIf="!success" class="mt-3 text-center text-xs text-slate-500">
+
+    <!-- Skip Info -->
+    <p
+      *ngIf="!success"
+      class="mt-3 text-center text-xs leading-relaxed text-slate-400"
+    >
       You can verify your email later from your account settings.
     </p>
 
 
-    <div *ngIf="!success" class="mt-6 text-center text-xs sm:text-sm text-slate-500">
+    <!-- Resend -->
+    <div
+      *ngIf="!success"
+      class="mt-6 text-center text-sm text-slate-500"
+    >
 
       Didn't receive the code?
 
       <button
+        type="button"
         (click)="resend()"
         [disabled]="!canResend"
-        class="ml-1 font-semibold text-sky-600 hover:text-sky-700 disabled:text-slate-400 disabled:cursor-not-allowed">
+        class="ml-1 font-semibold text-[#7e6907] transition-colors hover:text-[#5f4f05] disabled:cursor-not-allowed disabled:text-slate-400"
+      >
         {{ canResend ? 'Resend' : 'Resend in ' + resendCooldown + 's' }}
       </button>
 
-
-      <p
-        *ngIf="error"
-        class="mt-4 text-red-500">
-        {{ error }}
-      </p>
-
     </div>
+
+
 
   </div>
 
 </div>
 
+
 <!-- Skip Confirmation Modal -->
 <div
   *ngIf="showSkipConfirm"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+  class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-6 backdrop-blur-sm"
+>
 
-  <div class="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+  <div
+    class="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl"
+  >
 
-    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-100">
-      <svg xmlns="http://www.w3.org/2000/svg"
-           class="h-7 w-7 text-amber-600"
-           fill="none"
-           viewBox="0 0 24 24"
-           stroke="currentColor">
-        <path stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 9v4m0 4h.01M10.29 3.86l-7.5 13A1 1 0 003.67 18h16.66a1 1 0 00.88-1.5l-7.5-13a1 1 0 00-1.74 0z"/>
+    <!-- Warning Icon -->
+    <div
+      class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-100"
+    >
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-7 w-7 text-amber-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 9v4m0 4h.01M10.29 3.86l-7.5 13A1 1 0 003.67 18h16.66a1 1 0 00.88-1.5l-7.5-13a1 1 0 00-1.74 0z"
+        />
       </svg>
+
     </div>
+
 
     <h2 class="mt-5 text-center text-xl font-bold text-slate-900">
       Skip email verification?
     </h2>
 
-    <p class="mt-3 text-center text-sm text-slate-500">
+
+    <p class="mt-3 text-center text-sm leading-relaxed text-slate-500">
       You can continue without verifying your email, but some features may be
       unavailable until you verify it later from your account settings.
     </p>
 
+
     <div class="mt-6 flex gap-3">
+
       <button
+        type="button"
         (click)="closeSkipConfirm()"
-        class="flex-1 rounded-xl border border-slate-300 py-2.5 font-medium text-slate-700 hover:bg-slate-50">
+        class="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2.5 font-medium text-slate-700 transition hover:bg-slate-50"
+      >
         Cancel
       </button>
 
+
       <button
+        type="button"
         (click)="confirmSkip()"
-        class="flex-1 rounded-xl bg-sky-600 py-2.5 font-semibold text-white hover:bg-sky-700">
-        Skip Anyway
+        class="flex-1 rounded-xl bg-[#002b12] px-4 py-2.5 font-semibold text-white transition hover:bg-[#00190a]"
+      >
+        Skip anyway
       </button>
+
     </div>
 
   </div>
+
 </div>

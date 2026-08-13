@@ -1,5 +1,5 @@
-import {ProductStatus} from '../../../product/enums/productStatus.enum.model';
 import {Country} from '../../../../core/models/enums/country.enum.model';
+import {CompanyStatus} from '../../enums/companyStatus.enum.model';
 
 export interface CompanyResponse {
   id: number;
@@ -8,6 +8,6 @@ export interface CompanyResponse {
   logoUrl?: string;
   bannerUrl?: string;
   country: Country;
-  status: ProductStatus;
+  status: CompanyStatus;
 
 }

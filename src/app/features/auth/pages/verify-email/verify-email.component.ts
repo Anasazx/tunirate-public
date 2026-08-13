@@ -4,7 +4,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import { AuthService } from '../../services/authService/auth.service';
-import { EmailVerificationService } from '../../../../core/services/EmailVerificationService/email-verification.service';
+import { EmailVerificationService } from '../../../../core/services/emailVerificationService/email-verification.service';
 
 
 @Component({

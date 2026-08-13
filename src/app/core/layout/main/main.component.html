@@ -1,7 +1,13 @@
-<app-header></app-header>
+<div class="min-h-screen flex flex-col">
 
-<main class="min-h-screen max-w-7xl mx-auto px-4 py-8">
-  <router-outlet></router-outlet>
-</main>
+  <app-header></app-header>
 
-<app-footer></app-footer>
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-toast></app-toast>
+
+  <app-footer></app-footer>
+
+</div>

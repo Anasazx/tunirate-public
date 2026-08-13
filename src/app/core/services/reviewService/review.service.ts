@@ -6,7 +6,7 @@ import { ReviewResponse } from '../../models/dto/reviewDTO/reviewResponse.model'
 import { ReviewRequest } from '../../models/dto/reviewDTO/reviewRequest.model';
 import {MinimizedReviewResponse} from '../../models/dto/reviewDTO/minimizedReviewResponse.model';
 import {ProductReviewsResponse} from '../../models/dto/reviewDTO/productReviewsResponse.model';
-import {Page} from '../../models/page.model';
+import {PageResponse} from '../../models/page.model';
 import {LikeStatus} from '../../models/dto/like-status.model';
 
 
@@ -39,13 +39,13 @@ export class ReviewService {
   getMyReviews(
     page: number = 0,
     size: number = 10
-  ): Observable<Page<MinimizedReviewResponse>> {
+  ): Observable<PageResponse<MinimizedReviewResponse>> {
 
     const params = new HttpParams()
       .set('page', page)
       .set('size', size);
 
-    return this.http.get<Page<MinimizedReviewResponse>>(
+    return this.http.get<PageResponse<MinimizedReviewResponse>>(
       `${this.reviewUrl}/my`,
       { params }
     );

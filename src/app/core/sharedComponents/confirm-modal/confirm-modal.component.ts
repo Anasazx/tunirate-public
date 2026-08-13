@@ -1,0 +1,19 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-confirm-modal',
+  standalone: true,
+  imports: [],
+  templateUrl: './confirm-modal.component.html'
+})
+export class ConfirmModalComponent {
+
+  @Input() title = '';
+  @Input() message = '';
+  @Input() confirmText = 'Confirm';
+  @Input() loading = false;
+
+  @Output() confirm = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+
+}

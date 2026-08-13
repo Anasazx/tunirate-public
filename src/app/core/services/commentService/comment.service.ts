@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { SharedService } from '../sharedService/shared.service';
 import { CommentRequest } from '../../models/dto/commentDTO/commentRequest.model';
 import { CommentResponse } from '../../models/dto/commentDTO/commentResponse.model';
-import {Page} from '../../models/page.model';
+import {PageResponse} from '../../models/page.model';
 import {LikeStatus} from '../../models/dto/like-status.model';
 
 @Injectable({
@@ -27,8 +27,8 @@ export class CommentService {
     reviewId: number,
     page: number = 0,
     size: number = 4
-  ): Observable<Page<CommentResponse>> {
-    return this.http.get<Page<CommentResponse>>(
+  ): Observable<PageResponse<CommentResponse>> {
+    return this.http.get<PageResponse<CommentResponse>>(
       `${this.commentUrl}/review/${reviewId}?page=${page}&size=${size}`
     );
   }
@@ -61,6 +61,13 @@ export class CommentService {
   removeLike(commentId: number): Observable<LikeStatus> {
     return this.http.delete<LikeStatus>(
       `${this.commentUrl}/${commentId}/likes`
+    );
+  }
+
+  // Delete comment
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.commentUrl}/${commentId}`
     );
   }
 

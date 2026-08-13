@@ -14,6 +14,7 @@ export interface CommentResponse {
   repliedToActorName: string | null;
   likeCount: number,
   liked: boolean,
+  deleted: boolean,
   createdAt: string;
 }
 

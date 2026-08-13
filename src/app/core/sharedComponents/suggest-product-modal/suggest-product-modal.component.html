@@ -1,0 +1,102 @@
+<div
+  class="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 px-4">
+
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+
+    <h2 class="text-lg font-semibold text-slate-900">
+      Didn't find a product?
+    </h2>
+
+    <p class="mt-1 text-sm text-slate-500">
+      Tell us what you are looking for and we will add it.
+    </p>
+
+
+    <div class="mt-5 space-y-3">
+
+      <input
+        [(ngModel)]="suggestion.name"
+        placeholder="Product name (ex: Air Max 95)"
+        class="
+          w-full
+          border
+          rounded-xl
+          px-4
+          py-3
+          text-sm
+        "
+      />
+
+
+      <input
+        [(ngModel)]="suggestion.companyName"
+        placeholder="Company (ex: Nike)"
+        class="
+          w-full
+          border
+          rounded-xl
+          px-4
+          py-3
+          text-sm
+        "
+      />
+
+
+      <textarea
+        [(ngModel)]="suggestion.description"
+        placeholder="More details (optional)"
+        class="
+          w-full
+          border
+          rounded-xl
+          px-4
+          py-3
+          text-sm
+          resize-none
+        "
+        rows="3">
+      </textarea>
+
+    </div>
+
+
+
+    <div class="flex gap-3 mt-6">
+
+      <button
+        (click)="close.emit()"
+        class="
+          flex-1
+          py-2.5
+          rounded-xl
+          bg-slate-100
+          text-sm
+          font-medium
+          hover:bg-slate-200
+          transition
+        ">
+        Cancel
+      </button>
+
+
+      <button
+        (click)="submit()"
+        class="
+          flex-1
+          py-2.5
+          rounded-xl
+          bg-slate-900
+          text-white
+          text-sm
+          font-medium
+          hover:bg-slate-800
+          transition
+        ">
+        Suggest
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

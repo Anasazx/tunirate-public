@@ -1,11 +1,12 @@
-<div class="w-full space-y-4 sm:space-y-5 px-0 sm:px-0">
+<div class="w-full space-y-4 sm:space-y-5 px-0 sm:px-0 mt-8">
 
   <!-- Back -->
   <div>
     <button (click)="goBack()"
-      class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-slate-900 transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-slate-900 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       Back
     </button>
@@ -16,102 +17,30 @@
 
     <div class="flex flex-col lg:flex-row gap-5 items-start">
 
-      <!-- Image gallery -->
-      <div class="w-full lg:w-2/5 shrink-0">
-        <div class="relative aspect-square max-w-md mx-auto lg:max-w-none rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group">
-
-          <!-- MAIN IMAGE -->
-          <img
-            [src]="selectedImage | imageUrl"
-            alt="product"
-            class="w-full h-full object-cover transition"
-          />
-
-          <!-- LEFT ARROW -->
-          <button
-            *ngIf="(product?.images?.length ?? 0) > 1"
-            (click)="prevImage()"
-            class="absolute left-2 top-1/2 -translate-y-1/2
-             bg-black/40 hover:bg-black/70 text-white
-             w-8 h-8 rounded-full flex items-center justify-center
-             opacity-0 group-hover:opacity-100 transition">
-            ‹
-          </button>
-
-          <!-- RIGHT ARROW -->
-          <button
-            *ngIf="(product?.images?.length ?? 0) > 1"
-            (click)="nextImage()"
-            class="absolute right-2 top-1/2 -translate-y-1/2
-             bg-black/40 hover:bg-black/70 text-white
-             w-8 h-8 rounded-full flex items-center justify-center
-             opacity-0 group-hover:opacity-100 transition">
-            ›
-          </button>
-
-          <!-- IMAGE COUNTER (optional but nice UX) -->
-          <div
-            *ngIf="(product?.images?.length ?? 0) > 1"
-            class="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-2 py-1 rounded-full">
-            {{ currentImageIndex + 1 }} / {{ product?.images?.length }}
-          </div>
-
-        </div>
-      </div>
-
+      <app-product-image-gallery
+        [images]="product?.images ?? []">
+      </app-product-image-gallery>
 
       <!-- Info -->
       <div class="flex-1 min-w-0">
-
-
-
-        <h1
-
-          class="
-            text-2xl
-            sm:text-3xl
-            lg:text-4xl
-            font-bold
-            text-slate-900
-            leading-tight
-            break-words
-          "
-        >
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 leading-tight break-words">
           {{ product?.name }}
         </h1>
-
-
-
         <!-- Company -->
-        <div class="
-          flex
-          flex-wrap
-          items-center
-          gap-3
-          my-3
-        "
-        >
-
-          <img
-            [src]="product?.companyLogoUrl | imageUrl"
-            class="h-10 w-10 rounded-full border border-slate-200 object-cover shrink-0"
-          />
-
+        <div class="flex flex-wrap items-center gap-3 my-3">
+          <img [src]="product?.companyLogoUrl | imageUrl" class="h-10 w-10 rounded-full border border-slate-200 object-cover shrink-0"/>
           <span
-            class="text-base font-semibold text-gray-600 cursor-pointer hover:underline"
-            [routerLink]="['/company', product?.companyId]">
-
+            [routerLink]="['/c', product?.companyId]"
+            class="text-base font-semibold text-gray-600 cursor-pointer hover:underline">
             {{ product?.companyName }}
-
           </span>
-
           <svg
             *ngIf="product?.companyIsVerified"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
             class="h-4 w-4 text-sky-500 shrink-0"
             fill="currentColor"
-            title="Verified">
+            title="Verified"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
 
             <circle cx="12" cy="12" r="10"/>
             <path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white"/>
@@ -121,110 +50,42 @@
         </div>
 
 
-
         <!-- Description -->
         <div class="mt-4">
           <p
+            [class.line-clamp-4]="!descExpanded"
             class="
             text-sm
             sm:text-base
             text-gray-600
             leading-relaxed
-            "
-            [class.line-clamp-4]="!descExpanded">
+            ">
             {{ product?.description }}
           </p>
           <button
-            *ngIf="hasLongDescription(product?.description || '')"
             (click)="descExpanded = !descExpanded"
+            *ngIf="hasLongDescription(product?.description || '')"
             class="mt-1.5 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
             {{ descExpanded ? 'Show less' : 'Read more' }}
           </button>
         </div>
 
-        <!-- Rating overview -->
-        <div
-          *ngIf="(product?.reviewsCount ?? 0) > 0"
-          class="
-            mt-6
-            pt-5
-            border-t
-            border-slate-100
-            flex
-            items-center
-            gap-4
-          "
-        >
 
-          <!-- Overall rating -->
-          <div class="shrink-0 text-center">
-
-            <div class="text-4xl font-extrabold text-slate-900 leading-none">
-              {{ (product?.averageRating || 0).toFixed(1) }}
-            </div>
-
-            <div class="flex justify-center gap-0.5 text-yellow-400 mt-1 text-sm">
-      <span *ngFor="let i of getSolidStars(product?.averageRating || 0)">
-        ★
-      </span>
-
-              <span
-                *ngFor="let i of getOutlineStars(product?.averageRating || 0)"
-                class="text-slate-200">
-        ★
-      </span>
-            </div>
-
-            <div class="text-xs text-gray-400 mt-1">
-              {{ product?.reviewsCount ?? 0 }} reviews
-            </div>
-
-          </div>
-
-
-          <!-- Distribution -->
-          <div class="flex-1 min-w-[180px] space-y-1.5">
-
-            <div
-              *ngFor="let star of [5,4,3,2,1]"
-              class="flex items-center gap-2"
-            >
-
-      <span class="text-[11px] text-gray-400 w-3 text-right shrink-0">
-        {{ star }}
-      </span>
-
-              <svg
-                class="w-3 h-3 text-yellow-400 shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.448a1 1 0 00-1.175 0l-3.37 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.05 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.285-3.957z"/>
-              </svg>
-
-
-              <div class="flex-1 min-w-0 bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div
-                  class="bg-yellow-400 h-full rounded-full transition-all duration-500"
-                  [style.width.%]="getStarPercent(star)">
-                </div>
-              </div>
-
-
-            </div>
-
-          </div>
-
-        </div>
+        <app-product-rating-overview
+          [averageRating]="product?.averageRating ?? 0"
+          [ratingDistribution]="product?.ratingDistribution ?? {}"
+          [reviewsCount]="product?.reviewsCount ?? 0">
+        </app-product-rating-overview>
 
         <div
           *ngIf="product?.reviewsCount === 0"
           class="mt-6 pt-6 border-t border-slate-100 flex flex-col items-center justify-center text-center gap-3"
         >
           <!-- Icon -->
-            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M7 8h10M7 12h6m-6 4h8M5 6h14a2 2 0 012 2v10a2 2 0 01-2 2H7l-4 4V8a2 2 0 012-2z"/>
-            </svg>
+          <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M7 8h10M7 12h6m-6 4h8M5 6h14a2 2 0 012 2v10a2 2 0 01-2 2H7l-4 4V8a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"/>
+          </svg>
 
           <!-- Text -->
           <div>
@@ -249,447 +110,256 @@
     <div class="basis-0 grow min-w-0 w-full space-y-4">
 
       <!-- Section heading -->
-      <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest px-0.5">
-        Community reviews
-        <span class="ml-1 font-normal normal-case tracking-normal">({{ totalReviews }})</span>
-      </h2>
+      <div class="flex items-center justify-between px-0.5">
+        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+          Community reviews
+          <span class="ml-1 font-normal normal-case tracking-normal text-gray-400">({{ totalReviews }})</span>
+        </h2>
+      </div>
 
       <!-- Empty state -->
       <div *ngIf="(product?.reviews?.length ?? 0) === 0"
-        class="bg-white rounded-2xl border border-dashed border-slate-200 py-14 text-center">
-        <p class="text-sm text-gray-400">No reviews yet. Be the first to share your thoughts!</p>
+           class="bg-white rounded-2xl border border-dashed border-slate-200 py-16 text-center">
+        <div class="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-slate-50">
+          <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+        </div>
+        <p class="text-sm font-medium text-slate-500">No reviews yet</p>
+        <p class="mt-1 text-xs text-slate-400">Be the first to share your thoughts on this product</p>
       </div>
 
       <!-- Review list -->
       <div class="space-y-3 w-full">
         <div *ngFor="let review of reviews"
-             class="
-              bg-white
-              rounded-xl
-              sm:rounded-2xl
-              border
-              border-slate-200
-              overflow-hidden
-              transition-shadow
-              hover:shadow-md
-             "
-          [class.ring-2]="reviewIsMine(review.user.id)"
-          [class.ring-blue-200]="reviewIsMine(review.user.id)">
+             [class.ring-2]="reviewIsMine(review.user.id)"
+             [class.ring-blue-100]="reviewIsMine(review.user.id)"
+             [class.border-blue-100]="reviewIsMine(review.user.id)"
+             class="bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all hover:border-slate-300 hover:shadow-sm">
 
-          <div class="flex w-full">
-            <div class="flex-1 min-w-0 p-3 sm:p-4">
+          <div class="p-4 sm:p-5">
 
-              <!-- Header -->
-              <div
-                class="
-                  flex
-                  flex-col
-                  sm:flex-row
-                  sm:items-start
-                  sm:justify-between
-                  gap-3
-                "
-              >
-                <div class="flex items-start gap-3 min-w-0">
-                  <img [src]="review.user.avatarUrl | imageUrl"
-                    class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0">
-                  <div>
+            <!-- Header -->
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-3 min-w-0">
+                <img [src]="review.user.avatarUrl | imageUrl"
+                     class="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-sm font-semibold text-slate-900 truncate">
+                  {{ review.user.name }}
+                </span>
+                    <span *ngIf="reviewIsMine(review.user.id)"
+                          class="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium shrink-0">
+                  You
+                </span>
+                  </div>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <div class="flex gap-0.5 text-amber-400 text-xs leading-none">
+                      <span *ngFor="let i of getSolidStars(review.rating)">★</span>
+                      <span *ngFor="let i of getOutlineStars(review.rating)" class="text-slate-200">★</span>
+                    </div>
+                    <span class="text-slate-300">·</span>
+                    <span class="text-xs text-gray-400">{{ review.createdAt | date:'MMM d, y' }}</span>
+                  </div>
+                </div>
+              </div>
 
-                    <div class="flex items-center gap-2 flex-wrap">
+              <button
+                (click)="openDeleteModal(review)"
+                *ngIf="reviewIsMine(review.user.id)"
+                class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                aria-label="Delete review">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14H6L5 6"/>
+                  <path d="M10 11v6"/>
+                  <path d="M14 11v6"/>
+                </svg>
+              </button>
+            </div>
 
-                      <span class="text-sm font-semibold text-slate-900 break-words">
-                        {{ review.user.name }}
-                      </span>
+            <!-- Body -->
+            <p class="mt-2 text-md text-gray-600 leading-relaxed break-words">
+              {{ review.content }}
+            </p>
 
-                      <span *ngIf="reviewIsMine(review.user.id)"
-                            class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">
-                        You
-                      </span>
+            <!-- Review actions -->
+            <div class="mt-3 flex items-center gap-1 -ml-2">
 
+              <button
+                (click)="toggleReviewLike(review)"
+                [class.text-blue-600]="review.liked"
+                [class.text-gray-400]="!review.liked"
+                class="flex items-center gap-1.5 px-2 py-1.5 rounded-full text-sm hover:bg-slate-50 transition-colors">
+                <svg class="w-4 h-4" [attr.fill]="review.liked ? 'currentColor' : 'none'"
+                     stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12.001 20.727l-.717-.653C5.463 14.77 2 11.61 2 7.75 2 4.857 4.238 2.5 7.05 2.5c1.59 0 3.116.76 4.05 1.965C12.834 3.26 14.36 2.5 15.95 2.5 18.762 2.5 21 4.857 21 7.75c0 3.86-3.463 7.02-9.284 12.324l-.715.653z"/>
+                </svg>
+                <span class="text-xs font-medium">{{ review.likeCount }}</span>
+              </button>
+
+              <button
+                (click)="toggleComments(review)"
+                [class.text-slate-700]="review.showComments"
+                [class.text-gray-400]="!review.showComments"
+                class="flex items-center gap-1.5 px-2 py-1.5 rounded-full text-sm hover:bg-slate-50 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                <span class="text-xs font-medium">{{ review.commentsCount }}</span>
+              </button>
+            </div>
+
+            <!-- Comments -->
+            <div *ngIf="review.showComments" class="mt-3 pt-3 border-t border-slate-100">
+
+              <div class="space-y-2">
+
+                <div *ngIf="review.comments?.length === 0"
+                     class="text-xs text-gray-400 text-center py-4 bg-slate-50 rounded-xl">
+                  No comments yet — be the first to reply
+                </div>
+
+                <div *ngFor="let c of review.comments"
+                     class="rounded-xl bg-slate-50 px-3 py-2.5 text-xs">
+
+                  <div class="flex items-start gap-2 mb-1">
+                    <img [src]="c.actorAvatarUrl | imageUrl" class="w-6 h-6 rounded-full object-cover border border-slate-200 shrink-0"/>
+
+                    <div class="flex items-center gap-1.5 flex-wrap min-w-0 flex-1">
+      <span [ngClass]="c.actorType === 'COMPANY' ? 'font-semibold text-violet-600' : 'font-semibold text-blue-600'">
+        {{ c.actorName }}
+      </span>
+
+                      <span *ngIf="c.repliedToActorName"
+                            class="inline-flex items-center gap-0.5 text-gray-400 text-[10px]">
+        <svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path d="M5 12h12" stroke-linecap="round"/>
+          <path d="m13 6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+                        {{ c.repliedToActorName }}
+      </span>
                     </div>
 
-                    <div class="text-xs text-gray-400 mt-0.5">
-                      {{ review.createdAt | date:'MMM d, y' }}
-                    </div>
+                    <button
+                      *ngIf="commentIsMine(c) && !c.deleted"
+                      (click)="openDeleteCommentModal(review, c)"
+                      class="shrink-0 flex items-center justify-center w-5 h-5 rounded-full text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                      aria-label="Delete comment">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14H6L5 6"/>
+                        <path d="M10 11v6"/>
+                        <path d="M14 11v6"/>
+                      </svg>
+                    </button>
+                  </div>
 
+                  <p class="leading-snug text-sm py-0.5 break-words"
+                     [class.text-gray-400]="c.deleted"
+                     [class.italic]="c.deleted"
+                     [class.text-gray-600]="!c.deleted">
+                    {{ c.deleted ? 'This comment was deleted' : c.content }}
+                  </p>
+
+                  <div *ngIf="!c.deleted" class="mt-1.5 flex items-center gap-3">
+                    <button
+                      (click)="toggleCommentLike(c)"
+                      [class.text-blue-600]="c.liked"
+                      [class.text-gray-400]="!c.liked"
+                      class="inline-flex items-center gap-1 text-[11px] font-medium hover:text-blue-500 transition-colors">
+                      <svg class="w-3.5 h-3.5" [attr.fill]="c.liked ? 'currentColor' : 'none'"
+                           stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12.001 20.727l-.717-.653C5.463 14.77 2 11.61 2 7.75 2 4.857 4.238 2.5 7.05 2.5c1.59 0 3.116.76 4.05 1.965C12.834 3.26 14.36 2.5 15.95 2.5 18.762 2.5 21 4.857 21 7.75c0 3.86-3.463 7.02-9.284 12.324l-.715.653z"/>
+                      </svg>
+                      <span>{{ c.likeCount }}</span>
+                    </button>
+                    <button
+                      (click)="startReply(c)"
+                      class="text-[11px] text-gray-400 hover:text-blue-500 font-medium transition-colors">
+                      Reply
+                    </button>
                   </div>
                 </div>
 
-                <div
-                  class="
-                    flex
-                    flex-row
-                    sm:flex-col
-                    items-center
-                    sm:items-end
-                    gap-3
-                    sm:gap-1.5
-                    shrink-0
-                  "
-                >
-                  <div class="flex gap-0.5 text-yellow-400 text-sm leading-none">
-                    <span *ngFor="let i of getSolidStars(review.rating)">★</span>
-                    <span *ngFor="let i of getOutlineStars(review.rating)" class="text-slate-200">★</span>
-                  </div>
+                <div *ngIf="review.comments && review.comments.length < review.commentsTotal!"
+                     class="flex justify-center pt-1">
                   <button
-                    *ngIf="reviewIsMine(review.user.id)"
-                    (click)="openDeleteModal(review)"
-                    class="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 transition-colors">
+                    (click)="loadComments(review)"
+                    [disabled]="review.commentsLoading"
+                    class="text-xs font-medium text-blue-600 hover:underline disabled:opacity-50">
+                    {{ review.commentsLoading ? 'Loading...' : 'Show more comments' }}
+                  </button>
+                </div>
 
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2">
-                      <polyline points="3 6 5 6 21 6"/>
-                      <path d="M19 6l-1 14H6L5 6"/>
-                      <path d="M10 11v6"/>
-                      <path d="M14 11v6"/>
+                <!-- Reply context banner -->
+                <div *ngIf="replyingToCommentId" class="flex items-center justify-between rounded-lg bg-blue-50 px-3 py-1.5 text-[11px] text-blue-600">
+                  <span>Replying to <strong>{{ replyingToActorName }}</strong></span>
+                  <button (click)="cancelReply()" class="text-blue-400 hover:text-blue-600">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
+                  </button>
+                </div>
 
-                    Delete
+                <div class="flex items-center gap-2 pt-1">
+                  <input
+                    [(ngModel)]="commentText"
+                    placeholder="Add a comment..."
+                    class="flex-1 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-200 transition-all"
+                  />
+                  <button
+                    (click)="replyingToCommentId ? sendReply(review) : addComment(review)"
+                    [disabled]="!commentText"
+                    class="shrink-0 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:hover:bg-blue-600 px-4 py-2 text-xs font-semibold text-white transition-colors">
+                    Send
                   </button>
                 </div>
               </div>
-
-              <!-- Body -->
-              <p
-                class="
-                  mt-3
-                  text-sm
-                  text-gray-600
-                  leading-relaxed
-                  break-words
-                "
-              >{{ review.content }}</p>
-
-              <!-- Review actions -->
-              <div class="mt-3 flex items-center gap-4 text-sm">
-
-                <button
-                  (click)="toggleReviewLike(review)"
-                  class="flex items-center gap-1.5 transition-colors"
-                  [class.text-blue-600]="review.liked"
-                  [class.text-gray-400]="!review.liked">
-
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                       class="w-4 h-4"
-                       fill="currentColor"
-                       viewBox="0 0 20 20">
-                    <path d="M3.172 5.172A4 4 0 018.828 5L10 6.172 11.172 5A4 4 0 1117 10.828l-7 7-7-7a4 4 0 010-5.656z"/>
-                  </svg>
-
-                  {{ review.likeCount }}
-                </button>
-
-                <button
-                  (click)="toggleComments(review)"
-                  class="flex items-center gap-1.5 text-gray-400 hover:text-slate-700">
-
-                  <svg xmlns="http://www.w3.org/2000/svg"
-                       class="w-4 h-4"
-                       fill="none"
-                       viewBox="0 0 24 24"
-                       stroke="currentColor">
-
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                  </svg>
-
-                  {{ review.commentsCount }}
-                </button>
-
-              </div>
-
-
-              <!-- Comments -->
-              <div class="mt-3.5 pt-3 border-t border-slate-50" *ngIf="review.showComments">
-
-                <div *ngIf="review.previewComment && !review.showComments"
-                  class="mb-2.5 rounded-lg bg-slate-50 px-3 py-2 text-[12px] text-gray-500">
-                  <span class="font-semibold text-blue-600">{{ review.previewComment.actorName }}: </span>
-                  {{ review.previewComment.content }}
-                </div>
-
-                <div *ngIf="review.showComments" class="mt-3 space-y-1.5">
-
-                  <div *ngIf="review.comments?.length === 0"
-                    class="text-[12px] text-gray-400 text-center py-3 bg-slate-50 rounded-lg">
-                    No comments yet.
-                  </div>
-
-                  <div *ngFor="let c of review.comments"
-                       class="rounded-lg bg-slate-50 px-3 py-2 text-[12px]">
-
-                    <!-- HEADER -->
-                    <div class="flex items-start gap-2 mb-1">
-
-                      <!-- AVATAR -->
-                      <img
-                        [src]="c.actorAvatarUrl | imageUrl"
-                        class="w-6 h-6 rounded-full object-cover border"
-                      />
-
-                      <div class="flex items-center gap-1.5 flex-wrap">
-
-                        <span
-                          [ngClass]="c.actorType === 'COMPANY'
-                            ? 'font-semibold text-violet-600'
-                            : 'font-semibold text-blue-600'">
-
-                          {{ c.actorName }}
-                        </span>
-
-                        <!-- SMALL TRIANGLE (instead of arrow) -->
-                        <span *ngIf="c.repliedToActorName" class="text-gray-400 text-[10px]">
-                          ▶ {{ c.repliedToActorName }}
-                        </span>
-
-                      </div>
-
-                    </div>
-
-                    <!-- CONTENT -->
-                    <p class="text-gray-600 leading-snug">
-                      {{ c.content }}
-                    </p>
-
-                    <!-- Actions -->
-                    <div class="mt-2 flex items-center gap-4">
-
-                      <button
-                        (click)="toggleCommentLike(c)"
-                        class="inline-flex items-center text-[11px] font-medium transition-colors"
-                        [class.text-blue-600]="c.liked"
-                        [class.text-gray-400]="!c.liked">
-
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          class="w-4 h-4 mr-1">
-
-                          <path d="M12.001 20.727l-.717-.653C5.463 14.77 2 11.61 2 7.75 2 4.857 4.238 2.5 7.05 2.5c1.59 0 3.116.76 4.05 1.965C12.834 3.26 14.36 2.5 15.95 2.5 18.762 2.5 21 4.857 21 7.75c0 3.86-3.463 7.02-9.284 12.324l-.715.653z"/>
-                        </svg>
-
-                        <span>{{ c.likeCount }}</span>
-                      </button>
-
-                      <button
-                        (click)="startReply(c)"
-                        class="text-[11px] text-gray-400 hover:text-blue-500 font-medium transition-colors">
-
-                        Reply
-                      </button>
-
-                    </div>
-
-
-
-
-                  </div>
-
-
-
-                  <div
-                    *ngIf="review.comments && review.comments.length < review.commentsTotal!"
-                    class="flex justify-center pt-2"
-                  >
-                    <button
-                      (click)="loadComments(review)"
-                      [disabled]="review.commentsLoading"
-                      class="text-[12px] font-medium text-blue-600 hover:underline"
-                    >
-                      {{ review.commentsLoading ? 'Loading...' : 'Show more comments' }}
-                    </button>
-                  </div>
-
-
-
-                  <div class="mt-3 flex items-center gap-2">
-
-                    <input
-                      [(ngModel)]="commentText"
-                      [placeholder]="
-      replyingToCommentId
-      ? 'Replying to ' + replyingToActorName + '...'
-      : 'Add a comment...'
-    "
-                      class="
-      flex-1
-      rounded-full
-      border
-      border-slate-200
-      bg-slate-50
-      px-4
-      py-2
-      text-[12px]
-      text-gray-800
-      placeholder-gray-400
-      focus:outline-none
-      focus:ring-2
-      focus:ring-blue-100
-      focus:bg-white
-      transition-all
-    "
-                    />
-
-
-                    <button
-                      (click)="
-      replyingToCommentId
-      ? sendReply(review)
-      : addComment(review)
-    "
-                      class="
-      rounded-full
-      bg-blue-600
-      hover:bg-blue-700
-      px-4
-      py-2
-      text-[12px]
-      font-semibold
-      text-white
-    "
-                    >
-                      Send
-                    </button>
-
-
-                    <button
-                      *ngIf="replyingToCommentId"
-                      (click)="cancelReply()"
-                      class="
-                        shrink-0
-                        rounded-full
-                        border
-                        border-slate-200
-                        bg-white
-                        px-3
-                        py-2
-                        text-[12px]
-                        font-medium
-                        text-gray-500
-                        hover:bg-slate-50
-                        hover:text-slate-700
-                        transition-colors
-                      "
-                    >
-                      Cancel
-                    </button>
-
-                  </div>
-
-
-                </div>
-
-              </div>
             </div>
           </div>
-
         </div>
-        <div *ngIf="loading" class="pt-2 text-center divide-gray-400">Loading reviews...</div>
+
+        <div *ngIf="loading" class="pt-2 flex items-center justify-center gap-2 text-xs text-gray-400">
+          <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+          </svg>
+          Loading reviews...
+        </div>
         <div #loadMoreTrigger class="h-10"></div>
       </div>
     </div>
 
     <!-- Review form -->
     <div class="w-full lg:basis-72 shrink-0">
-
       <app-review-form
-        [productId]="product?.id"
+        (reviewSubmitted)="submitReview($event)"
         [myReview]="myReview"
-        [submittingReview]="submittingReview"
-        (reviewSubmitted)="submitReview($event)">
+        [productId]="product?.id"
+        [submittingReview]="submittingReview">
       </app-review-form>
-
     </div>
-
   </div>
-
 </div>
 
-
-
 <app-auth-required
-  *ngIf="showAuthModal"
   (close)="showAuthModal = false"
+  *ngIf="showAuthModal"
 >
 </app-auth-required>
 
-
-
-
-<div
+<app-confirm-modal
+  (cancel)="closeDeleteModal()"
+  (confirm)="confirmDelete()"
   *ngIf="showDeleteModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-
-
-  <div class="bg-white rounded-2xl shadow-xl w-[320px] p-6">
-
-
-    <div class="flex items-center gap-3 mb-4">
-
-      <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
-        <svg
-          class="w-6 h-6 text-red-500"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round">
-
-          <path d="M3 6h18"/>
-          <path d="M8 6V4.5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1V6"/>
-          <path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/>
-          <path d="M10 11v6"/>
-          <path d="M14 11v6"/>
-
-        </svg>
-      </div>
-
-
-      <h3 class="font-semibold text-gray-900">
-        Delete review?
-      </h3>
-
-    </div>
-
-
-    <p class="text-sm text-gray-500 mb-6">
-      Are you sure you want to delete this review?
-      This action cannot be undone.
-    </p>
-
-
-
-    <div class="flex justify-end gap-3">
-
-
-      <button
-        (click)="closeDeleteModal()"
-        class="px-4 py-2 text-sm rounded-xl bg-gray-100 hover:bg-gray-200">
-        Cancel
-      </button>
-
-
-
-      <button
-        (click)="confirmDelete()"
-        [disabled]="deletingReviewId !== null"
-        class="px-4 py-2 text-sm rounded-xl bg-red-500 text-white hover:bg-red-600 disabled:opacity-50">
-
-        {{ deletingReviewId ? 'Deleting...' : 'Delete' }}
-
-      </button>
-
-
-    </div>
-
-  </div>
-
-</div>
+  [loading]="deletingReviewId !== null"
+  confirmText="Delete"
+  message="Are you sure you want to delete this review? This action cannot be undone."
+  title="Delete review?">
+</app-confirm-modal>

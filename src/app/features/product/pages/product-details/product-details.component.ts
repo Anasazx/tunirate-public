@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { ReviewResponse } from '../../../../core/models/dto/reviewDTO/reviewResponse.model';
 import { DetailedProduct } from '../../models/detailedProduct.model';
 import { CommentResponse } from '../../../../core/models/dto/commentDTO/commentResponse.model';
@@ -14,6 +14,11 @@ import {ReviewFormComponent} from './components/review-form/review-form.componen
 import {AuthService} from '../../../auth/services/authService/auth.service';
 import {AuthRequiredComponent} from '../../../../core/sharedComponents/auth-required/auth-required.component';
 import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
+import {finalize} from 'rxjs';
+import {ConfirmModalComponent} from '../../../../core/sharedComponents/confirm-modal/confirm-modal.component';
+import {ToastService} from '../../../../core/services/toastService/toast.service';
+import {ProductRatingOverviewComponent} from './components/product-rating-overview/product-rating-overview.component';
+import {ProductImageGalleryComponent} from './components/product-image-gallery/product-image-gallery.component';
 
 
 type ReviewWithComments = ReviewResponse & {
@@ -25,10 +30,14 @@ type ReviewWithComments = ReviewResponse & {
   commentsLoading?: boolean;
 };
 
+type DeleteTarget =
+  | { type: 'review'; review: ReviewResponse }
+  | { type: 'comment'; review: ReviewWithComments; comment: CommentResponse };
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent, AuthRequiredComponent, ImageUrlPipe],
+  imports: [CommonModule, FormsModule, RouterLink, ReviewFormComponent, AuthRequiredComponent, ImageUrlPipe, ConfirmModalComponent, ProductRatingOverviewComponent, ProductImageGalleryComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css',
 })
@@ -48,6 +57,7 @@ export class ProductDetailsComponent implements OnInit {
 
   submittingReview = false;
   deletingReviewId: number | null = null;
+  deletingCommentId: number | null = null;
 
   descExpanded = false;
   selectedImage: string | null = '';
@@ -64,13 +74,13 @@ export class ProductDetailsComponent implements OnInit {
 
   productId!: number;
 
-  //Reply logic
-
   currentImageIndex = 0;
-
   showAuthModal = false;
-
   commentText = '';
+
+  // ===================== DELETE (shared for review + comment) =====================
+  showDeleteModal = false;
+  deleteTarget: DeleteTarget | null = null;
 
   // ===================== INIT =====================
   constructor(
@@ -80,7 +90,9 @@ export class ProductDetailsComponent implements OnInit {
     public sharedService: SharedService,
     private reviewService: ReviewService,
     private commentService: CommentService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    private toastService: ToastService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -96,17 +108,19 @@ export class ProductDetailsComponent implements OnInit {
       next: (data) => {
 
         this.product = data;
-
         const mainIndex = data.images?.findIndex(i => i.isMain) ?? -1;
-
         this.currentImageIndex = mainIndex >= 0 ? mainIndex : 0;
-
-        this.selectedImage =
-          data.images?.[this.currentImageIndex]?.url ?? null;
+        this.selectedImage = data.images?.[this.currentImageIndex]?.url ?? null;
 
         this.loadReviews();
       },
-      error: console.error
+      error: (err) => {
+        if (err.status === 404) {
+          this.router.navigate(['/not-found'], { skipLocationChange: true });
+        } else {
+          console.error(err);
+        }
+      }
     });
   }
 
@@ -166,48 +180,73 @@ export class ProductDetailsComponent implements OnInit {
     return id === this.authService.getCurrentUser?.id;
   }
 
-  showDeleteModal = false;
-  reviewToDelete: ReviewResponse | null = null;
+  // ===================== DELETE MODAL CONTROL =====================
 
   openDeleteModal(review: ReviewResponse) {
-    this.reviewToDelete = review;
+    this.deleteTarget = { type: 'review', review };
     this.showDeleteModal = true;
   }
 
+  openDeleteCommentModal(review: ReviewWithComments, comment: CommentResponse) {
+    this.deleteTarget = { type: 'comment', review, comment };
+    this.showDeleteModal = true;
+  }
 
   closeDeleteModal() {
-    this.reviewToDelete = null;
+    this.deleteTarget = null;
     this.showDeleteModal = false;
   }
 
-
   confirmDelete() {
+    if (!this.deleteTarget) return;
 
-    if (!this.reviewToDelete) return;
+    if (this.deleteTarget.type === 'review') {
+      this.confirmDeleteReview(this.deleteTarget.review);
+    } else {
+      this.confirmDeleteComment(this.deleteTarget.review, this.deleteTarget.comment);
+    }
+  }
 
-    const review = this.reviewToDelete;
-
+  private confirmDeleteReview(review: ReviewResponse) {
     this.deletingReviewId = review.id;
 
     this.reviewService.deleteReview(review.id).subscribe({
-
       next: () => {
-
-        this.reviews = this.reviews.filter(
-          r => r.id !== review.id
-        );
-
+        this.reviews = this.reviews.filter(r => r.id !== review.id);
         this.product!.reviews = this.reviews;
 
         this.closeDeleteModal();
+        this.toastService.show('Review deleted', 'success');
         this.deletingReviewId = null;
       },
-
-
       error: err => {
         console.error(err);
         this.closeDeleteModal();
         this.deletingReviewId = null;
+      }
+    });
+  }
+
+  private confirmDeleteComment(review: ReviewWithComments, comment: CommentResponse) {
+    this.deletingCommentId = comment.id;
+
+    this.commentService.deleteComment(comment.id).subscribe({
+      next: () => {
+        const target = review.comments?.find(c => c.id === comment.id);
+        if (target) {
+          (target as any).deleted = true;
+          target.content = '';
+        }
+
+        this.closeDeleteModal();
+        this.toastService.show('Comment deleted', 'success');
+        this.deletingCommentId = null;
+      },
+      error: err => {
+        console.error(err);
+        this.closeDeleteModal();
+        this.deletingCommentId = null;
+        this.toastService.show('Could not delete comment', 'error');
       }
     });
   }
@@ -218,6 +257,10 @@ export class ProductDetailsComponent implements OnInit {
 
   // ===================== COMMENTS =====================
   addComment(review: ReviewWithComments) {
+
+    if (this.showAuthModelIfNoAuthUser()) {
+      return;
+    }
 
     if (!this.commentText.trim()) return;
 
@@ -293,15 +336,11 @@ export class ProductDetailsComponent implements OnInit {
     return Array(5 - Math.floor(rating));
   }
 
-  getStarPercent(star: number): number {
-    if (!this.reviews.length) return 0;
-    const count = this.reviews.filter(r => Math.floor(r.rating) === star).length;
-    return Math.round((count / this.reviews.length) * 100);
-  }
 
   goBack() {
     this.location.back();
   }
+
   startReply(comment: CommentResponse) {
     if (this.showAuthModelIfNoAuthUser()) {
       return;
@@ -323,12 +362,10 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
 
-
     const request = {
       content: this.commentText,
       reviewId: review.id
     };
-
 
     this.commentService
       .replyToComment(this.replyingToCommentId, request)
@@ -341,10 +378,8 @@ export class ProductDetailsComponent implements OnInit {
             newReply
           ];
 
-
           review.commentsCount =
             (review.commentsCount || 0) + 1;
-
 
           this.cancelReply();
 
@@ -353,28 +388,6 @@ export class ProductDetailsComponent implements OnInit {
         error: console.error
 
       });
-  }
-
-  nextImage() {
-    const images = this.product?.images;
-
-    if (!images?.length) return;
-
-    this.currentImageIndex =
-      (this.currentImageIndex + 1) % images.length;
-
-    this.selectedImage = images[this.currentImageIndex].url;
-  }
-
-  prevImage() {
-    const images = this.product?.images;
-
-    if (!images?.length) return;
-
-    this.currentImageIndex =
-      (this.currentImageIndex - 1 + images.length) % images.length;
-
-    this.selectedImage = images[this.currentImageIndex].url;
   }
 
 
@@ -386,16 +399,24 @@ export class ProductDetailsComponent implements OnInit {
 
   private requestInProgress = false;
 
+
   // ===================== LOAD REVIEWS =====================
+
   private loadReviews() {
 
-    if (this.requestInProgress || this.last) return;
+    if (!this.productId || this.requestInProgress || this.last) return;
 
     this.requestInProgress = true;
     this.loading = true;
 
     this.reviewService
       .getReviewsByProductId(this.productId, this.page, this.size)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.requestInProgress = false;
+        })
+      )
       .subscribe({
         next: (response) => {
 
@@ -453,14 +474,9 @@ export class ProductDetailsComponent implements OnInit {
           this.page++;
           this.last = response.reviews.last;
 
-          this.loading = false;
-          this.requestInProgress = false;
         },
-
         error: (err) => {
           console.error(err);
-          this.loading = false;
-          this.requestInProgress = false;
         }
       });
   }
@@ -497,6 +513,7 @@ export class ProductDetailsComponent implements OnInit {
 
   @ViewChild('loadMoreTrigger')
   loadMoreTrigger?: ElementRef;
+
   ngAfterViewInit() {
     if (!this.loadMoreTrigger) return;
     this.observer = new IntersectionObserver(
@@ -516,6 +533,11 @@ export class ProductDetailsComponent implements OnInit {
     this.observer.observe(
       this.loadMoreTrigger.nativeElement
     );
+  }
+
+
+  commentIsMine(comment: CommentResponse): boolean {
+    return comment.actorType === 'USER' && comment.actorId === this.authService.getCurrentUser?.id;
   }
 
 }
