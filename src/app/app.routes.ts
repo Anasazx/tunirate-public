@@ -20,6 +20,7 @@ import {AllProductsComponent} from './features/product/pages/all-products/all-pr
 import {RegisterComponent} from './features/auth/pages/register/register.component';
 import {NotFoundComponent} from './core/sharedComponents/not-found/not-found.component';
 import {AboutComponent} from './features/about/about/about.component';
+import {AllCompaniesComponent} from './features/company/pages/all-companies/all-companies.component';
 
 
 export const routes: Routes = [
@@ -47,6 +48,7 @@ export const routes: Routes = [
       { path: 'search', component: SearchComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'products', component: AllProductsComponent },
+      { path: 'companies', component: AllCompaniesComponent },
       { path: 'auth/login', component: LoginComponent, canActivate: [guestGuard] },
       { path: 'auth/register', component: RegisterComponent, canActivate: [guestGuard] },
       { path: 'auth/verify', component: VerifyEmailComponent, canActivate: [emailVerificationGuard] },
