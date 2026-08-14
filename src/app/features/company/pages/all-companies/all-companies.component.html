@@ -1,0 +1,107 @@
+<section class="mx-auto max-w-7xl px-4 py-8 sm:px-5 sm:py-10">
+
+  <div class="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+        All companies
+      </h1>
+      <p class="mt-1.5 text-sm text-slate-500">
+        <span *ngIf="!loading">{{ totalElements }} companies building trust on ReviewHood</span>
+        <span *ngIf="loading">Loading companies...</span>
+      </p>
+    </div>
+
+    <!-- SEARCH WITHIN LOADED RESULTS -->
+    <div class="relative w-full sm:w-64">
+      <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+      <input
+        type="text"
+        [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)"
+        placeholder="Filter by name..."
+        class="w-full rounded-full border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#7e6907]/40"
+      />
+    </div>
+  </div>
+
+  <!-- VERIFIED TOGGLE -->
+  <div class="mb-5 flex items-center gap-2 sm:mb-6">
+    <button
+      (click)="toggleVerifiedOnly()"
+      class="flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-medium transition sm:px-4 sm:text-sm"
+      [ngClass]="verifiedOnly
+        ? 'border-[#7e6907] bg-[#7e6907]/5 text-[#7e6907]'
+        : 'border-slate-200 text-slate-600 hover:border-slate-300'"
+    >
+      <svg viewBox="0 0 24 24" class="h-3.5 w-3.5 sm:h-4 sm:w-4" [attr.fill]="verifiedOnly ? 'currentColor' : 'none'" [attr.stroke]="verifiedOnly ? 'none' : 'currentColor'" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <path *ngIf="verifiedOnly" d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white"/>
+        <path *ngIf="!verifiedOnly" stroke-linecap="round" stroke-linejoin="round" d="M9 12.5l2 2 4-4"/>
+      </svg>
+      Verified only
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+    <div *ngFor="let i of [1,2,3,4,5,6]" class="h-24 animate-pulse rounded-2xl bg-slate-100 sm:h-28"></div>
+  </div>
+
+  <!-- COMPANY GRID -->
+  <div *ngIf="!loading && filteredCompanies.length > 0" class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+
+    <a
+    *ngFor="let company of filteredCompanies"
+    [routerLink]="['/c', company.id]"
+    class="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3 transition-all duration-300 hover:border-[#b69c41]/40 hover:shadow-lg hover:shadow-slate-200/60 sm:gap-4 sm:p-4"
+    >
+    <img [src]="company.logoUrl | imageUrl" class="h-12 w-12 flex-shrink-0 rounded-full border border-slate-200 object-cover sm:h-14 sm:w-14"/>
+    <div class="min-w-0 flex-1">
+      <div class="flex items-center gap-1.5">
+        <h4 class="truncate text-sm font-semibold text-slate-900 transition group-hover:text-[#7e6907]">{{ company.name }}</h4>
+        <svg *ngIf="company.status === CompanyStatus.ACTIVE" viewBox="0 0 24 24" class="h-3.5 w-3.5 flex-shrink-0 text-[#7e6907]" fill="currentColor">
+          <circle cx="12" cy="12" r="10"/><path d="M10 12.5 8.5 11 7 12.5 10 15.5 17 8.5 15.5 7z" fill="white"/>
+        </svg>
+      </div>
+      <p class="mt-0.5 truncate text-xs text-slate-500">{{ company.description || company.country }}</p>
+    </div>
+    <i class="fa-solid fa-chevron-right flex-shrink-0 text-xs text-slate-300 transition group-hover:text-[#7e6907]"></i>
+    </a>
+
+  </div>
+
+  <!-- LOAD MORE -->
+  <div *ngIf="!loading && !isLastPage && !searchTerm && !verifiedOnly" class="mt-8 flex justify-center sm:mt-10">
+    <button
+      (click)="loadMore()"
+      [disabled]="loadingMore"
+      class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-[#7e6907]/30 hover:text-[#7e6907] disabled:cursor-not-allowed disabled:opacity-50 sm:px-6 sm:py-3"
+    >
+      <i *ngIf="loadingMore" class="fa-solid fa-spinner animate-spin text-xs"></i>
+      <span *ngIf="!loadingMore">Load more companies</span>
+      <span *ngIf="loadingMore">Loading...</span>
+    </button>
+  </div>
+
+  <!-- END OF LIST -->
+  <p *ngIf="!loading && isLastPage && filteredCompanies.length > 0 && !searchTerm && !verifiedOnly" class="mt-8 text-center text-sm text-slate-400 sm:mt-10">
+    You've reached the end · {{ companies.length }} of {{ totalElements }} companies
+  </p>
+
+  <!-- NO MATCHES (filter active, but nothing found in loaded results) -->
+  <div *ngIf="!loading && filteredCompanies.length === 0 && companies.length > 0" class="flex flex-col items-center px-4 py-14 text-center sm:py-16">
+    <i class="fa-solid fa-filter-circle-xmark mb-3 text-2xl text-slate-300"></i>
+    <h3 class="font-semibold text-slate-900">No companies match your filter</h3>
+    <p class="mt-1 text-sm text-slate-500">Try a different name, or turn off "Verified only".</p>
+  </div>
+
+  <!-- EMPTY STATE (no companies at all) -->
+  <div *ngIf="!loading && companies.length === 0" class="flex flex-col items-center px-4 py-16 text-center sm:py-20">
+    <i class="fa-solid fa-building mb-4 text-3xl text-slate-300"></i>
+    <h2 class="text-lg font-semibold text-slate-900">No companies yet</h2>
+    <p class="mt-1 max-w-sm text-sm text-slate-500">
+      Check back soon — new companies are added regularly.
+    </p>
+  </div>
+
+</section>

@@ -10,11 +10,14 @@ import { SubcategoryResponse } from '../../../../core/models/dto/subcategoryDTO/
 import {DEFAULT_SUBCATEGORY_ICON, SUBCATEGORY_ICONS} from '../../../../core/constants/subcategory-icons';
 import { FeedService } from '../../../../core/services/feedService/feed.service';
 import { SearchBarComponent } from '../../../../core/layout/search-bar/search-bar.component';
+import {CompanyResponse} from '../../../company/models/companyDTO/companyResponse.model';
+import {ImageUrlPipe} from '../../../../core/pipes/image-url.pipe';
+import {CompanyStatus} from '../../../company/enums/companyStatus.enum.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ProductCardComponent, RouterLink, SearchBarComponent],
+  imports: [CommonModule, ProductCardComponent, RouterLink, SearchBarComponent, ImageUrlPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -39,6 +42,10 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedSubcategoryId?: number;
 
   showNoProductFoundModel: boolean = false;
+
+  companies: CompanyResponse[] = [];
+  companyPages: CompanyResponse[][] = [];
+  currentCompanyPage = 0;
 
   protected readonly SUBCATEGORY_ICONS = SUBCATEGORY_ICONS;
 
@@ -180,9 +187,11 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
           this.categories = response.categories;
           this.reviews = response.reviews;
           this.products = response.products;
+          this.companies = response.companies;
 
           this.buildProductPages();
           this.buildReviewPages();
+          this.buildCompanyPages();
 
           // ResizeObserver will pick up the layout change automatically,
           // but this gives a same-tick fallback too
@@ -196,4 +205,33 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   protected readonly DEFAULT_SUBCATEGORY_ICON = DEFAULT_SUBCATEGORY_ICON;
+
+
+
+
+  buildCompanyPages() {
+    const pageSize = 6; // 3 columns x 2 rows
+    this.companyPages = [];
+    for (let i = 0; i < this.companies.length; i += pageSize) {
+      this.companyPages.push(this.companies.slice(i, i + pageSize));
+    }
+  }
+
+  get canGoLeftCompanies(): boolean {
+    return this.currentCompanyPage > 0;
+  }
+
+  get canGoRightCompanies(): boolean {
+    return this.currentCompanyPage < this.companyPages.length - 1;
+  }
+
+  scrollCompanies(direction: 'left' | 'right') {
+    if (direction === 'left' && this.canGoLeftCompanies) {
+      this.currentCompanyPage--;
+    } else if (direction === 'right' && this.canGoRightCompanies) {
+      this.currentCompanyPage++;
+    }
+  }
+
+  protected readonly CompanyStatus = CompanyStatus;
 }
